@@ -846,6 +846,37 @@ button {
   border-color: #65c4c9;
 }
 
+.tools-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 17px 24px;
+}
+
+.tools-guide-link {
+  align-items: center;
+  border-bottom: 1px solid rgba(245, 243, 237, 0.38);
+  color: #f5f3ed;
+  display: inline-flex;
+  font-size: 13px;
+  gap: 15px;
+  padding: 10px 0;
+  transition: border-color 0.18s, color 0.18s;
+}
+
+.tools-guide-link span {
+  color: #65c4c9;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.09em;
+}
+
+.tools-guide-link:hover,
+.tools-guide-link:focus-visible {
+  border-color: #65c4c9;
+  color: #65c4c9;
+}
+
 .tools-copy > small {
   align-items: center;
   color: #8ba2a8;

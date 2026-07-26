@@ -40,6 +40,7 @@ const labels = {
     privacy: "Dosyanız bu tarayıcıdan dışarı çıkmaz",
     new: "Yeni",
     example: "Örnek",
+    guide: "PDF Kılavuzu",
     open: "DBC Aç",
     save: "DBC İndir",
     draft: "Taslağı Yükle",
@@ -129,6 +130,7 @@ const labels = {
     privacy: "Your file never leaves this browser",
     new: "New",
     example: "Example",
+    guide: "PDF Guide",
     open: "Open DBC",
     save: "Download DBC",
     draft: "Load draft",
@@ -681,6 +683,16 @@ export default function DbcEditor() {
         </div>
 
         <div className="dbc-toolbar">
+          <a
+            className="dbc-tool-button dbc-guide-link"
+            href={language === "tr"
+              ? "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf"
+              : "/docs/dbc-editor-user-guide-en.pdf"}
+            download
+            title={t.guide}
+          >
+            <Icon>?</Icon><span className="dbc-guide-label">{t.guide}</span>
+          </a>
           <button
             className="dbc-tool-button"
             type="button"

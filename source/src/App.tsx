@@ -119,6 +119,7 @@ const copy = {
       text:
         "CAN ve CAN FD veritabanlarını açın, mesaj ve sinyalleri düzenleyin, bit yerleşimini kontrol edin ve doğrulanmış DBC dosyanızı indirin.",
       action: "DBC Editörü aç",
+      guide: "PDF kılavuzunu indir",
       privacy: "Dosyalar sunucuya yüklenmez · Ücretsiz kullanım",
       features: ["CAN / CAN FD", "Intel / Motorola", "Doğrulama ve dışa aktarma"],
     },
@@ -246,6 +247,7 @@ const copy = {
       text:
         "Open CAN and CAN FD databases, edit messages and signals, inspect the bit layout, and download a validated DBC file.",
       action: "Open DBC Editor",
+      guide: "Download PDF guide",
       privacy: "Files are never uploaded · Free to use",
       features: ["CAN / CAN FD", "Intel / Motorola", "Validation and export"],
     },
@@ -429,10 +431,22 @@ export default function Home() {
           <ul>
             {t.tools.features.map((feature) => <li key={feature}>{feature}</li>)}
           </ul>
-          <a className="button button--primary" href="/dbc-editor/">
-            {t.tools.action}
-            <Arrow />
-          </a>
+          <div className="tools-actions">
+            <a className="button button--primary" href="/dbc-editor/">
+              {t.tools.action}
+              <Arrow />
+            </a>
+            <a
+              className="tools-guide-link"
+              href={language === "tr"
+                ? "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf"
+                : "/docs/dbc-editor-user-guide-en.pdf"}
+              download
+            >
+              {t.tools.guide}
+              <span aria-hidden="true">PDF ↓</span>
+            </a>
+          </div>
           <small><i />{t.tools.privacy}</small>
         </div>
         <div className="dbc-tool-preview" aria-hidden="true">
