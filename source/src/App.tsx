@@ -115,13 +115,21 @@ const copy = {
     },
     tools: {
       kicker: "04 / Mühendislik Araçları",
-      title: "DBC dosyalarını tarayıcınızda oluşturun.",
+      title: "CAN araçları, doğrudan tarayıcıda.",
       text:
-        "CAN ve CAN FD veritabanlarını açın, mesaj ve sinyalleri düzenleyin, bit yerleşimini kontrol edin ve doğrulanmış DBC dosyanızı indirin.",
-      action: "DBC Editörü aç",
+        "CAN veritabanlarını hazırlamak ve gerçek CAN trafiğini incelemek için ücretsiz, yerel ve uygulamaya dönük araçlar.",
+      dbcTitle: "DBC Editörü",
+      dbcText:
+        "Mesaj ve sinyalleri oluşturun, bit yerleşimini doğrulayın ve DBC dosyanızı dışa aktarın.",
+      dbcAction: "DBC Editörü aç",
       guide: "PDF kılavuzunu indir",
-      privacy: "Dosyalar sunucuya yüklenmez · Ücretsiz kullanım",
-      features: ["CAN / CAN FD", "Intel / Motorola", "Doğrulama ve dışa aktarma"],
+      dbcFeatures: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"],
+      viewerTitle: "CAN Viewer",
+      viewerText:
+        "PCAN-USB ile canlı CAN mesajlarını izleyin; yüklediğiniz DBC ile sinyalleri anlık çözümleyin.",
+      viewerAction: "CAN Viewer aç",
+      viewerFeatures: ["PCAN-USB", "Canlı trace", "DBC çözümleme"],
+      privacy: "Dosyalar ve CAN verisi sunucuya yüklenmez · Ücretsiz kullanım",
     },
     contact: {
       kicker: "06 / İletişim",
@@ -243,13 +251,21 @@ const copy = {
     },
     tools: {
       kicker: "04 / Engineering Tools",
-      title: "Create DBC files directly in your browser.",
+      title: "CAN tools, directly in your browser.",
       text:
-        "Open CAN and CAN FD databases, edit messages and signals, inspect the bit layout, and download a validated DBC file.",
-      action: "Open DBC Editor",
+        "Free, local, and practical tools for preparing CAN databases and inspecting real CAN traffic.",
+      dbcTitle: "DBC Editor",
+      dbcText:
+        "Create messages and signals, validate the bit layout, and export your DBC file.",
+      dbcAction: "Open DBC Editor",
       guide: "Download PDF guide",
-      privacy: "Files are never uploaded · Free to use",
-      features: ["CAN / CAN FD", "Intel / Motorola", "Validation and export"],
+      dbcFeatures: ["CAN / CAN FD", "Intel / Motorola", "DBC export"],
+      viewerTitle: "CAN Viewer",
+      viewerText:
+        "Monitor live CAN messages with PCAN-USB and decode signals in real time using your DBC.",
+      viewerAction: "Open CAN Viewer",
+      viewerFeatures: ["PCAN-USB", "Live trace", "DBC decoding"],
+      privacy: "Files and CAN data are never uploaded · Free to use",
     },
     contact: {
       kicker: "06 / Contact",
@@ -428,51 +444,96 @@ export default function Home() {
           <p className="section-kicker">{t.tools.kicker}</p>
           <h2>{t.tools.title}</h2>
           <p>{t.tools.text}</p>
-          <ul>
-            {t.tools.features.map((feature) => <li key={feature}>{feature}</li>)}
-          </ul>
-          <div className="tools-actions">
-            <a className="button button--primary" href="/dbc-editor/">
-              {t.tools.action}
-              <Arrow />
-            </a>
-            <a
-              className="tools-guide-link"
-              href={language === "tr"
-                ? "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf"
-                : "/docs/dbc-editor-user-guide-en.pdf"}
-              download
-            >
-              {t.tools.guide}
-              <span aria-hidden="true">PDF ↓</span>
-            </a>
+          <div className="tools-choice-list">
+            <article>
+              <span>01 / DBC</span>
+              <h3>{t.tools.dbcTitle}</h3>
+              <p>{t.tools.dbcText}</p>
+              <ul>
+                {t.tools.dbcFeatures.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <div className="tools-actions">
+                <a className="button button--primary" href="/dbc-editor/">
+                  {t.tools.dbcAction}
+                  <Arrow />
+                </a>
+                <a
+                  className="tools-guide-link"
+                  href={language === "tr"
+                    ? "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf"
+                    : "/docs/dbc-editor-user-guide-en.pdf"}
+                  download
+                >
+                  {t.tools.guide}
+                  <span aria-hidden="true">PDF ↓</span>
+                </a>
+              </div>
+            </article>
+            <article>
+              <span>02 / LIVE CAN</span>
+              <h3>{t.tools.viewerTitle}</h3>
+              <p>{t.tools.viewerText}</p>
+              <ul>
+                {t.tools.viewerFeatures.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <div className="tools-actions">
+                <a className="button button--primary" href="/can-viewer/">
+                  {t.tools.viewerAction}
+                  <Arrow />
+                </a>
+              </div>
+            </article>
           </div>
           <small><i />{t.tools.privacy}</small>
         </div>
-        <div className="dbc-tool-preview" aria-hidden="true">
-          <div className="preview-top">
-            <span>DBC / CAN DATABASE</span>
-            <i />
-          </div>
-          <div className="preview-body">
-            <div className="preview-list">
-              <span>0x201</span>
-              <strong>VCU_Status</strong>
-              <span>0x18FF50E5</span>
-              <strong>Charger_Status</strong>
-              <span>0x301</span>
-              <strong>Telemetry_Data</strong>
+        <div className="tools-preview-stack" aria-hidden="true">
+          <div className="dbc-tool-preview">
+            <div className="preview-top">
+              <span>DBC / CAN DATABASE</span>
+              <i />
             </div>
-            <div className="preview-editor">
-              <small>SG_ ENGINE_SPEED</small>
-              <strong>0|16@1+</strong>
-              <div className="preview-bits">
-                {Array.from({ length: 16 }, (_, index) => <i key={index} />)}
+            <div className="preview-body">
+              <div className="preview-list">
+                <span>0x201</span>
+                <strong>VCU_Status</strong>
+                <span>0x18FF50E5</span>
+                <strong>Charger_Status</strong>
+                <span>0x301</span>
+                <strong>Telemetry_Data</strong>
               </div>
-              <p>(0.125,0) [0|8031.875] "rpm"</p>
+              <div className="preview-editor">
+                <small>SG_ ENGINE_SPEED</small>
+                <strong>0|16@1+</strong>
+                <div className="preview-bits">
+                  {Array.from({ length: 16 }, (_, index) => <i key={index} />)}
+                </div>
+                <p>(0.125,0) [0|8031.875] "rpm"</p>
+              </div>
             </div>
+            <div className="preview-status"><i /> VALID · CLIENT-SIDE</div>
           </div>
-          <div className="preview-status"><i /> VALID · CLIENT-SIDE</div>
+          <div className="can-tool-preview">
+            <div className="preview-top">
+              <span>PCAN-USB / LIVE MONITOR</span>
+              <i />
+            </div>
+            <div className="can-preview-status">
+              <span><i /> LISTEN-ONLY</span>
+              <strong>250 kbit/s</strong>
+            </div>
+            {[
+              ["0x201", "VCU_Status", "40 2E E2 04 01 00 00 00"],
+              ["0x18FF50E5", "Charger_Status", "98 03 B4 00 10 00 45 00"],
+              ["0x301", "Telemetry_Data", "7E 20 18 00 00 01 00 00"],
+            ].map(([id, name, data]) => (
+              <div className="can-preview-row" key={id}>
+                <strong>{id}</strong>
+                <span>{name}</span>
+                <code>{data}</code>
+              </div>
+            ))}
+            <div className="preview-status"><i /> LIVE · DBC DECODED</div>
+          </div>
         </div>
       </section>
 
