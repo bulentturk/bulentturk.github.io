@@ -134,6 +134,11 @@ const copy = {
         "TRC, ASC, CSV ve SocketCAN kayıtlarını açın; çevrim zamanı, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.",
       analyzerAction: "CAN Log Analyzer aç",
       analyzerFeatures: ["TRC / ASC / CSV", "Periyot ve jitter", "Sinyal grafikleri"],
+      dtcTitle: "J1939 DM1 / DTC Analyzer",
+      dtcText:
+        "Motor CAN trace’inde DM1 arızalarını, çok paketli mesajları ve arıza anı çalışma koşullarını teşhis edin.",
+      dtcAction: "J1939 arıza teşhisini aç",
+      dtcFeatures: ["DM1 / SPN / FMI", "BAM / TP.DT", "Arıza anı raporu"],
       privacy: "Dosyalar ve CAN verisi sunucuya yüklenmez · Ücretsiz kullanım",
     },
     contact: {
@@ -275,6 +280,11 @@ const copy = {
         "Open TRC, ASC, CSV, and SocketCAN captures; inspect cycle time, jitter, missing messages, and DBC signals.",
       analyzerAction: "Open CAN Log Analyzer",
       analyzerFeatures: ["TRC / ASC / CSV", "Period and jitter", "Signal charts"],
+      dtcTitle: "J1939 DM1 / DTC Analyzer",
+      dtcText:
+        "Diagnose DM1 faults, multi-packet messages, and operating conditions at fault onset from an engine CAN trace.",
+      dtcAction: "Open J1939 fault diagnosis",
+      dtcFeatures: ["DM1 / SPN / FMI", "BAM / TP.DT", "Fault-context report"],
       privacy: "Files and CAN data are never uploaded · Free to use",
     },
     contact: {
@@ -503,6 +513,20 @@ export default function Home() {
               <div className="tools-actions">
                 <a className="button button--primary" href="/can-log-analyzer/">
                   {t.tools.analyzerAction}
+                  <Arrow />
+                </a>
+              </div>
+            </article>
+            <article>
+              <span>04 / J1939 DIAGNOSTICS</span>
+              <h3>{t.tools.dtcTitle}</h3>
+              <p>{t.tools.dtcText}</p>
+              <ul>
+                {t.tools.dtcFeatures.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <div className="tools-actions">
+                <a className="button button--primary" href="/j1939-dtc-decoder/">
+                  {t.tools.dtcAction}
                   <Arrow />
                 </a>
               </div>

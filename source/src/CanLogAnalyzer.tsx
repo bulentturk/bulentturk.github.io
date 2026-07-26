@@ -16,6 +16,7 @@ import {
   parseCanLog,
 } from "./can-log/log";
 import type { LogFrame, MessageStats, ParsedLog } from "./can-log/log";
+import { storeCanLogForTransfer } from "./can-log/transfer";
 
 type Language = "tr" | "en";
 type Tab = "overview" | "signals" | "frames";
@@ -49,6 +50,7 @@ const copy = {
     openDbc: "DBC yükle",
     exampleDbc: "Örnek DBC",
     exportCsv: "Filtreli CSV indir",
+    diagnoseJ1939: "DM1 arızalarını analiz et",
     printReport: "Rapor / PDF",
     supported: "PEAK TRC 1.0–3.0 · Vector ASC · CSV · SocketCAN LOG",
     emptyTitle: "Analiz için bir CAN kaydı açın",
@@ -170,6 +172,7 @@ const copy = {
     openDbc: "Load DBC",
     exampleDbc: "Example DBC",
     exportCsv: "Download filtered CSV",
+    diagnoseJ1939: "Analyze DM1 faults",
     printReport: "Report / PDF",
     supported: "PEAK TRC 1.0–3.0 · Vector ASC · CSV · SocketCAN LOG",
     emptyTitle: "Open a CAN capture to start analysis",
@@ -316,6 +319,22 @@ function downloadText(filename: string, text: string, type = "text/csv;charset=u
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+function serializeLogForTransfer(log: ParsedLog): string {
+  const rows = [
+    ["timestamp_ms", "id", "dlc", "data", "direction", "channel", "extended"].join(","),
+    ...log.frames.map((frame) => [
+      frame.timestampMs.toFixed(3),
+      frame.id.toString(16).toUpperCase(),
+      frame.data.length,
+      `"${formatData(frame.data)}"`,
+      frame.direction,
+      frame.channel,
+      frame.extended ? "true" : "false",
+    ].join(",")),
+  ];
+  return rows.join("\n");
 }
 
 function messageMatches(
@@ -501,6 +520,20 @@ export default function CanLogAnalyzer() {
       setToast(t.dbcLoaded);
     } catch {
       setToast(t.invalidDbc);
+    }
+  };
+
+  const openJ1939Diagnosis = async () => {
+    if (!log) return;
+    try {
+      await storeCanLogForTransfer({
+        name: `${log.name.replace(/\.[^.]+$/, "")}-j1939.csv`,
+        text: serializeLogForTransfer(log),
+        storedAt: Date.now(),
+      });
+      window.location.href = "/j1939-dtc-decoder/?from=can-log-analyzer";
+    } catch {
+      setToast(t.invalidLog);
     }
   };
 
@@ -759,6 +792,9 @@ export default function CanLogAnalyzer() {
                 setSelectedReportSignalKeys([]);
                 setToast(t.dbcLoaded);
               }} type="button">{t.exampleDbc}</button>
+              <button onClick={() => void openJ1939Diagnosis()} type="button">
+                <span>DM1</span>{t.diagnoseJ1939}<b>→</b>
+              </button>
               <button onClick={exportFrames} type="button">{t.exportCsv}<b>↓</b></button>
               <button onClick={openReportOptions} type="button">{t.printReport}<b>↗</b></button>
             </div>
