@@ -129,6 +129,11 @@ const copy = {
         "PCAN-USB ile canlı CAN mesajlarını izleyin; yüklediğiniz DBC ile sinyalleri anlık çözümleyin.",
       viewerAction: "CAN Viewer aç",
       viewerFeatures: ["PCAN-USB", "Canlı trace", "DBC çözümleme"],
+      analyzerTitle: "CAN Log Analyzer",
+      analyzerText:
+        "TRC, ASC, CSV ve SocketCAN kayıtlarını açın; çevrim zamanı, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.",
+      analyzerAction: "CAN Log Analyzer aç",
+      analyzerFeatures: ["TRC / ASC / CSV", "Periyot ve jitter", "Sinyal grafikleri"],
       privacy: "Dosyalar ve CAN verisi sunucuya yüklenmez · Ücretsiz kullanım",
     },
     contact: {
@@ -265,6 +270,11 @@ const copy = {
         "Monitor live CAN messages with PCAN-USB and decode signals in real time using your DBC.",
       viewerAction: "Open CAN Viewer",
       viewerFeatures: ["PCAN-USB", "Live trace", "DBC decoding"],
+      analyzerTitle: "CAN Log Analyzer",
+      analyzerText:
+        "Open TRC, ASC, CSV, and SocketCAN captures; inspect cycle time, jitter, missing messages, and DBC signals.",
+      analyzerAction: "Open CAN Log Analyzer",
+      analyzerFeatures: ["TRC / ASC / CSV", "Period and jitter", "Signal charts"],
       privacy: "Files and CAN data are never uploaded · Free to use",
     },
     contact: {
@@ -479,6 +489,20 @@ export default function Home() {
               <div className="tools-actions">
                 <a className="button button--primary" href="/can-viewer/">
                   {t.tools.viewerAction}
+                  <Arrow />
+                </a>
+              </div>
+            </article>
+            <article>
+              <span>03 / OFFLINE ANALYSIS</span>
+              <h3>{t.tools.analyzerTitle}</h3>
+              <p>{t.tools.analyzerText}</p>
+              <ul>
+                {t.tools.analyzerFeatures.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <div className="tools-actions">
+                <a className="button button--primary" href="/can-log-analyzer/">
+                  {t.tools.analyzerAction}
                   <Arrow />
                 </a>
               </div>

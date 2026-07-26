@@ -19,6 +19,15 @@ the PCAN connection when listen-only mode cannot be enabled. Browser requests
 are restricted to the live site and local development origins. The official
 PEAK driver is required separately and is not distributed in this repository.
 
+## CAN Log Analyzer
+
+`/can-log-analyzer/` analyzes PEAK TRC 1.0–3.0, Vector ASC, header-based CSV,
+and SocketCAN candump log files fully in the browser. It calculates per-ID
+message counts, cycle-time statistics, jitter, estimated missing frames, and
+byte-change intensity. A user-supplied DBC enables physical signal charts and
+statistics. Filtered frames can be exported as CSV, and the analysis summary
+can be printed or saved as PDF.
+
 ## Development
 
 ```bash

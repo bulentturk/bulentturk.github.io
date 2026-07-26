@@ -13,6 +13,7 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         "dbc-editor": resolve(__dirname, "dbc-editor/index.html"),
         "can-viewer": resolve(__dirname, "can-viewer/index.html"),
+        "can-log-analyzer": resolve(__dirname, "can-log-analyzer/index.html"),
       },
     },
   },
