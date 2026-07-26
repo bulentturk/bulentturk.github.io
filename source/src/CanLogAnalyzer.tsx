@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./can-log-analyzer.css";
-import type { DbcDatabase, DbcSignal } from "./dbc/dbc";
+import type { DbcDatabase, DbcMessage, DbcSignal } from "./dbc/dbc";
 import { createExampleDatabase, parseDbc } from "./dbc/dbc";
 import {
   decodeMessage,
@@ -20,8 +20,22 @@ import type { LogFrame, MessageStats, ParsedLog } from "./can-log/log";
 type Language = "tr" | "en";
 type Tab = "overview" | "signals" | "frames";
 type SortKey = "id" | "count" | "period" | "jitter" | "missing";
+type ChartPoint = { x: number; y: number };
+type SignalSummary = { min: number; max: number; average: number; count: number };
+type ReportSignalCandidate = {
+  key: string;
+  message: DbcMessage;
+  signal: DbcSignal;
+  frames: LogFrame[];
+};
+type ReportSignalAnalysis = ReportSignalCandidate & {
+  series: ChartPoint[];
+  summary: SignalSummary;
+};
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024;
+const MAX_REPORT_SIGNALS = 12;
+const DEFAULT_REPORT_SIGNALS = 6;
 const CHART_COLORS = ["#087f8c", "#e08b36", "#446aa3", "#9a5877"];
 
 const copy = {
@@ -114,6 +128,32 @@ const copy = {
     reportTitle: "CAN Kayıt Analiz Raporu",
     reportDate: "Rapor tarihi",
     printHint: "Yazdırma penceresinde “PDF olarak kaydet” seçilebilir.",
+    reportOptionsTitle: "PDF raporunu yapılandır",
+    reportOptionsText:
+      "Genel analiz ve mesaj tablosuna ek olarak raporda yer alacak DBC sinyallerini seçin.",
+    reportSignals: "DBC sinyal grafikleri",
+    reportSignalsHint: "En fazla 12 sinyal seçilebilir. Grafikler seçili zaman aralığını kullanır.",
+    reportSelected: "seçili",
+    selectAll: "İlk 12 sinyali seç",
+    clearAll: "Seçimi temizle",
+    generatePdf: "PDF raporunu aç",
+    cancel: "Vazgeç",
+    reportNoDbc:
+      "DBC yüklenmediği için rapor yalnız genel analiz ve CAN mesaj tablosunu içerecek.",
+    reportNoSignals:
+      "Yüklenen DBC ile geçerli filtrelerde çözülebilen sinyal bulunamadı.",
+    reportLimit: "Rapora en fazla 12 sinyal grafiği eklenebilir.",
+    reportSummary: "Genel özet",
+    reportMessageAnalysis: "CAN mesaj analizi",
+    reportSignalAnalysis: "DBC sinyal grafikleri",
+    reportSignalAnalysisText:
+      "Fiziksel değerler yüklenen DBC tanımına göre çözümlenmiştir.",
+    reportGeneratedBy: "Bülent Türk · Engineering Tools",
+    dbcFile: "DBC dosyası",
+    notLoaded: "Yüklenmedi",
+    filteredRange: "Analiz aralığı",
+    signalDetails: "Sinyal tanımı",
+    matchedFrames: "Eşleşen frame",
     total: "toplam",
     frameUnit: "frame",
     signalUnit: "sinyal",
@@ -208,6 +248,32 @@ const copy = {
     reportTitle: "CAN Capture Analysis Report",
     reportDate: "Report date",
     printHint: "Choose “Save as PDF” in the print dialog.",
+    reportOptionsTitle: "Configure PDF report",
+    reportOptionsText:
+      "Select the DBC signals to include alongside the overview and message table.",
+    reportSignals: "DBC signal charts",
+    reportSignalsHint: "Up to 12 signals can be selected. Charts use the active time range.",
+    reportSelected: "selected",
+    selectAll: "Select first 12",
+    clearAll: "Clear selection",
+    generatePdf: "Open PDF report",
+    cancel: "Cancel",
+    reportNoDbc:
+      "No DBC is loaded, so the report will contain only the overview and CAN message table.",
+    reportNoSignals:
+      "No signals can be decoded from the loaded DBC with the current filters.",
+    reportLimit: "A maximum of 12 signal charts can be added to the report.",
+    reportSummary: "Overview",
+    reportMessageAnalysis: "CAN message analysis",
+    reportSignalAnalysis: "DBC signal charts",
+    reportSignalAnalysisText:
+      "Physical values are decoded according to the loaded DBC definition.",
+    reportGeneratedBy: "Bülent Türk · Engineering Tools",
+    dbcFile: "DBC file",
+    notLoaded: "Not loaded",
+    filteredRange: "Analysis range",
+    signalDetails: "Signal definition",
+    matchedFrames: "Matched frames",
     total: "total",
     frameUnit: "frames",
     signalUnit: "signals",
@@ -281,13 +347,44 @@ function downsample<T>(values: T[], limit: number): T[] {
   return result;
 }
 
+function summarizeSeries(series: ChartPoint[]): SignalSummary | null {
+  if (!series.length) return null;
+  let min = series[0].y;
+  let max = series[0].y;
+  let sum = 0;
+  series.forEach((item) => {
+    min = Math.min(min, item.y);
+    max = Math.max(max, item.y);
+    sum += item.y;
+  });
+  return {
+    min,
+    max,
+    average: sum / series.length,
+    count: series.length,
+  };
+}
+
+function createSignalSeries(
+  frames: LogFrame[],
+  message: DbcMessage,
+  signal: DbcSignal,
+): ChartPoint[] {
+  return frames.flatMap((frame) => {
+    const decoded = signalForUid(decodeMessage(frame, message), signal.uid);
+    return decoded && Number.isFinite(decoded.numericValue)
+      ? [{ x: frame.timestampMs, y: decoded.numericValue }]
+      : [];
+  });
+}
+
 function LineChart({
   values,
   color = CHART_COLORS[0],
   emptyText,
   formatValue = (value) => formatNumber(value, 3),
 }: {
-  values: { x: number; y: number }[];
+  values: ChartPoint[];
   color?: string;
   emptyText: string;
   formatValue?: (value: number) => string;
@@ -341,6 +438,8 @@ export default function CanLogAnalyzer() {
   const [sortKey, setSortKey] = useState<SortKey>("id");
   const [rangeStartMs, setRangeStartMs] = useState(0);
   const [rangeEndMs, setRangeEndMs] = useState(0);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [selectedReportSignalKeys, setSelectedReportSignalKeys] = useState<string[]>([]);
   const [toast, setToast] = useState("");
   const logInputRef = useRef<HTMLInputElement>(null);
   const dbcInputRef = useRef<HTMLInputElement>(null);
@@ -370,6 +469,7 @@ export default function CanLogAnalyzer() {
     const initialStats = analyzeMessages(parsed.frames).sort((a, b) => b.count - a.count);
     setSelectedKey(initialStats[0]?.key ?? "");
     setSelectedSignalUid("");
+    setSelectedReportSignalKeys([]);
     setTab("overview");
     setQuery("");
     setToast(t.loaded);
@@ -397,6 +497,7 @@ export default function CanLogAnalyzer() {
       setDatabase(parsed);
       setDbcName(file.name);
       setSelectedSignalUid("");
+      setSelectedReportSignalKeys([]);
       setToast(t.dbcLoaded);
     } catch {
       setToast(t.invalidDbc);
@@ -470,39 +571,79 @@ export default function CanLogAnalyzer() {
 
   const signalSeries = useMemo(() => {
     if (!selectedMessage || !selectedSignal) return [];
-    return selectedFrames.flatMap((frame) => {
-      const decoded = signalForUid(decodeMessage(frame, selectedMessage), selectedSignal.uid);
-      return decoded && Number.isFinite(decoded.numericValue)
-        ? [{ x: frame.timestampMs, y: decoded.numericValue }]
-        : [];
-    });
+    return createSignalSeries(selectedFrames, selectedMessage, selectedSignal);
   }, [selectedFrames, selectedMessage, selectedSignal]);
 
-  const signalSummary = useMemo(() => {
-    if (!signalSeries.length) return null;
-    let min = signalSeries[0].y;
-    let max = signalSeries[0].y;
-    let sum = 0;
-    signalSeries.forEach((item) => {
-      min = Math.min(min, item.y);
-      max = Math.max(max, item.y);
-      sum += item.y;
-    });
-    return {
-      min,
-      max,
-      average: sum / signalSeries.length,
-      count: signalSeries.length,
-    };
-  }, [signalSeries]);
+  const signalSummary = useMemo(() => summarizeSeries(signalSeries), [signalSeries]);
 
   const dbcMatchedFrames = useMemo(
     () => rangeFrames.filter((frame) => Boolean(findDbcMessage(database, frame))).length,
     [database, rangeFrames],
   );
+  const reportSignalCandidates = useMemo<ReportSignalCandidate[]>(() => {
+    if (!database) return [];
+    const framesByKey = new Map<string, LogFrame[]>();
+    rangeFrames.forEach((frame) => {
+      const key = frameKey(frame);
+      const frames = framesByKey.get(key);
+      if (frames) frames.push(frame);
+      else framesByKey.set(key, [frame]);
+    });
+
+    return sortedStats.flatMap((item) => {
+      const frames = framesByKey.get(item.key) ?? [];
+      const message = frames[0] ? findDbcMessage(database, frames[0]) : null;
+      if (!message) return [];
+      return message.signals.map((signal) => ({
+        key: `${message.uid}::${signal.uid}`,
+        message,
+        signal,
+        frames,
+      }));
+    });
+  }, [database, rangeFrames, sortedStats]);
+  const reportSignalAnalyses = useMemo<ReportSignalAnalysis[]>(() => {
+    const byKey = new Map(reportSignalCandidates.map((candidate) => [candidate.key, candidate]));
+    return selectedReportSignalKeys.flatMap((key) => {
+      const candidate = byKey.get(key);
+      if (!candidate) return [];
+      const series = createSignalSeries(candidate.frames, candidate.message, candidate.signal);
+      const summary = summarizeSeries(series);
+      return summary ? [{ ...candidate, series, summary }] : [];
+    });
+  }, [reportSignalCandidates, selectedReportSignalKeys]);
   const startTimestamp = log?.frames[0]?.timestampMs ?? 0;
   const rangeDuration = Math.max(0, rangeEndMs - rangeStartMs);
   const averageRate = rangeDuration > 0 ? (rangeFrames.length * 1000) / rangeDuration : 0;
+
+  const openReportOptions = () => {
+    const validKeys = new Set(reportSignalCandidates.map((candidate) => candidate.key));
+    setSelectedReportSignalKeys((current) => {
+      const validSelection = current.filter((key) => validKeys.has(key));
+      return validSelection.length
+        ? validSelection.slice(0, MAX_REPORT_SIGNALS)
+        : reportSignalCandidates
+            .slice(0, DEFAULT_REPORT_SIGNALS)
+            .map((candidate) => candidate.key);
+    });
+    setReportDialogOpen(true);
+  };
+
+  const toggleReportSignal = (key: string) => {
+    setSelectedReportSignalKeys((current) => {
+      if (current.includes(key)) return current.filter((item) => item !== key);
+      if (current.length >= MAX_REPORT_SIGNALS) {
+        setToast(t.reportLimit);
+        return current;
+      }
+      return [...current, key];
+    });
+  };
+
+  const printConfiguredReport = () => {
+    setReportDialogOpen(false);
+    window.setTimeout(() => window.print(), 60);
+  };
 
   const exportFrames = () => {
     const visibleKeys = new Set(sortedStats.map((item) => item.key));
@@ -615,10 +756,11 @@ export default function CanLogAnalyzer() {
                 const example = createExampleDatabase();
                 setDatabase(example);
                 setDbcName(example.name);
+                setSelectedReportSignalKeys([]);
                 setToast(t.dbcLoaded);
               }} type="button">{t.exampleDbc}</button>
               <button onClick={exportFrames} type="button">{t.exportCsv}<b>↓</b></button>
-              <button onClick={() => window.print()} type="button">{t.printReport}<b>↗</b></button>
+              <button onClick={openReportOptions} type="button">{t.printReport}<b>↗</b></button>
             </div>
           </section>
 
@@ -826,18 +968,190 @@ export default function CanLogAnalyzer() {
             </details>
           )}
 
+          {reportDialogOpen && (
+            <div
+              className="cla-report-dialog-backdrop"
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget) setReportDialogOpen(false);
+              }}
+              role="presentation"
+            >
+              <section
+                aria-labelledby="cla-report-dialog-title"
+                aria-modal="true"
+                className="cla-report-dialog"
+                role="dialog"
+              >
+                <header>
+                  <div>
+                    <span>PDF / REPORT</span>
+                    <h2 id="cla-report-dialog-title">{t.reportOptionsTitle}</h2>
+                    <p>{t.reportOptionsText}</p>
+                  </div>
+                  <button
+                    aria-label={t.cancel}
+                    className="cla-report-dialog-close"
+                    onClick={() => setReportDialogOpen(false)}
+                    type="button"
+                  >
+                    ×
+                  </button>
+                </header>
+
+                <div className="cla-report-dialog-summary">
+                  <div><span>{t.file}</span><strong>{log.name}</strong></div>
+                  <div><span>{t.filteredRange}</span><strong>{formatDuration(rangeDuration)}</strong></div>
+                  <div><span>{t.dbcFile}</span><strong>{database ? dbcName : t.notLoaded}</strong></div>
+                </div>
+
+                <div className="cla-report-signal-toolbar">
+                  <div>
+                    <strong>{t.reportSignals}</strong>
+                    <small>{selectedReportSignalKeys.length} / {MAX_REPORT_SIGNALS} {t.reportSelected}</small>
+                  </div>
+                  {reportSignalCandidates.length > 0 && (
+                    <div>
+                      <button
+                        onClick={() =>
+                          setSelectedReportSignalKeys(
+                            reportSignalCandidates
+                              .slice(0, MAX_REPORT_SIGNALS)
+                              .map((candidate) => candidate.key),
+                          )
+                        }
+                        type="button"
+                      >
+                        {t.selectAll}
+                      </button>
+                      <button onClick={() => setSelectedReportSignalKeys([])} type="button">
+                        {t.clearAll}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {!database ? (
+                  <div className="cla-report-dialog-empty"><span>DBC</span><p>{t.reportNoDbc}</p></div>
+                ) : reportSignalCandidates.length === 0 ? (
+                  <div className="cla-report-dialog-empty"><span>0x</span><p>{t.reportNoSignals}</p></div>
+                ) : (
+                  <>
+                    <p className="cla-report-signal-hint">{t.reportSignalsHint}</p>
+                    <div className="cla-report-signal-list">
+                      {reportSignalCandidates.map((candidate) => {
+                        const selected = selectedReportSignalKeys.includes(candidate.key);
+                        return (
+                          <label className={selected ? "selected" : ""} key={candidate.key}>
+                            <input
+                              checked={selected}
+                              onChange={() => toggleReportSignal(candidate.key)}
+                              type="checkbox"
+                            />
+                            <span>
+                              <strong>{candidate.signal.name}</strong>
+                              <small>{candidate.message.name} · {formatCanId(candidate.message)}</small>
+                            </span>
+                            <b>{candidate.signal.unit || "—"}</b>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+
+                <footer>
+                  <button onClick={() => setReportDialogOpen(false)} type="button">{t.cancel}</button>
+                  <button className="primary" onClick={printConfiguredReport} type="button">
+                    {t.generatePdf}<b>↗</b>
+                  </button>
+                </footer>
+              </section>
+            </div>
+          )}
+
           <section className="cla-print-report">
-            <h1>{t.reportTitle}</h1>
-            <p>{log.name} · {log.formatLabel}</p>
-            <p>{t.reportDate}: {new Date().toLocaleString(language === "tr" ? "tr-TR" : "en-GB")}</p>
-            <table>
-              <thead><tr><th>{t.id}</th><th>{t.name}</th><th>{t.count}</th><th>{t.period}</th><th>{t.jitter}</th><th>{t.missing}</th></tr></thead>
-              <tbody>{sortedStats.map((item) => {
-                const sample = sampleByKey.get(item.key);
-                return <tr key={item.key}><td>{sample ? formatCanId(sample) : item.id}</td><td>{sample ? findDbcMessage(database, sample)?.name ?? "—" : "—"}</td><td>{item.count}</td><td>{formatPeriod(item.averagePeriodMs)}</td><td>{formatPeriod(item.jitterMs)}</td><td>{item.estimatedMissing}</td></tr>;
-              })}</tbody>
-            </table>
-            <small>{t.printHint}</small>
+            <header className="cla-print-report-header">
+              <div>
+                <span>CAN LOG ANALYZER</span>
+                <h1>{t.reportTitle}</h1>
+                <p>{t.reportGeneratedBy}</p>
+              </div>
+              <strong>{new Date().toLocaleDateString(language === "tr" ? "tr-TR" : "en-GB")}</strong>
+            </header>
+
+            <section className="cla-print-report-meta">
+              <div><span>{t.file}</span><strong>{log.name}</strong><small>{log.formatLabel}</small></div>
+              <div><span>{t.dbcFile}</span><strong>{database ? dbcName : t.notLoaded}</strong><small>{database ? `${database.messages.length} ${t.messageList.toLocaleLowerCase()}` : t.noDbc}</small></div>
+              <div><span>{t.filteredRange}</span><strong>{formatDuration(rangeDuration)}</strong><small>{formatNumber((rangeStartMs - startTimestamp) / 1000, 3)}–{formatNumber((rangeEndMs - startTimestamp) / 1000, 3)} s</small></div>
+              <div><span>{t.reportDate}</span><strong>{new Date().toLocaleDateString(language === "tr" ? "tr-TR" : "en-GB")}</strong><small>{new Date().toLocaleTimeString(language === "tr" ? "tr-TR" : "en-GB")}</small></div>
+            </section>
+
+            <section className="cla-print-report-section">
+              <div className="cla-print-section-heading">
+                <span>01 / OVERVIEW</span>
+                <h2>{t.reportSummary}</h2>
+              </div>
+              <div className="cla-print-kpis">
+                <article><span>{t.frames}</span><strong>{rangeFrames.length.toLocaleString()}</strong><small>{log.frames.length.toLocaleString()} {t.total}</small></article>
+                <article><span>{t.ids}</span><strong>{stats.length}</strong><small>{stats.filter((item) => item.extended).length} EXT</small></article>
+                <article><span>{t.duration}</span><strong>{formatDuration(rangeDuration)}</strong><small>{formatDuration(log.durationMs)} {t.total}</small></article>
+                <article><span>{t.rate}</span><strong>{formatNumber(averageRate, 1)}</strong><small>frame/s</small></article>
+                <article><span>{t.dbcMatch}</span><strong>{database && rangeFrames.length ? `${formatNumber((dbcMatchedFrames / rangeFrames.length) * 100, 1)}%` : "—"}</strong><small>{database ? `${dbcMatchedFrames.toLocaleString()} ${t.matchedFrames.toLocaleLowerCase()}` : t.noDbc}</small></article>
+              </div>
+            </section>
+
+            <section className="cla-print-report-section">
+              <div className="cla-print-section-heading">
+                <span>02 / TIMING</span>
+                <h2>{t.reportMessageAnalysis}</h2>
+              </div>
+              <table>
+                <thead><tr><th>{t.id}</th><th>{t.name}</th><th>{t.count}</th><th>{t.period}</th><th>{t.jitter}</th><th>{t.minMaxPeriod}</th><th>{t.missing}</th></tr></thead>
+                <tbody>{sortedStats.map((item) => {
+                  const sample = sampleByKey.get(item.key);
+                  return <tr key={item.key}><td>{sample ? formatCanId(sample) : item.id}</td><td>{sample ? findDbcMessage(database, sample)?.name ?? "—" : "—"}</td><td>{item.count}</td><td>{formatPeriod(item.averagePeriodMs)}</td><td>{formatPeriod(item.jitterMs)}</td><td>{formatPeriod(item.minPeriodMs)} / {formatPeriod(item.maxPeriodMs)}</td><td>{item.estimatedMissing}</td></tr>;
+                })}</tbody>
+              </table>
+            </section>
+
+            {reportSignalAnalyses.length > 0 && (
+              <section className="cla-print-report-section cla-print-signal-section">
+                <div className="cla-print-section-heading">
+                  <span>03 / DBC</span>
+                  <h2>{t.reportSignalAnalysis}</h2>
+                  <p>{t.reportSignalAnalysisText}</p>
+                </div>
+                {reportSignalAnalyses.map((analysis, index) => (
+                  <article className="cla-print-signal-card" key={analysis.key}>
+                    <header>
+                      <div>
+                        <span>{String(index + 1).padStart(2, "0")} · {formatCanId(analysis.message)} · {analysis.message.name}</span>
+                        <h3>{analysis.signal.name}</h3>
+                        <p>{analysis.signal.length} bit · factor {analysis.signal.factor} · offset {analysis.signal.offset}</p>
+                      </div>
+                      <strong>{analysis.signal.unit || "—"}</strong>
+                    </header>
+                    <LineChart
+                      color={CHART_COLORS[index % CHART_COLORS.length]}
+                      emptyText={t.noTiming}
+                      formatValue={(value) => `${formatNumber(value, 3)} ${analysis.signal.unit}`}
+                      values={analysis.series}
+                    />
+                    <div className="cla-print-signal-stats">
+                      <div><span>{t.minimum}</span><strong>{formatNumber(analysis.summary.min, 5)}</strong></div>
+                      <div><span>{t.maximum}</span><strong>{formatNumber(analysis.summary.max, 5)}</strong></div>
+                      <div><span>{t.average}</span><strong>{formatNumber(analysis.summary.average, 5)}</strong></div>
+                      <div><span>{t.samples}</span><strong>{analysis.summary.count.toLocaleString()}</strong></div>
+                    </div>
+                  </article>
+                ))}
+              </section>
+            )}
+
+            <footer className="cla-print-report-footer">
+              <span>{t.reportGeneratedBy}</span>
+              <small>{t.printHint}</small>
+            </footer>
           </section>
         </>
       )}

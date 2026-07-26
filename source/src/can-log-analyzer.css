@@ -1052,6 +1052,258 @@
   z-index: 100;
 }
 
+.cla-report-dialog-backdrop {
+  align-items: center;
+  background: rgba(10, 25, 37, 0.62);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 24px;
+  position: fixed;
+  z-index: 80;
+}
+
+.cla-report-dialog {
+  background: var(--cla-paper);
+  border: 1px solid #aeb9b6;
+  box-shadow: 0 28px 90px rgba(8, 27, 39, 0.32);
+  display: flex;
+  flex-direction: column;
+  max-height: min(820px, calc(100dvh - 48px));
+  max-width: 920px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.cla-report-dialog > header {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--cla-line);
+  display: flex;
+  justify-content: space-between;
+  padding: 22px 24px 18px;
+}
+
+.cla-report-dialog > header span,
+.cla-report-dialog-summary span {
+  color: var(--cla-signal);
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.cla-report-dialog h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  margin: 6px 0;
+}
+
+.cla-report-dialog > header p {
+  color: var(--cla-muted);
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cla-report-dialog-close {
+  background: transparent;
+  border: 0;
+  color: var(--cla-muted);
+  font-size: 25px !important;
+  line-height: 1;
+  padding: 1px 4px;
+}
+
+.cla-report-dialog-summary {
+  background: #f0f3f0;
+  border-bottom: 1px solid var(--cla-line);
+  display: grid;
+  grid-template-columns: 1.5fr 0.7fr 1fr;
+}
+
+.cla-report-dialog-summary > div {
+  border-right: 1px solid var(--cla-line);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px 18px;
+}
+
+.cla-report-dialog-summary > div:last-child {
+  border-right: 0;
+}
+
+.cla-report-dialog-summary strong {
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cla-report-signal-toolbar {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 17px 24px 4px;
+}
+
+.cla-report-signal-toolbar > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cla-report-signal-toolbar strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.cla-report-signal-toolbar small,
+.cla-report-signal-hint {
+  color: var(--cla-muted);
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 7px;
+}
+
+.cla-report-signal-toolbar > div:last-child {
+  display: flex;
+  gap: 5px;
+}
+
+.cla-report-signal-toolbar button,
+.cla-report-dialog > footer button {
+  background: transparent;
+  border: 1px solid var(--cla-line);
+  font-size: 9px;
+  min-height: 33px;
+  padding: 0 11px;
+}
+
+.cla-report-signal-toolbar button:hover,
+.cla-report-dialog > footer button:hover {
+  background: var(--cla-signal-soft);
+  border-color: #7eadae;
+}
+
+.cla-report-signal-hint {
+  margin: 4px 24px 10px;
+}
+
+.cla-report-signal-list {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0 24px 18px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.cla-report-signal-list label {
+  align-items: center;
+  background: #f7f8f5;
+  border: 1px solid var(--cla-line);
+  cursor: pointer;
+  display: grid;
+  gap: 9px;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  min-height: 52px;
+  padding: 8px 10px;
+}
+
+.cla-report-signal-list label:hover,
+.cla-report-signal-list label.selected {
+  background: var(--cla-signal-soft);
+  border-color: #7eadae;
+}
+
+.cla-report-signal-list input {
+  accent-color: var(--cla-signal);
+}
+
+.cla-report-signal-list label > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cla-report-signal-list strong,
+.cla-report-signal-list small,
+.cla-report-signal-list b {
+  font-family: "Cascadia Mono", Consolas, monospace;
+}
+
+.cla-report-signal-list strong {
+  font-size: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cla-report-signal-list small {
+  color: var(--cla-muted);
+  font-size: 7px;
+}
+
+.cla-report-signal-list b {
+  color: var(--cla-signal);
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.cla-report-dialog-empty {
+  align-items: center;
+  color: var(--cla-muted);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 190px;
+  padding: 20px;
+  text-align: center;
+}
+
+.cla-report-dialog-empty span {
+  border: 1px solid var(--cla-signal);
+  color: var(--cla-signal);
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 14px;
+  padding: 11px;
+}
+
+.cla-report-dialog-empty p {
+  font-size: 10px;
+  line-height: 1.55;
+  max-width: 520px;
+}
+
+.cla-report-dialog > footer {
+  align-items: center;
+  border-top: 1px solid var(--cla-line);
+  display: flex;
+  gap: 7px;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding: 13px 24px;
+}
+
+.cla-report-dialog > footer button.primary {
+  background: var(--cla-ink);
+  border-color: var(--cla-ink);
+  color: white;
+  padding: 0 15px;
+}
+
+.cla-report-dialog > footer button b {
+  margin-left: 10px;
+}
+
 .cla-print-report {
   display: none;
 }
@@ -1226,12 +1478,65 @@
     margin-right: 16px;
     font-size: 7px;
   }
+
+  .cla-report-dialog-backdrop {
+    padding: 8px;
+  }
+
+  .cla-report-dialog {
+    max-height: calc(100dvh - 16px);
+  }
+
+  .cla-report-dialog > header {
+    padding: 17px 16px 14px;
+  }
+
+  .cla-report-dialog h2 {
+    font-size: 24px;
+  }
+
+  .cla-report-dialog-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .cla-report-dialog-summary > div {
+    border-bottom: 1px solid var(--cla-line);
+    border-right: 0;
+    padding: 9px 16px;
+  }
+
+  .cla-report-signal-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+    padding: 14px 16px 4px;
+  }
+
+  .cla-report-signal-hint {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .cla-report-signal-list {
+    grid-template-columns: 1fr;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .cla-report-dialog > footer {
+    padding: 11px 16px;
+  }
 }
 
 @media print {
   @page {
-    margin: 14mm;
+    margin: 12mm 13mm;
     size: A4 landscape;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
   body {
@@ -1253,39 +1558,274 @@
     font-family: Arial, sans-serif;
   }
 
-  .cla-print-report h1 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 26px;
-    font-weight: 400;
-    margin: 0 0 8px;
+  .cla-print-report-header {
+    align-items: flex-start;
+    border-bottom: 2px solid #087f8c;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7mm;
+    padding-bottom: 5mm;
   }
 
-  .cla-print-report > p {
+  .cla-print-report-header > div > span,
+  .cla-print-section-heading > span {
+    color: #087f8c;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .cla-print-report-header h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    margin: 2mm 0 1mm;
+  }
+
+  .cla-print-report-header p {
     color: #56636d;
+    font-size: 8px;
+    margin: 0;
+  }
+
+  .cla-print-report-header > strong {
+    color: #56636d;
+    font-family: "Cascadia Mono", Consolas, monospace;
     font-size: 9px;
-    margin: 3px 0;
+    font-weight: 500;
+  }
+
+  .cla-print-report-meta {
+    background: #f1f4f2;
+    border: 1px solid #ccd4d1;
+    display: grid;
+    grid-template-columns: 1.45fr 1.25fr 0.85fr 0.85fr;
+    margin-bottom: 7mm;
+  }
+
+  .cla-print-report-meta > div {
+    border-right: 1px solid #ccd4d1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.3mm;
+    min-height: 16mm;
+    padding: 3mm 3.5mm;
+  }
+
+  .cla-print-report-meta > div:last-child {
+    border-right: 0;
+  }
+
+  .cla-print-report-meta span,
+  .cla-print-kpis span,
+  .cla-print-signal-stats span {
+    color: #66757d;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 6.5px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .cla-print-report-meta strong {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 8.5px;
+    overflow-wrap: anywhere;
+  }
+
+  .cla-print-report-meta small {
+    color: #66757d;
+    font-size: 7px;
+  }
+
+  .cla-print-report-section {
+    margin-bottom: 7mm;
+  }
+
+  .cla-print-section-heading {
+    border-bottom: 1px solid #ccd4d1;
+    margin-bottom: 3mm;
+    padding-bottom: 2mm;
+  }
+
+  .cla-print-section-heading h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 19px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin: 1mm 0 0;
+  }
+
+  .cla-print-section-heading p {
+    color: #66757d;
+    font-size: 7.5px;
+    margin: 1mm 0 0;
+  }
+
+  .cla-print-kpis {
+    display: grid;
+    gap: 1.7mm;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .cla-print-kpis article {
+    border: 1px solid #ccd4d1;
+    display: flex;
+    flex-direction: column;
+    min-height: 21mm;
+    padding: 3mm;
+  }
+
+  .cla-print-kpis strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 400;
+    margin: 2mm 0 1mm;
+  }
+
+  .cla-print-kpis small {
+    color: #66757d;
+    font-size: 6.5px;
   }
 
   .cla-print-report table {
     border-collapse: collapse;
-    font-size: 8px;
-    margin-top: 16px;
+    font-size: 7px;
     width: 100%;
   }
 
   .cla-print-report th,
   .cla-print-report td {
     border: 1px solid #ccd2d0;
-    padding: 5px 6px;
+    padding: 1.8mm 2mm;
     text-align: left;
   }
 
   .cla-print-report th {
     background: #e8eeec;
+    color: #42535e;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 6.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  .cla-print-report small {
-    display: block;
-    margin-top: 12px;
+  .cla-print-report thead {
+    display: table-header-group;
+  }
+
+  .cla-print-report tr {
+    break-inside: avoid;
+  }
+
+  .cla-print-signal-section {
+    break-before: page;
+  }
+
+  .cla-print-signal-card {
+    border: 1px solid #c7d0cd;
+    break-inside: avoid;
+    margin-bottom: 5mm;
+    padding: 3.5mm 4mm 3mm;
+  }
+
+  .cla-print-signal-card > header {
+    align-items: flex-start;
+    border-bottom: 1px solid #d8dedc;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5mm;
+    padding-bottom: 2mm;
+  }
+
+  .cla-print-signal-card > header span {
+    color: #087f8c;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .cla-print-signal-card h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 1mm 0 0.5mm;
+  }
+
+  .cla-print-signal-card header p {
+    color: #66757d;
+    font-size: 6.5px;
+    margin: 0;
+  }
+
+  .cla-print-signal-card header > strong {
+    color: #087f8c;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 8px;
+    font-weight: 600;
+  }
+
+  .cla-print-signal-card .cla-line-chart {
+    height: 43mm;
+  }
+
+  .cla-print-signal-card .cla-line-chart svg {
+    overflow: hidden;
+  }
+
+  .cla-print-signal-card .cla-line-chart text {
+    font-size: 7px;
+  }
+
+  .cla-print-signal-card .cla-line-chart polyline {
+    stroke-width: 1.6;
+  }
+
+  .cla-print-signal-stats {
+    border-top: 1px solid #d8dedc;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 1mm;
+    padding-top: 2mm;
+  }
+
+  .cla-print-signal-stats > div {
+    border-right: 1px solid #d8dedc;
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+    padding: 0 3mm;
+  }
+
+  .cla-print-signal-stats > div:first-child {
+    padding-left: 0;
+  }
+
+  .cla-print-signal-stats > div:last-child {
+    border-right: 0;
+  }
+
+  .cla-print-signal-stats strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .cla-print-report-footer {
+    align-items: center;
+    border-top: 1px solid #ccd4d1;
+    color: #66757d;
+    display: flex;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 6.5px;
+    justify-content: space-between;
+    margin-top: 6mm;
+    padding-top: 2mm;
+  }
+
+  .cla-print-report-footer small {
+    font-size: 6.5px;
   }
 }
