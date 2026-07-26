@@ -10,6 +10,7 @@ const copy = {
       about: "Hakkımda",
       expertise: "Çalışma Alanları",
       work: "Yaklaşım",
+      tools: "Araçlar",
       notes: "Teknik Notlar",
       contact: "İletişim",
     },
@@ -89,7 +90,7 @@ const copy = {
       ],
     },
     notes: {
-      kicker: "04 / Teknik Notlar",
+      kicker: "05 / Teknik Notlar",
       title: "Öğrendiklerimden kısa notlar.",
       intro:
         "İş makineleri, kontrol sistemleri ve saha uygulamaları üzerine zaman içinde paylaşacağım teknik yazılar için bir alan.",
@@ -112,8 +113,17 @@ const copy = {
         },
       ],
     },
+    tools: {
+      kicker: "04 / Mühendislik Araçları",
+      title: "DBC dosyalarını tarayıcınızda oluşturun.",
+      text:
+        "CAN ve CAN FD veritabanlarını açın, mesaj ve sinyalleri düzenleyin, bit yerleşimini kontrol edin ve doğrulanmış DBC dosyanızı indirin.",
+      action: "DBC Editörü aç",
+      privacy: "Dosyalar sunucuya yüklenmez · Ücretsiz kullanım",
+      features: ["CAN / CAN FD", "Intel / Motorola", "Doğrulama ve dışa aktarma"],
+    },
     contact: {
-      kicker: "05 / İletişim",
+      kicker: "06 / İletişim",
       title: "Teknik fikirler ve mesleki paylaşımlar için.",
       text:
         "İş makineleri, kontrol sistemleri ve mühendislik uygulamaları üzerine görüş alışverişine açığım.",
@@ -127,6 +137,7 @@ const copy = {
       about: "About",
       expertise: "Focus Areas",
       work: "Approach",
+      tools: "Tools",
       notes: "Technical Notes",
       contact: "Contact",
     },
@@ -206,7 +217,7 @@ const copy = {
       ],
     },
     notes: {
-      kicker: "04 / Technical Notes",
+      kicker: "05 / Technical Notes",
       title: "Short notes from what I learn.",
       intro:
         "A place for technical writing I plan to share over time on off-highway machines, control systems, and field applications.",
@@ -229,8 +240,17 @@ const copy = {
         },
       ],
     },
+    tools: {
+      kicker: "04 / Engineering Tools",
+      title: "Create DBC files directly in your browser.",
+      text:
+        "Open CAN and CAN FD databases, edit messages and signals, inspect the bit layout, and download a validated DBC file.",
+      action: "Open DBC Editor",
+      privacy: "Files are never uploaded · Free to use",
+      features: ["CAN / CAN FD", "Intel / Motorola", "Validation and export"],
+    },
     contact: {
-      kicker: "05 / Contact",
+      kicker: "06 / Contact",
       title: "For technical ideas and professional exchange.",
       text:
         "I am open to exchanging ideas on off-highway machines, control systems, and engineering practice.",
@@ -294,6 +314,7 @@ export default function Home() {
           <a href="#about">{t.nav.about}</a>
           <a href="#expertise">{t.nav.expertise}</a>
           <a href="#approach">{t.nav.work}</a>
+          <a href="#tools">{t.nav.tools}</a>
           <a href="#notes">{t.nav.notes}</a>
           <a href="#contact">{t.nav.contact}</a>
         </nav>
@@ -342,7 +363,7 @@ export default function Home() {
           </div>
         </div>
         <TechnicalCanvas />
-        <p className="scroll-note">SCROLL / 01—05</p>
+        <p className="scroll-note">SCROLL / 01—06</p>
       </section>
 
       <section className="section about-section" id="about">
@@ -398,6 +419,47 @@ export default function Home() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="section tools-section" id="tools">
+        <div className="tools-copy">
+          <p className="section-kicker">{t.tools.kicker}</p>
+          <h2>{t.tools.title}</h2>
+          <p>{t.tools.text}</p>
+          <ul>
+            {t.tools.features.map((feature) => <li key={feature}>{feature}</li>)}
+          </ul>
+          <a className="button button--primary" href="/dbc-editor/">
+            {t.tools.action}
+            <Arrow />
+          </a>
+          <small><i />{t.tools.privacy}</small>
+        </div>
+        <div className="dbc-tool-preview" aria-hidden="true">
+          <div className="preview-top">
+            <span>DBC / CAN DATABASE</span>
+            <i />
+          </div>
+          <div className="preview-body">
+            <div className="preview-list">
+              <span>0x201</span>
+              <strong>VCU_Status</strong>
+              <span>0x18FF50E5</span>
+              <strong>Charger_Status</strong>
+              <span>0x301</span>
+              <strong>Telemetry_Data</strong>
+            </div>
+            <div className="preview-editor">
+              <small>SG_ ENGINE_SPEED</small>
+              <strong>0|16@1+</strong>
+              <div className="preview-bits">
+                {Array.from({ length: 16 }, (_, index) => <i key={index} />)}
+              </div>
+              <p>(0.125,0) [0|8031.875] "rpm"</p>
+            </div>
+          </div>
+          <div className="preview-status"><i /> VALID · CLIENT-SIDE</div>
+        </div>
       </section>
 
       <section className="section notes-section" id="notes">
