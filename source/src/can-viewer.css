@@ -522,18 +522,20 @@
 
 .can-tx-fields {
   display: grid;
-  grid-template-columns: 0.7fr 0.85fr 1.55fr auto;
-  min-height: 116px;
+  grid-template-columns: 1.1fr 1.15fr 0.65fr 1.35fr;
 }
 
-.can-tx-fields label {
+.can-tx-fields > label {
+  border-bottom: 1px solid var(--can-line);
   border-right: 1px solid var(--can-line);
   display: flex;
   flex-direction: column;
-  padding: 22px 18px;
+  min-width: 0;
+  padding: 18px 16px;
 }
 
-.can-tx-fields label > span,
+.can-tx-fields > label > span,
+.can-tx-data > span,
 .can-record-stats span {
   color: #78858a;
   font-family: var(--font-geist-mono), monospace;
@@ -558,25 +560,102 @@
   width: 100%;
 }
 
+.can-tx-fields input:disabled,
+.can-tx-fields select:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
 .can-tx-fields select {
   cursor: pointer;
 }
 
-.can-tx-fields > button {
+.can-tx-cycle small {
+  color: #8a969a;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 6px;
+  line-height: 1.35;
+  margin-top: 6px;
+}
+
+.can-tx-data {
+  border-bottom: 1px solid var(--can-line);
+  grid-column: 1 / -1;
+  padding: 17px 16px 19px;
+}
+
+.can-byte-editor {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: repeat(8, minmax(42px, 1fr));
+  margin-top: 12px;
+}
+
+.can-byte-editor label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.can-byte-editor small {
+  color: #819095;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 6px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.can-byte-editor input {
+  background: #eef1ee;
+  border: 1px solid var(--can-line);
+  font-size: 13px;
+  font-weight: 600;
+  height: 38px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.can-byte-editor label.is-active input:focus {
+  background: #fff;
+  border-color: var(--can-signal);
+  box-shadow: 0 0 0 2px rgba(28, 129, 138, 0.12);
+}
+
+.can-byte-editor label.is-disabled {
+  opacity: 0.38;
+}
+
+.can-tx-actions {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr 1fr;
+  min-height: 48px;
+}
+
+.can-tx-actions button {
   background: var(--can-ink);
   border: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
   color: #fff;
   cursor: pointer;
   font-size: 9px;
-  min-width: 118px;
-  padding: 18px;
+  padding: 14px 18px;
 }
 
-.can-tx-fields > button:hover:not(:disabled) {
+.can-tx-actions button:last-child {
+  border-right: 0;
+}
+
+.can-tx-actions button:hover:not(:disabled) {
   background: var(--can-signal);
 }
 
-.can-tx-fields > button:disabled,
+.can-tx-actions button.is-stop {
+  background: #a84f2b;
+}
+
+.can-tx-actions button:disabled,
 .can-record-actions button:disabled {
   cursor: not-allowed;
   opacity: 0.35;
@@ -1297,12 +1376,13 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .can-tx-fields .can-tx-data {
-    border-top: 1px solid var(--can-line);
+  .can-tx-data,
+  .can-tx-actions {
+    grid-column: 1 / -1;
   }
 
-  .can-tx-fields > button {
-    border-top: 1px solid var(--can-line);
+  .can-byte-editor {
+    grid-template-columns: repeat(8, minmax(38px, 1fr));
   }
 
   .can-toolbar-actions {
@@ -1386,8 +1466,26 @@
     grid-template-columns: 1fr;
   }
 
-  .can-tx-fields label {
+  .can-tx-fields > label {
     border-bottom: 1px solid var(--can-line);
+    border-right: 0;
+  }
+
+  .can-tx-data,
+  .can-tx-actions {
+    grid-column: 1;
+  }
+
+  .can-byte-editor {
+    grid-template-columns: repeat(4, minmax(45px, 1fr));
+  }
+
+  .can-tx-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .can-tx-actions button {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
     border-right: 0;
   }
 

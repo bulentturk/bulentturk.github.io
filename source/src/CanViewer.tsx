@@ -2,6 +2,8 @@
 
 import {
   type ChangeEvent,
+  type ClipboardEvent,
+  type KeyboardEvent,
   type ReactNode,
   useCallback,
   useEffect,
@@ -172,15 +174,25 @@ const copy = {
     dropped: "Yerel kuyrukta düşen frame",
     framesShown: "En fazla son 500 kayıt gösterilir",
     txTitle: "CAN mesajı gönder",
-    txIntro: "Klasik CAN için tek seferlik STD veya EXT frame gönderimi.",
+    txIntro: "Klasik CAN için tek seferlik veya periyodik STD / EXT frame gönderimi.",
     txId: "CAN ID (hex)",
     txFormat: "Frame tipi",
+    txDlc: "DLC (byte)",
     txData: "Veri byte’ları",
+    txCycle: "Cycle (ms)",
+    txCycleHint: "10–60000 ms · tarayıcı zamanlaması",
     sendOnce: "Bir kez gönder",
+    startCycle: "Periyodik başlat",
+    stopCycle: "Periyodik durdur",
     sendSuccess: "CAN mesajı başarıyla gönderildi.",
     sendFailed: "CAN mesajı gönderilemedi.",
-    invalidTx: "CAN ID veya veri byte’ları geçersiz.",
+    cycleStarted: "Periyodik CAN gönderimi başlatıldı.",
+    cycleStopped: "Periyodik CAN gönderimi durduruldu.",
+    invalidTx: "CAN ID veya DLC için etkin veri byte’ları geçersiz.",
+    invalidCycle: "Cycle değeri 10–60000 ms arasında tam sayı olmalıdır.",
     requiresTxMode: "Gönderme için bağlantıyı “Gönderme açık” modunda kurun.",
+    byteLabel: "Byte",
+    cyclicActive: "Periyodik gönderim",
     recordTitle: "CAN kaydı",
     recordIntro:
       "Görünüm dondurulsa bile gelen frame’leri kaydet; sonra TRC veya CSV olarak indir.",
@@ -291,15 +303,25 @@ const copy = {
     dropped: "Frames dropped in local queue",
     framesShown: "At most the latest 500 records are displayed",
     txTitle: "Transmit CAN message",
-    txIntro: "Send a single classic CAN standard or extended frame.",
+    txIntro: "Send a classic CAN standard or extended frame once or cyclically.",
     txId: "CAN ID (hex)",
     txFormat: "Frame type",
+    txDlc: "DLC (bytes)",
     txData: "Data bytes",
+    txCycle: "Cycle (ms)",
+    txCycleHint: "10–60000 ms · browser timing",
     sendOnce: "Send once",
+    startCycle: "Start cyclic",
+    stopCycle: "Stop cyclic",
     sendSuccess: "CAN message transmitted successfully.",
     sendFailed: "The CAN message could not be transmitted.",
-    invalidTx: "The CAN ID or data bytes are invalid.",
+    cycleStarted: "Cyclic CAN transmission started.",
+    cycleStopped: "Cyclic CAN transmission stopped.",
+    invalidTx: "The CAN ID or the data bytes enabled by the DLC are invalid.",
+    invalidCycle: "Cycle must be an integer between 10 and 60000 ms.",
     requiresTxMode: "Reconnect with “Transmit enabled” to send messages.",
+    byteLabel: "Byte",
+    cyclicActive: "Cyclic transmission",
     recordTitle: "CAN recording",
     recordIntro:
       "Keep recording incoming frames even while the view is paused, then download TRC or CSV.",
@@ -461,14 +483,32 @@ function parseCanId(value: string, extended: boolean): number | null {
   return Number.isFinite(id) && id >= 0 && id <= maximum ? id : null;
 }
 
-function parseDataBytes(value: string): number[] | null {
-  const clean = value.trim();
-  if (!clean) return [];
-  const tokens = clean.split(/[\s,;]+/).filter(Boolean);
-  if (tokens.length > 8 || tokens.some((token) => !/^[0-9a-fA-F]{1,2}$/.test(token))) {
+function parseDataBytes(values: string[], dlc: number): number[] | null {
+  const activeValues = values.slice(0, dlc);
+  if (
+    dlc < 0 ||
+    dlc > 8 ||
+    activeValues.length !== dlc ||
+    activeValues.some((value) => !/^[0-9a-fA-F]{2}$/.test(value))
+  ) {
     return null;
   }
-  return tokens.map((token) => Number.parseInt(token, 16));
+  return activeValues.map((value) => Number.parseInt(value, 16));
+}
+
+function pastedDataBytes(value: string): string[] {
+  const trimmed = value.trim().replaceAll("0x", "").replaceAll("0X", "");
+  if (!trimmed) return [];
+  const separated = trimmed.split(/[\s,;]+/).filter(Boolean);
+  if (
+    separated.length > 1 &&
+    separated.every((token) => /^[0-9a-fA-F]{1,2}$/.test(token))
+  ) {
+    return separated.map((token) => token.padStart(2, "0").toUpperCase());
+  }
+  const compact = trimmed.replace(/[^0-9a-fA-F]/g, "");
+  if (!compact || compact.length % 2 !== 0) return [];
+  return compact.match(/.{2}/g)?.map((token) => token.toUpperCase()) ?? [];
 }
 
 function downloadText(filename: string, text: string, type: string) {
@@ -498,8 +538,11 @@ export default function CanViewer() {
   const [txAcknowledged, setTxAcknowledged] = useState(false);
   const [txId, setTxId] = useState("201");
   const [txExtended, setTxExtended] = useState(false);
-  const [txData, setTxData] = useState("00 00 00 00 00 00 00 00");
+  const [txDlc, setTxDlc] = useState(8);
+  const [txBytes, setTxBytes] = useState<string[]>(() => Array(8).fill("00"));
+  const [txCycle, setTxCycle] = useState("100");
   const [txBusy, setTxBusy] = useState(false);
+  const [cycleSending, setCycleSending] = useState(false);
   const [database, setDatabase] = useState<DbcDatabase | null>(null);
   const [dbcName, setDbcName] = useState("");
   const [rows, setRows] = useState<Map<string, AggregateRow>>(() => new Map());
@@ -526,6 +569,9 @@ export default function CanViewer() {
   const recordingStartedAtRef = useRef(0);
   const recordingBaseTimestampRef = useRef<number | null>(null);
   const recordingBaseElapsedRef = useRef(0);
+  const txByteRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const cycleSendingRef = useRef(false);
+  const cycleTimerRef = useRef<number | null>(null);
   const t = copy[language];
 
   const recordFrames = useCallback((frames: CanFrame[], direction: "rx" | "tx") => {
@@ -668,6 +714,26 @@ export default function CanViewer() {
     setRecordLimitReached(false);
   }, [recordLimitReached, t.recordLimit]);
 
+  useEffect(() => {
+    if (bridge.connected && bridge.listenOnly === false && connectionMode === "transmit") {
+      return;
+    }
+    cycleSendingRef.current = false;
+    setCycleSending(false);
+    if (cycleTimerRef.current !== null) {
+      window.clearTimeout(cycleTimerRef.current);
+      cycleTimerRef.current = null;
+    }
+  }, [bridge.connected, bridge.listenOnly, connectionMode]);
+
+  useEffect(
+    () => () => {
+      cycleSendingRef.current = false;
+      if (cycleTimerRef.current !== null) window.clearTimeout(cycleTimerRef.current);
+    },
+    [],
+  );
+
   const aggregateRows = useMemo(
     () =>
       [...rows.values()].sort(
@@ -761,6 +827,7 @@ export default function CanViewer() {
   }
 
   async function disconnect() {
+    stopCycle(false);
     setBusy(true);
     setDemo(false);
     try {
@@ -949,19 +1016,35 @@ export default function CanViewer() {
     setToast(t.recordSaved);
   }
 
-  async function sendFrame() {
-    if (!bridge.connected || bridge.listenOnly !== false) {
-      setToast(t.requiresTxMode);
-      return;
+  function stopCycle(showToast = true) {
+    const wasActive = cycleSendingRef.current;
+    cycleSendingRef.current = false;
+    setCycleSending(false);
+    if (cycleTimerRef.current !== null) {
+      window.clearTimeout(cycleTimerRef.current);
+      cycleTimerRef.current = null;
     }
+    if (showToast && wasActive) setToast(t.cycleStopped);
+  }
+
+  function preparedTx(): { id: number; data: number[] } | null {
     const id = parseCanId(txId, txExtended);
-    const data = parseDataBytes(txData);
-    if (id === null || data === null) {
-      setToast(t.invalidTx);
-      return;
+    const data = parseDataBytes(txBytes, txDlc);
+    return id === null || data === null ? null : { id, data };
+  }
+
+  async function transmitPrepared(
+    id: number,
+    data: number[],
+    announce: boolean,
+    showBusy: boolean,
+  ): Promise<boolean> {
+    if (!bridge.connected || bridge.listenOnly !== false) {
+      if (announce) setToast(t.requiresTxMode);
+      return false;
     }
 
-    setTxBusy(true);
+    if (showBusy) setTxBusy(true);
     try {
       const result = await bridgeRequest<{ ok: boolean; sent?: number; error?: string }>(
         "/send",
@@ -971,11 +1054,11 @@ export default function CanViewer() {
         },
       );
       if (!result.ok) {
-        setToast(result.error || t.sendFailed);
-        return;
+        if (announce) setToast(result.error || t.sendFailed);
+        return false;
       }
       const frame: CanFrame = {
-        sequence: (bridge.sent ?? 0) + 1,
+        sequence: result.sent ?? (bridge.sent ?? 0) + 1,
         timestampMs: 0,
         id,
         extended: txExtended,
@@ -986,12 +1069,98 @@ export default function CanViewer() {
       };
       recordFrames([frame], "tx");
       setBridge((current) => ({ ...current, sent: result.sent ?? current.sent }));
-      setToast(t.sendSuccess);
+      if (announce) setToast(t.sendSuccess);
+      return true;
     } catch {
-      setToast(t.sendFailed);
+      if (announce) setToast(t.sendFailed);
+      return false;
     } finally {
-      setTxBusy(false);
+      if (showBusy) setTxBusy(false);
     }
+  }
+
+  async function sendFrame() {
+    const prepared = preparedTx();
+    if (!prepared) {
+      setToast(t.invalidTx);
+      return;
+    }
+    await transmitPrepared(prepared.id, prepared.data, true, true);
+  }
+
+  function startCycle() {
+    if (!bridge.connected || bridge.listenOnly !== false) {
+      setToast(t.requiresTxMode);
+      return;
+    }
+    const prepared = preparedTx();
+    if (!prepared) {
+      setToast(t.invalidTx);
+      return;
+    }
+    const cycleMs = Number(txCycle);
+    if (!Number.isInteger(cycleMs) || cycleMs < 10 || cycleMs > 60000) {
+      setToast(t.invalidCycle);
+      return;
+    }
+
+    stopCycle(false);
+    cycleSendingRef.current = true;
+    setCycleSending(true);
+    setToast(t.cycleStarted);
+
+    const tick = async () => {
+      const startedAt = performance.now();
+      const sent = await transmitPrepared(prepared.id, prepared.data, false, false);
+      if (!sent) {
+        stopCycle(false);
+        setToast(t.sendFailed);
+        return;
+      }
+      if (!cycleSendingRef.current) return;
+      const remaining = Math.max(0, cycleMs - (performance.now() - startedAt));
+      cycleTimerRef.current = window.setTimeout(() => void tick(), remaining);
+    };
+    void tick();
+  }
+
+  function updateTxByte(index: number, value: string) {
+    const normalized = value.replace(/[^0-9a-fA-F]/g, "").slice(0, 2).toUpperCase();
+    setTxBytes((current) => current.map((byte, byteIndex) => (
+      byteIndex === index ? normalized : byte
+    )));
+    if (normalized.length === 2 && index + 1 < txDlc) {
+      window.requestAnimationFrame(() => txByteRefs.current[index + 1]?.focus());
+    }
+  }
+
+  function onTxByteKeyDown(index: number, event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Backspace" && !txBytes[index] && index > 0) {
+      event.preventDefault();
+      txByteRefs.current[index - 1]?.focus();
+      txByteRefs.current[index - 1]?.select();
+    }
+    if (event.key === "ArrowLeft" && index > 0) {
+      txByteRefs.current[index - 1]?.focus();
+    }
+    if (event.key === "ArrowRight" && index + 1 < txDlc) {
+      txByteRefs.current[index + 1]?.focus();
+    }
+  }
+
+  function onTxBytePaste(index: number, event: ClipboardEvent<HTMLInputElement>) {
+    const pasted = pastedDataBytes(event.clipboardData.getData("text"));
+    if (!pasted.length) return;
+    event.preventDefault();
+    setTxBytes((current) => {
+      const next = [...current];
+      pasted.slice(0, txDlc - index).forEach((byte, offset) => {
+        next[index + offset] = byte;
+      });
+      return next;
+    });
+    const nextIndex = Math.min(txDlc - 1, index + pasted.length);
+    window.requestAnimationFrame(() => txByteRefs.current[nextIndex]?.focus());
   }
 
   const active = demo || bridge.connected;
@@ -1184,45 +1353,116 @@ export default function CanViewer() {
               <p>{t.txIntro}</p>
             </div>
             <strong className={bridge.connected && bridge.listenOnly === false ? "is-ready" : ""}>
-              {bridge.connected && bridge.listenOnly === false ? t.transmitMode : t.receiveMode}
+              {cycleSending
+                ? t.cyclicActive
+                : bridge.connected && bridge.listenOnly === false
+                  ? t.transmitMode
+                  : t.receiveMode}
             </strong>
           </div>
           <div className="can-tx-fields">
-            <label>
+            <label className="can-tx-id">
               <span>{t.txId}</span>
               <input
                 value={txId}
                 onChange={(event) => setTxId(event.target.value)}
                 placeholder={txExtended ? "18FF50E5" : "201"}
                 spellCheck={false}
+                disabled={cycleSending}
               />
             </label>
-            <label>
+            <label className="can-tx-format">
               <span>{t.txFormat}</span>
               <select
                 value={txExtended ? "extended" : "standard"}
                 onChange={(event) => setTxExtended(event.target.value === "extended")}
+                disabled={cycleSending}
               >
                 <option value="standard">{t.standard} · 11 bit</option>
                 <option value="extended">{t.extended} · 29 bit</option>
               </select>
             </label>
-            <label className="can-tx-data">
-              <span>{t.txData}</span>
-              <input
-                value={txData}
-                onChange={(event) => setTxData(event.target.value.toUpperCase())}
-                placeholder="00 00 00 00 00 00 00 00"
-                spellCheck={false}
-              />
+            <label className="can-tx-dlc">
+              <span>{t.txDlc}</span>
+              <select
+                value={txDlc}
+                onChange={(event) => setTxDlc(Number(event.target.value))}
+                disabled={cycleSending}
+              >
+                {Array.from({ length: 9 }, (_, dlc) => (
+                  <option key={dlc} value={dlc}>{dlc}</option>
+                ))}
+              </select>
             </label>
-            <button
-              type="button"
-              onClick={() => void sendFrame()}
-              disabled={txBusy || !bridge.connected || bridge.listenOnly !== false}
-            >
-              {t.sendOnce}
-            </button>
+            <label className="can-tx-cycle">
+              <span>{t.txCycle}</span>
+              <input
+                type="number"
+                min={10}
+                max={60000}
+                step={1}
+                inputMode="numeric"
+                value={txCycle}
+                onChange={(event) => setTxCycle(event.target.value)}
+                disabled={cycleSending}
+              />
+              <small>{t.txCycleHint}</small>
+            </label>
+            <div className="can-tx-data">
+              <span>{t.txData}</span>
+              <div className="can-byte-editor" aria-label={t.txData}>
+                {txBytes.map((byte, index) => {
+                  const enabled = index < txDlc;
+                  return (
+                    <label key={index} className={enabled ? "is-active" : "is-disabled"}>
+                      <small>B{index}</small>
+                      <input
+                        ref={(element) => {
+                          txByteRefs.current[index] = element;
+                        }}
+                        aria-label={`${t.byteLabel} ${index}`}
+                        value={enabled ? byte : ""}
+                        placeholder={enabled ? "00" : "—"}
+                        maxLength={2}
+                        inputMode="text"
+                        autoComplete="off"
+                        spellCheck={false}
+                        disabled={!enabled || cycleSending}
+                        onFocus={(event) => event.currentTarget.select()}
+                        onChange={(event) => updateTxByte(index, event.target.value)}
+                        onKeyDown={(event) => onTxByteKeyDown(index, event)}
+                        onPaste={(event) => onTxBytePaste(index, event)}
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="can-tx-actions">
+              <button
+                type="button"
+                onClick={() => void sendFrame()}
+                disabled={
+                  txBusy ||
+                  cycleSending ||
+                  !bridge.connected ||
+                  bridge.listenOnly !== false
+                }
+              >
+                {t.sendOnce}
+              </button>
+              <button
+                className={cycleSending ? "is-stop" : ""}
+                type="button"
+                onClick={cycleSending ? () => stopCycle() : startCycle}
+                disabled={
+                  !cycleSending &&
+                  (txBusy || !bridge.connected || bridge.listenOnly !== false)
+                }
+              >
+                {cycleSending ? t.stopCycle : t.startCycle}
+              </button>
+            </div>
           </div>
           {bridge.ok && bridge.version === "1.0.0" ? (
             <p className="can-bridge-upgrade">
