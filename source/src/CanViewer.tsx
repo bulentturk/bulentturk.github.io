@@ -1756,6 +1756,120 @@ export default function CanViewer() {
         </article>
       </section>
 
+      <section className="can-sent-panel" aria-labelledby="can-sent-title">
+        <div className="can-sent-head">
+          <div>
+            <span>TX / QUEUE</span>
+            <h2 id="can-sent-title">{t.sentTitle}</h2>
+            <p>{t.sentIntro}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => stopAllCycles()}
+            disabled={!cycleSending}
+          >
+            {t.stopAllTx}
+          </button>
+        </div>
+
+        {!sentMessages.length ? (
+          <div className="can-sent-empty">{t.sentEmpty}</div>
+        ) : (
+          <div className="can-sent-scroll">
+            <table className="can-sent-table">
+              <thead>
+                <tr>
+                  <th>{t.sentStatus}</th>
+                  <th>{t.id}</th>
+                  <th>{t.format}</th>
+                  <th>{t.dlc}</th>
+                  <th>{t.data}</th>
+                  <th>{t.sentCycle}</th>
+                  <th>{t.sentCountLabel}</th>
+                  <th>{t.sentLast}</th>
+                  <th>{t.sentActions}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sentMessages.map((message) => (
+                  <tr
+                    key={message.uid}
+                    className={`${message.enabled ? "is-running" : ""}${
+                      editingTxUid === message.uid ? " is-editing" : ""
+                    }`}
+                    tabIndex={0}
+                    onClick={() => editSentMessage(message)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        editSentMessage(message);
+                      }
+                    }}
+                  >
+                    <td>
+                      <label className="can-cycle-toggle" onClick={(event) => event.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={message.enabled}
+                          onChange={() => toggleSentMessage(message.uid)}
+                          aria-label={`${formatTxMessageId(message)} · ${
+                            message.enabled ? t.stopCycle : t.startCycle
+                          }`}
+                        />
+                        <span aria-hidden="true" />
+                        <strong>{message.enabled ? t.sentEnabled : t.sentDisabled}</strong>
+                      </label>
+                    </td>
+                    <td>
+                      <strong>{formatTxMessageId(message)}</strong>
+                    </td>
+                    <td>
+                      <span className={`can-frame-type${message.extended ? " is-ext" : ""}`}>
+                        {message.extended ? t.extended : t.standard}
+                      </span>
+                    </td>
+                    <td>{message.data.length}</td>
+                    <td><code>{formatData(message.data) || "—"}</code></td>
+                    <td>{message.cycleMs} ms</td>
+                    <td>{message.sentCount.toLocaleString()}</td>
+                    <td>
+                      {message.lastSentAt
+                        ? new Date(message.lastSentAt).toLocaleTimeString(
+                            language === "tr" ? "tr-TR" : "en-GB",
+                            { hour12: false },
+                          )
+                        : "—"}
+                    </td>
+                    <td>
+                      <div className="can-sent-actions">
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            editSentMessage(message);
+                          }}
+                        >
+                          {t.editTx}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            deleteSentMessage(message.uid);
+                          }}
+                        >
+                          {t.deleteTx}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
       <section className="can-workspace">
         <div className="can-toolbar">
           <div className="can-dbc-control">
@@ -1983,120 +2097,6 @@ export default function CanViewer() {
         {bridge.dropped ? (
           <p className="can-dropped">{t.dropped}: {bridge.dropped.toLocaleString()}</p>
         ) : null}
-      </section>
-
-      <section className="can-sent-panel" aria-labelledby="can-sent-title">
-        <div className="can-sent-head">
-          <div>
-            <span>TX / QUEUE</span>
-            <h2 id="can-sent-title">{t.sentTitle}</h2>
-            <p>{t.sentIntro}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => stopAllCycles()}
-            disabled={!cycleSending}
-          >
-            {t.stopAllTx}
-          </button>
-        </div>
-
-        {!sentMessages.length ? (
-          <div className="can-sent-empty">{t.sentEmpty}</div>
-        ) : (
-          <div className="can-sent-scroll">
-            <table className="can-sent-table">
-              <thead>
-                <tr>
-                  <th>{t.sentStatus}</th>
-                  <th>{t.id}</th>
-                  <th>{t.format}</th>
-                  <th>{t.dlc}</th>
-                  <th>{t.data}</th>
-                  <th>{t.sentCycle}</th>
-                  <th>{t.sentCountLabel}</th>
-                  <th>{t.sentLast}</th>
-                  <th>{t.sentActions}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sentMessages.map((message) => (
-                  <tr
-                    key={message.uid}
-                    className={`${message.enabled ? "is-running" : ""}${
-                      editingTxUid === message.uid ? " is-editing" : ""
-                    }`}
-                    tabIndex={0}
-                    onClick={() => editSentMessage(message)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        editSentMessage(message);
-                      }
-                    }}
-                  >
-                    <td>
-                      <label className="can-cycle-toggle" onClick={(event) => event.stopPropagation()}>
-                        <input
-                          type="checkbox"
-                          checked={message.enabled}
-                          onChange={() => toggleSentMessage(message.uid)}
-                          aria-label={`${formatTxMessageId(message)} · ${
-                            message.enabled ? t.stopCycle : t.startCycle
-                          }`}
-                        />
-                        <span aria-hidden="true" />
-                        <strong>{message.enabled ? t.sentEnabled : t.sentDisabled}</strong>
-                      </label>
-                    </td>
-                    <td>
-                      <strong>{formatTxMessageId(message)}</strong>
-                    </td>
-                    <td>
-                      <span className={`can-frame-type${message.extended ? " is-ext" : ""}`}>
-                        {message.extended ? t.extended : t.standard}
-                      </span>
-                    </td>
-                    <td>{message.data.length}</td>
-                    <td><code>{formatData(message.data) || "—"}</code></td>
-                    <td>{message.cycleMs} ms</td>
-                    <td>{message.sentCount.toLocaleString()}</td>
-                    <td>
-                      {message.lastSentAt
-                        ? new Date(message.lastSentAt).toLocaleTimeString(
-                            language === "tr" ? "tr-TR" : "en-GB",
-                            { hour12: false },
-                          )
-                        : "—"}
-                    </td>
-                    <td>
-                      <div className="can-sent-actions">
-                        <button
-                          type="button"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            editSentMessage(message);
-                          }}
-                        >
-                          {t.editTx}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            deleteSentMessage(message.uid);
-                          }}
-                        >
-                          {t.deleteTx}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </section>
 
       <footer className="can-footer">
