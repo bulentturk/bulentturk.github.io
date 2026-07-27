@@ -27,6 +27,13 @@ import "./can-viewer.css";
 
 type Language = "tr" | "en";
 type ViewMode = "messages" | "trace";
+type ConnectionMode = "listen" | "transmit";
+
+type RecordedFrame = {
+  frame: CanFrame;
+  direction: "rx" | "tx";
+  elapsedMs: number;
+};
 
 type BridgeStatus = {
   ok: boolean;
@@ -37,6 +44,7 @@ type BridgeStatus = {
   listenOnly?: boolean;
   error?: string;
   dropped?: number;
+  sent?: number;
 };
 
 type AggregateRow = {
@@ -50,6 +58,7 @@ type AggregateRow = {
 const BRIDGE_URL = "http://127.0.0.1:8765/api";
 const MAX_DBC_SIZE = 20 * 1024 * 1024;
 const MAX_HISTORY = 5000;
+const MAX_RECORDING_FRAMES = 1_000_000;
 
 const bitrates = [
   1_000_000,
@@ -72,8 +81,8 @@ const copy = {
   tr: {
     back: "Ana site",
     title: "CAN Viewer",
-    subtitle: "PCAN-USB ile canlı CAN verisi · DBC ile anlık sinyal çözümleme",
-    readonly: "Salt okunur",
+    subtitle: "PCAN-USB ile canlı izleme, güvenli gönderme ve CAN kaydı",
+    readonly: "Varsayılan güvenli mod",
     privacy: "DBC ve CAN verisi bilgisayarınızdan dışarı çıkmaz",
     bridge: "Yerel köprü",
     device: "PCAN bağlantısı",
@@ -84,6 +93,13 @@ const copy = {
     channel: "Kanal",
     bitrate: "Bit hızı",
     listenOnly: "Listen-only",
+    mode: "Çalışma modu",
+    receiveMode: "Yalnız dinle",
+    transmitMode: "Gönderme açık",
+    txAcknowledgement:
+      "Mesaj göndermenin bağlı makinede beklenmeyen hareket veya fonksiyon oluşturabileceğini anlıyorum.",
+    txWarning:
+      "Gönderme modu CAN hattına aktif mesaj yazar. Doğru ID, veri ve makine durumunu doğrulamadan kullanmayın.",
     connect: "CAN hattına bağlan",
     disconnect: "Bağlantıyı kes",
     demo: "Simülasyonu başlat",
@@ -145,20 +161,47 @@ const copy = {
     paused: "Görünüm donduruldu",
     bridgeMissing:
       "Yerel köprüye ulaşılamadı. ZIP’i çıkarıp Start-PCAN-Bridge.cmd dosyasını çalıştırın.",
+    bridgeUpgrade:
+      "CAN gönderme için PCAN Local Bridge v1.1.0 gerekir. Yeni ZIP’i indirip eski köprünün yerine çalıştırın.",
     connectFailed: "PCAN bağlantısı kurulamadı.",
     csvEmpty: "Dışa aktarılacak CAN mesajı yok.",
     csvSaved: "CAN kaydı CSV olarak indirildi.",
     cleared: "CAN kayıtları temizlendi.",
     safety:
-      "Bu araç mesaj göndermez. Listen-only açılamazsa bağlantı güvenlik amacıyla kurulmaz.",
+      "Varsayılan bağlantı listen-only açılır. Mesaj gönderme yalnız açık onayla etkinleştirilir.",
     dropped: "Yerel kuyrukta düşen frame",
     framesShown: "En fazla son 500 kayıt gösterilir",
+    txTitle: "CAN mesajı gönder",
+    txIntro: "Klasik CAN için tek seferlik STD veya EXT frame gönderimi.",
+    txId: "CAN ID (hex)",
+    txFormat: "Frame tipi",
+    txData: "Veri byte’ları",
+    sendOnce: "Bir kez gönder",
+    sendSuccess: "CAN mesajı başarıyla gönderildi.",
+    sendFailed: "CAN mesajı gönderilemedi.",
+    invalidTx: "CAN ID veya veri byte’ları geçersiz.",
+    requiresTxMode: "Gönderme için bağlantıyı “Gönderme açık” modunda kurun.",
+    recordTitle: "CAN kaydı",
+    recordIntro:
+      "Görünüm dondurulsa bile gelen frame’leri kaydet; sonra TRC veya CSV olarak indir.",
+    startRecord: "Kaydı başlat",
+    stopRecord: "Kaydı durdur",
+    downloadTrc: "TRC indir",
+    downloadRecordCsv: "Kayıt CSV indir",
+    recordFrames: "Kayıtlı frame",
+    recordDuration: "Süre",
+    recordEmpty: "İndirilecek kayıt bulunmuyor.",
+    recordSaved: "CAN kaydı indirildi.",
+    recordLimit: "1.000.000 frame kayıt sınırına ulaşıldı; kayıt otomatik durduruldu.",
+    recording: "Kayıt yapılıyor",
+    notRecording: "Kayıt bekliyor",
+    txCount: "Gönderilen",
   },
   en: {
     back: "Main site",
     title: "CAN Viewer",
-    subtitle: "Live CAN data via PCAN-USB · Real-time signal decoding with DBC",
-    readonly: "Receive only",
+    subtitle: "Live monitoring, controlled transmission, and CAN recording via PCAN-USB",
+    readonly: "Safe mode by default",
     privacy: "DBC and CAN data stay on your computer",
     bridge: "Local bridge",
     device: "PCAN connection",
@@ -169,6 +212,13 @@ const copy = {
     channel: "Channel",
     bitrate: "Bit rate",
     listenOnly: "Listen-only",
+    mode: "Operating mode",
+    receiveMode: "Receive only",
+    transmitMode: "Transmit enabled",
+    txAcknowledgement:
+      "I understand that transmitting a message can trigger unexpected motion or functions on the connected machine.",
+    txWarning:
+      "Transmit mode actively writes to the CAN bus. Verify the ID, data, and machine state before use.",
     connect: "Connect to CAN",
     disconnect: "Disconnect",
     demo: "Start simulation",
@@ -230,14 +280,41 @@ const copy = {
     paused: "View is paused",
     bridgeMissing:
       "The local bridge could not be reached. Extract the ZIP and run Start-PCAN-Bridge.cmd.",
+    bridgeUpgrade:
+      "CAN transmission requires PCAN Local Bridge v1.1.0. Download and run the new ZIP instead of the old bridge.",
     connectFailed: "The PCAN connection could not be established.",
     csvEmpty: "There are no CAN messages to export.",
     csvSaved: "The CAN capture was downloaded as CSV.",
     cleared: "CAN records were cleared.",
     safety:
-      "This tool cannot transmit messages. If listen-only cannot be enabled, the connection is rejected.",
+      "Connections use listen-only by default. Transmission is enabled only after explicit acknowledgement.",
     dropped: "Frames dropped in local queue",
     framesShown: "At most the latest 500 records are displayed",
+    txTitle: "Transmit CAN message",
+    txIntro: "Send a single classic CAN standard or extended frame.",
+    txId: "CAN ID (hex)",
+    txFormat: "Frame type",
+    txData: "Data bytes",
+    sendOnce: "Send once",
+    sendSuccess: "CAN message transmitted successfully.",
+    sendFailed: "The CAN message could not be transmitted.",
+    invalidTx: "The CAN ID or data bytes are invalid.",
+    requiresTxMode: "Reconnect with “Transmit enabled” to send messages.",
+    recordTitle: "CAN recording",
+    recordIntro:
+      "Keep recording incoming frames even while the view is paused, then download TRC or CSV.",
+    startRecord: "Start recording",
+    stopRecord: "Stop recording",
+    downloadTrc: "Download TRC",
+    downloadRecordCsv: "Download recording CSV",
+    recordFrames: "Recorded frames",
+    recordDuration: "Duration",
+    recordEmpty: "There is no recording to download.",
+    recordSaved: "CAN recording downloaded.",
+    recordLimit: "The 1,000,000-frame limit was reached and recording stopped automatically.",
+    recording: "Recording",
+    notRecording: "Ready to record",
+    txCount: "Transmitted",
   },
 } as const;
 
@@ -376,11 +453,53 @@ function escapeCsv(value: string | number): string {
   return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }
 
+function parseCanId(value: string, extended: boolean): number | null {
+  const clean = value.trim().replace(/^0x/i, "");
+  if (!/^[0-9a-fA-F]+$/.test(clean)) return null;
+  const id = Number.parseInt(clean, 16);
+  const maximum = extended ? 0x1fffffff : 0x7ff;
+  return Number.isFinite(id) && id >= 0 && id <= maximum ? id : null;
+}
+
+function parseDataBytes(value: string): number[] | null {
+  const clean = value.trim();
+  if (!clean) return [];
+  const tokens = clean.split(/[\s,;]+/).filter(Boolean);
+  if (tokens.length > 8 || tokens.some((token) => !/^[0-9a-fA-F]{1,2}$/.test(token))) {
+    return null;
+  }
+  return tokens.map((token) => Number.parseInt(token, 16));
+}
+
+function downloadText(filename: string, text: string, type: string) {
+  const blob = new Blob([text], { type });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function durationLabel(milliseconds: number): string {
+  const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes.toString().padStart(2, "0")}:${(seconds % 60)
+    .toString()
+    .padStart(2, "0")}`;
+}
+
 export default function CanViewer() {
   const [language, setLanguage] = useState<Language>("tr");
   const [bridge, setBridge] = useState<BridgeStatus>({ ok: false, connected: false });
   const [channel, setChannel] = useState(1);
   const [bitrate, setBitrate] = useState(250_000);
+  const [connectionMode, setConnectionMode] = useState<ConnectionMode>("listen");
+  const [txAcknowledged, setTxAcknowledged] = useState(false);
+  const [txId, setTxId] = useState("201");
+  const [txExtended, setTxExtended] = useState(false);
+  const [txData, setTxData] = useState("00 00 00 00 00 00 00 00");
+  const [txBusy, setTxBusy] = useState(false);
   const [database, setDatabase] = useState<DbcDatabase | null>(null);
   const [dbcName, setDbcName] = useState("");
   const [rows, setRows] = useState<Map<string, AggregateRow>>(() => new Map());
@@ -394,15 +513,52 @@ export default function CanViewer() {
   const [frameRate, setFrameRate] = useState(0);
   const [toast, setToast] = useState("");
   const [busy, setBusy] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [recordingCount, setRecordingCount] = useState(0);
+  const [recordingElapsed, setRecordingElapsed] = useState(0);
+  const [recordLimitReached, setRecordLimitReached] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const arrivalTimesRef = useRef<number[]>([]);
   const demoSequenceRef = useRef(1);
   const pollActiveRef = useRef(false);
+  const recordedFramesRef = useRef<RecordedFrame[]>([]);
+  const recordingRef = useRef(false);
+  const recordingStartedAtRef = useRef(0);
+  const recordingBaseTimestampRef = useRef<number | null>(null);
+  const recordingBaseElapsedRef = useRef(0);
   const t = copy[language];
+
+  const recordFrames = useCallback((frames: CanFrame[], direction: "rx" | "tx") => {
+    if (!recordingRef.current || !frames.length) return;
+
+    const arrivalElapsed = performance.now() - recordingStartedAtRef.current;
+    if (recordingBaseTimestampRef.current === null && direction === "rx") {
+      recordingBaseTimestampRef.current = frames[0].timestampMs;
+      recordingBaseElapsedRef.current = arrivalElapsed;
+    }
+
+    for (const frame of frames) {
+      if (recordedFramesRef.current.length >= MAX_RECORDING_FRAMES) {
+        recordingRef.current = false;
+        setRecording(false);
+        setRecordLimitReached(true);
+        break;
+      }
+      const elapsedMs =
+        direction === "rx" && recordingBaseTimestampRef.current !== null
+          ? recordingBaseElapsedRef.current +
+            Math.max(0, frame.timestampMs - recordingBaseTimestampRef.current)
+          : arrivalElapsed;
+      recordedFramesRef.current.push({ frame, direction, elapsedMs });
+    }
+    setRecordingCount(recordedFramesRef.current.length);
+  }, []);
 
   const ingestFrames = useCallback(
     (frames: CanFrame[]) => {
-      if (!frames.length || paused) return;
+      if (!frames.length) return;
+      recordFrames(frames, "rx");
+      if (paused) return;
       const now = performance.now();
       arrivalTimesRef.current.push(...frames.map(() => now));
       arrivalTimesRef.current = arrivalTimesRef.current.filter((time) => now - time <= 1000);
@@ -430,7 +586,7 @@ export default function CanViewer() {
         return [...frames].reverse().find((frame) => frameKey(frame) === key) ?? current;
       });
     },
-    [paused],
+    [paused, recordFrames],
   );
 
   const refreshBridge = useCallback(async () => {
@@ -497,6 +653,21 @@ export default function CanViewer() {
     return () => window.clearTimeout(timeout);
   }, [toast]);
 
+  useEffect(() => {
+    if (!recording) return;
+    const update = () =>
+      setRecordingElapsed(performance.now() - recordingStartedAtRef.current);
+    update();
+    const interval = window.setInterval(update, 250);
+    return () => window.clearInterval(interval);
+  }, [recording]);
+
+  useEffect(() => {
+    if (!recordLimitReached) return;
+    setToast(t.recordLimit);
+    setRecordLimitReached(false);
+  }, [recordLimitReached, t.recordLimit]);
+
   const aggregateRows = useMemo(
     () =>
       [...rows.values()].sort(
@@ -560,17 +731,27 @@ export default function CanViewer() {
   );
 
   async function connect() {
+    if (connectionMode === "transmit" && !txAcknowledged) {
+      setToast(t.txWarning);
+      return;
+    }
     setBusy(true);
     setDemo(false);
     try {
       if (!bridge.ok) await refreshBridge();
       const result = await bridgeRequest<BridgeStatus>("/connect", {
         method: "POST",
-        body: JSON.stringify({ channel, bitrate, listenOnly: true }),
+        body: JSON.stringify({
+          channel,
+          bitrate,
+          listenOnly: connectionMode === "listen",
+        }),
       });
       setBridge(result);
       if (!result.ok || !result.connected) {
         setToast(result.error || t.connectFailed);
+      } else if (connectionMode === "transmit" && result.listenOnly !== false) {
+        setToast(t.bridgeUpgrade);
       }
     } catch {
       setToast(bridge.ok ? t.connectFailed : t.bridgeMissing);
@@ -588,6 +769,7 @@ export default function CanViewer() {
         body: "{}",
       });
       setBridge(result);
+      setTxAcknowledged(false);
     } catch {
       setBridge((current) => ({ ...current, connected: false }));
     } finally {
@@ -692,8 +874,136 @@ export default function CanViewer() {
     setToast(t.csvSaved);
   }
 
+  function startRecording() {
+    recordedFramesRef.current = [];
+    recordingBaseTimestampRef.current = null;
+    recordingBaseElapsedRef.current = 0;
+    recordingStartedAtRef.current = performance.now();
+    recordingRef.current = true;
+    setRecording(true);
+    setRecordingCount(0);
+    setRecordingElapsed(0);
+    setRecordLimitReached(false);
+  }
+
+  function stopRecording() {
+    recordingRef.current = false;
+    setRecording(false);
+    setRecordingElapsed(performance.now() - recordingStartedAtRef.current);
+  }
+
+  function downloadRecording(format: "trc" | "csv") {
+    const recorded = recordedFramesRef.current;
+    if (!recorded.length) {
+      setToast(t.recordEmpty);
+      return;
+    }
+    const stamp = new Date().toISOString().replaceAll(":", "-");
+
+    if (format === "trc") {
+      const header = [
+        ";$FILEVERSION=1.3",
+        `;$STARTTIME=${new Date().toISOString()}`,
+        "; Generated by Bülent Türk CAN Viewer",
+        "; Columns: message) time_ms channel direction can_id type dlc data",
+      ];
+      const lines = recorded.map(({ frame, direction, elapsedMs }, index) => {
+        const identifier = `${frame.id.toString(16).toUpperCase()}${frame.extended ? "x" : ""}`;
+        const payload = formatData(frame.data);
+        return `${index + 1}) ${elapsedMs.toFixed(3)} 1 ${
+          direction === "tx" ? "Tx" : "Rx"
+        } ${identifier} - ${frame.data.length}${payload ? ` ${payload}` : ""}`;
+      });
+      downloadText(
+        `can-recording-${stamp}.trc`,
+        [...header, ...lines].join("\r\n"),
+        "text/plain;charset=utf-8",
+      );
+    } else {
+      const header = [
+        "timestamp_ms",
+        "can_id",
+        "direction",
+        "frame_format",
+        "dlc",
+        "data_hex",
+      ];
+      const lines = recorded.map(({ frame, direction, elapsedMs }) =>
+        [
+          elapsedMs.toFixed(3),
+          formatCanId(frame),
+          direction,
+          frame.extended ? "extended" : "standard",
+          frame.data.length,
+          formatData(frame.data),
+        ]
+          .map(escapeCsv)
+          .join(","),
+      );
+      downloadText(
+        `can-recording-${stamp}.csv`,
+        [header.join(","), ...lines].join("\r\n"),
+        "text/csv;charset=utf-8",
+      );
+    }
+    setToast(t.recordSaved);
+  }
+
+  async function sendFrame() {
+    if (!bridge.connected || bridge.listenOnly !== false) {
+      setToast(t.requiresTxMode);
+      return;
+    }
+    const id = parseCanId(txId, txExtended);
+    const data = parseDataBytes(txData);
+    if (id === null || data === null) {
+      setToast(t.invalidTx);
+      return;
+    }
+
+    setTxBusy(true);
+    try {
+      const result = await bridgeRequest<{ ok: boolean; sent?: number; error?: string }>(
+        "/send",
+        {
+          method: "POST",
+          body: JSON.stringify({ id, extended: txExtended, data }),
+        },
+      );
+      if (!result.ok) {
+        setToast(result.error || t.sendFailed);
+        return;
+      }
+      const frame: CanFrame = {
+        sequence: (bridge.sent ?? 0) + 1,
+        timestampMs: 0,
+        id,
+        extended: txExtended,
+        rtr: false,
+        error: false,
+        direction: "tx",
+        data,
+      };
+      recordFrames([frame], "tx");
+      setBridge((current) => ({ ...current, sent: result.sent ?? current.sent }));
+      setToast(t.sendSuccess);
+    } catch {
+      setToast(t.sendFailed);
+    } finally {
+      setTxBusy(false);
+    }
+  }
+
   const active = demo || bridge.connected;
-  const activeText = paused ? t.paused : demo ? t.demoActive : bridge.connected ? t.active : t.disconnected;
+  const activeText = paused
+    ? t.paused
+    : demo
+      ? t.demoActive
+      : bridge.connected
+        ? bridge.listenOnly === false
+          ? t.transmitMode
+          : t.active
+        : t.disconnected;
 
   return (
     <main className="can-viewer">
@@ -731,7 +1041,7 @@ export default function CanViewer() {
           <h2>{t.subtitle}</h2>
         </div>
         <div className="can-intro-notes">
-          <span><i />{t.readonly}</span>
+          <span><i />{t.readonly} · {connectionMode === "listen" ? t.receiveMode : t.transmitMode}</span>
           <span><i />{t.privacy}</span>
           <small>{t.browserSupport}</small>
         </div>
@@ -774,16 +1084,30 @@ export default function CanViewer() {
             ))}
           </select>
         </label>
-        <div className="can-listen-flag">
-          <span>{t.listenOnly}</span>
-          <strong><i />ON</strong>
-        </div>
+        <label className="can-select-field">
+          <span>{t.mode}</span>
+          <select
+            value={connectionMode}
+            onChange={(event) => {
+              setConnectionMode(event.target.value as ConnectionMode);
+              setTxAcknowledged(false);
+            }}
+            disabled={Boolean(bridge.connected)}
+          >
+            <option value="listen">{t.receiveMode}</option>
+            <option value="transmit">{t.transmitMode}</option>
+          </select>
+        </label>
         <div className="can-connect-actions">
           <button
             className="can-primary"
             type="button"
             onClick={bridge.connected ? disconnect : connect}
-            disabled={busy || demo}
+            disabled={
+              busy ||
+              demo ||
+              (connectionMode === "transmit" && !txAcknowledged && !bridge.connected)
+            }
           >
             {bridge.connected ? t.disconnect : t.connect}
           </button>
@@ -792,6 +1116,23 @@ export default function CanViewer() {
           </button>
         </div>
       </section>
+
+      {connectionMode === "transmit" && !bridge.connected ? (
+        <section className="can-transmit-warning">
+          <div>
+            <strong>{t.transmitMode}</strong>
+            <p>{t.txWarning}</p>
+          </div>
+          <label>
+            <input
+              type="checkbox"
+              checked={txAcknowledged}
+              onChange={(event) => setTxAcknowledged(event.target.checked)}
+            />
+            <span>{t.txAcknowledgement}</span>
+          </label>
+        </section>
+      ) : null}
 
       {!bridge.ok ? (
         <section className="can-setup">
@@ -817,7 +1158,7 @@ export default function CanViewer() {
               <span>02</span>
               <h3>{t.bridgeTitle}</h3>
               <p>{t.bridgeText}</p>
-              <a href="/downloads/pcan-local-bridge-v1.0.0.zip" download>
+              <a href="/downloads/pcan-local-bridge-v1.1.0.zip" download>
                 {t.bridgeAction} ↓
               </a>
             </article>
@@ -833,6 +1174,109 @@ export default function CanViewer() {
           <p className="can-safety"><i />{t.safety}</p>
         </section>
       ) : null}
+
+      <section className="can-io-panel" aria-label="CAN transmit and recording">
+        <article className="can-tx-card">
+          <div className="can-io-head">
+            <span>TX / 01</span>
+            <div>
+              <h2>{t.txTitle}</h2>
+              <p>{t.txIntro}</p>
+            </div>
+            <strong className={bridge.connected && bridge.listenOnly === false ? "is-ready" : ""}>
+              {bridge.connected && bridge.listenOnly === false ? t.transmitMode : t.receiveMode}
+            </strong>
+          </div>
+          <div className="can-tx-fields">
+            <label>
+              <span>{t.txId}</span>
+              <input
+                value={txId}
+                onChange={(event) => setTxId(event.target.value)}
+                placeholder={txExtended ? "18FF50E5" : "201"}
+                spellCheck={false}
+              />
+            </label>
+            <label>
+              <span>{t.txFormat}</span>
+              <select
+                value={txExtended ? "extended" : "standard"}
+                onChange={(event) => setTxExtended(event.target.value === "extended")}
+              >
+                <option value="standard">{t.standard} · 11 bit</option>
+                <option value="extended">{t.extended} · 29 bit</option>
+              </select>
+            </label>
+            <label className="can-tx-data">
+              <span>{t.txData}</span>
+              <input
+                value={txData}
+                onChange={(event) => setTxData(event.target.value.toUpperCase())}
+                placeholder="00 00 00 00 00 00 00 00"
+                spellCheck={false}
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() => void sendFrame()}
+              disabled={txBusy || !bridge.connected || bridge.listenOnly !== false}
+            >
+              {t.sendOnce}
+            </button>
+          </div>
+          {bridge.ok && bridge.version === "1.0.0" ? (
+            <p className="can-bridge-upgrade">
+              {t.bridgeUpgrade}{" "}
+              <a href="/downloads/pcan-local-bridge-v1.1.0.zip" download>
+                {t.bridgeAction} ↓
+              </a>
+            </p>
+          ) : null}
+        </article>
+
+        <article className={`can-record-card${recording ? " is-recording" : ""}`}>
+          <div className="can-io-head">
+            <span>LOG / 02</span>
+            <div>
+              <h2>{t.recordTitle}</h2>
+              <p>{t.recordIntro}</p>
+            </div>
+            <strong className={recording ? "is-ready" : ""}>
+              {recording ? t.recording : t.notRecording}
+            </strong>
+          </div>
+          <div className="can-record-stats">
+            <div>
+              <span>{t.recordFrames}</span>
+              <strong>{recordingCount.toLocaleString()}</strong>
+            </div>
+            <div>
+              <span>{t.recordDuration}</span>
+              <strong>{durationLabel(recordingElapsed)}</strong>
+            </div>
+            <div>
+              <span>{t.txCount}</span>
+              <strong>{(bridge.sent ?? 0).toLocaleString()}</strong>
+            </div>
+          </div>
+          <div className="can-record-actions">
+            <button
+              className="can-record-primary"
+              type="button"
+              onClick={recording ? stopRecording : startRecording}
+              disabled={!active && !recording}
+            >
+              {recording ? t.stopRecord : t.startRecord}
+            </button>
+            <button type="button" onClick={() => downloadRecording("trc")} disabled={!recordingCount}>
+              {t.downloadTrc}
+            </button>
+            <button type="button" onClick={() => downloadRecording("csv")} disabled={!recordingCount}>
+              {t.downloadRecordCsv}
+            </button>
+          </div>
+        </article>
+      </section>
 
       <section className="can-workspace">
         <div className="can-toolbar">

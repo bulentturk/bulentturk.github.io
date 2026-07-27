@@ -126,9 +126,9 @@ const copy = {
       dbcFeatures: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"],
       viewerTitle: "CAN Viewer",
       viewerText:
-        "PCAN-USB ile canlı CAN mesajlarını izleyin; yüklediğiniz DBC ile sinyalleri anlık çözümleyin.",
+        "PCAN-USB ile canlı CAN mesajlarını izleyin, kontrollü mesaj gönderin ve TRC/CSV kaydı alın.",
       viewerAction: "CAN Viewer aç",
-      viewerFeatures: ["PCAN-USB", "Canlı trace", "DBC çözümleme"],
+      viewerFeatures: ["PCAN-USB", "RX / TX", "TRC / CSV kayıt"],
       analyzerTitle: "CAN Log Analyzer",
       analyzerText:
         "TRC, ASC, CSV ve SocketCAN kayıtlarını açın; çevrim zamanı, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.",
@@ -272,9 +272,9 @@ const copy = {
       dbcFeatures: ["CAN / CAN FD", "Intel / Motorola", "DBC export"],
       viewerTitle: "CAN Viewer",
       viewerText:
-        "Monitor live CAN messages with PCAN-USB and decode signals in real time using your DBC.",
+        "Monitor live CAN traffic with PCAN-USB, transmit controlled frames, and record TRC/CSV logs.",
       viewerAction: "Open CAN Viewer",
-      viewerFeatures: ["PCAN-USB", "Live trace", "DBC decoding"],
+      viewerFeatures: ["PCAN-USB", "RX / TX", "TRC / CSV recording"],
       analyzerTitle: "CAN Log Analyzer",
       analyzerText:
         "Open TRC, ASC, CSV, and SocketCAN captures; inspect cycle time, jitter, missing messages, and DBC signals.",
@@ -566,7 +566,7 @@ export default function Home() {
               <i />
             </div>
             <div className="can-preview-status">
-              <span><i /> LISTEN-ONLY</span>
+              <span><i /> RX / TX · LOG</span>
               <strong>250 kbit/s</strong>
             </div>
             {[

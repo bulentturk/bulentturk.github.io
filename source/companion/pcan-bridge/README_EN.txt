@@ -1,4 +1,4 @@
-BÜLENT TÜRK CAN VIEWER — PCAN LOCAL BRIDGE v1.0.0
+BÜLENT TÜRK CAN VIEWER — PCAN LOCAL BRIDGE v1.1.0
 ==================================================
 
 This small bridge connects the CAN Viewer on bulentturk.com to the PEAK
@@ -14,15 +14,21 @@ SETUP
 6. Open this address in Chrome or Edge:
    https://bulentturk.com/can-viewer/
 7. Choose the PCAN channel and CAN bit rate, then select “Connect to CAN”.
+8. Use “Receive only” for safe monitoring. To transmit, choose “Transmit
+   enabled” and accept the on-screen safety acknowledgement.
 
 SECURITY AND PRIVACY
 - The bridge listens only on 127.0.0.1:8765, on your own computer.
 - It accepts browser requests only from bulentturk.com and local development
   addresses.
-- It contains no CAN transmit function.
-- The connection is opened in listen-only mode. If listen-only cannot be
-  enabled, the CAN connection is rejected.
+- Connections use listen-only mode by default.
+- CAN transmission is available only after the user selects “Transmit enabled”
+  and provides explicit safety acknowledgement.
+- Transmit mode can trigger unexpected motion or functions on the connected
+  machine. Verify the CAN ID, data, and machine state before use.
 - Your DBC file and CAN data are never uploaded to a server.
+- CAN recordings remain in browser memory and are written to your computer only
+  when you download TRC or CSV.
 - Press Ctrl+C in the console or close its window to stop the bridge.
 
 NOTES

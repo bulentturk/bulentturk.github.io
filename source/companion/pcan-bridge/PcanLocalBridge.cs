@@ -39,6 +39,7 @@ namespace PcanLocalBridge
         public bool Extended;
         public bool Rtr;
         public bool Error;
+        public string Direction;
         public byte[] Data;
 
         public string ToJson()
@@ -52,13 +53,14 @@ namespace PcanLocalBridge
 
             return string.Format(
                 CultureInfo.InvariantCulture,
-                "{{\"sequence\":{0},\"timestampMs\":{1:0.###},\"id\":{2},\"extended\":{3},\"rtr\":{4},\"error\":{5},\"data\":[{6}]}}",
+                "{{\"sequence\":{0},\"timestampMs\":{1:0.###},\"id\":{2},\"extended\":{3},\"rtr\":{4},\"error\":{5},\"direction\":\"{6}\",\"data\":[{7}]}}",
                 Sequence,
                 TimestampMs,
                 Id,
                 Extended ? "true" : "false",
                 Rtr ? "true" : "false",
                 Error ? "true" : "false",
+                String.IsNullOrEmpty(Direction) ? "rx" : Direction,
                 bytes.ToString()
             );
         }
@@ -73,6 +75,7 @@ namespace PcanLocalBridge
         private const Byte PCAN_MESSAGE_STATUS = 0x80;
         private const Byte PCAN_LISTEN_ONLY = 0x08;
         private const UInt32 PCAN_PARAMETER_ON = 1;
+        private const UInt32 PCAN_PARAMETER_OFF = 0;
         private const int MaximumQueuedFrames = 100000;
 
         private static readonly object Sync = new object();
@@ -103,7 +106,9 @@ namespace PcanLocalBridge
         private static int _bitrate;
         private static long _sequence;
         private static long _dropped;
+        private static long _sent;
         private static int _queued;
+        private static bool _listenOnly = true;
         private static string _lastError = "";
         private static Thread _readThread;
 
@@ -140,6 +145,13 @@ namespace PcanLocalBridge
 
         [DllImport(
             "PCANBasic.dll",
+            EntryPoint = "CAN_Write",
+            CallingConvention = CallingConvention.StdCall
+        )]
+        private static extern UInt32 CAN_Write(UInt16 channel, ref TPCANMsg message);
+
+        [DllImport(
+            "PCANBasic.dll",
             EntryPoint = "CAN_SetValue",
             CallingConvention = CallingConvention.StdCall
         )]
@@ -162,7 +174,7 @@ namespace PcanLocalBridge
             StringBuilder buffer
         );
 
-        public static string Connect(int channelIndex, int bitrate)
+        public static string Connect(int channelIndex, int bitrate, bool listenOnly)
         {
             lock (Sync)
             {
@@ -184,17 +196,19 @@ namespace PcanLocalBridge
                 try
                 {
                     UInt16 handle = UsbChannelHandle(channelIndex);
-                    UInt32 listenOnly = PCAN_PARAMETER_ON;
+                    UInt32 listenOnlyValue =
+                        listenOnly ? PCAN_PARAMETER_ON : PCAN_PARAMETER_OFF;
                     UInt32 result = CAN_SetValue(
                         handle,
                         PCAN_LISTEN_ONLY,
-                        ref listenOnly,
+                        ref listenOnlyValue,
                         (UInt32)Marshal.SizeOf(typeof(UInt32))
                     );
                     if (result != PCAN_ERROR_OK)
                     {
                         return ErrorStatus(
-                            "Listen-only mode could not be enabled: " + ErrorText(result)
+                            "Requested CAN operating mode could not be enabled: " +
+                            ErrorText(result)
                         );
                     }
 
@@ -208,6 +222,7 @@ namespace PcanLocalBridge
                     _channelHandle = handle;
                     _channelIndex = channelIndex;
                     _bitrate = bitrate;
+                    _listenOnly = listenOnly;
                     _connected = true;
                     _readThread = new Thread(ReadLoop);
                     _readThread.Name = "PCAN receive";
@@ -254,6 +269,7 @@ namespace PcanLocalBridge
         {
             bool wasConnected = _connected;
             _connected = false;
+            _listenOnly = true;
             if (wasConnected)
             {
                 try
@@ -317,6 +333,7 @@ namespace PcanLocalBridge
                     Extended = (message.MSGTYPE & PCAN_MESSAGE_EXTENDED) != 0,
                     Rtr = (message.MSGTYPE & PCAN_MESSAGE_RTR) != 0,
                     Error = (message.MSGTYPE & PCAN_MESSAGE_STATUS) != 0,
+                    Direction = "rx",
                     Data = data
                 };
                 Queue.Enqueue(frame);
@@ -353,17 +370,74 @@ namespace PcanLocalBridge
             );
         }
 
+        public static string Send(UInt32 id, bool extended, byte[] data)
+        {
+            lock (Sync)
+            {
+                if (!_connected)
+                {
+                    return ErrorStatus("Connect to the CAN bus before transmitting.");
+                }
+                if (_listenOnly)
+                {
+                    return ErrorStatus(
+                        "Transmission is blocked while the connection is in listen-only mode."
+                    );
+                }
+                if ((!extended && id > 0x7FF) || (extended && id > 0x1FFFFFFF))
+                {
+                    return ErrorStatus("CAN identifier is outside the selected frame range.");
+                }
+                if (data == null || data.Length > 8)
+                {
+                    return ErrorStatus("Classic CAN data length must be between 0 and 8 bytes.");
+                }
+
+                TPCANMsg message = new TPCANMsg();
+                message.ID = id;
+                message.MSGTYPE = extended ? PCAN_MESSAGE_EXTENDED : (Byte)0;
+                message.LEN = (Byte)data.Length;
+                message.DATA = new byte[8];
+                if (data.Length > 0) Array.Copy(data, message.DATA, data.Length);
+
+                UInt32 result;
+                try
+                {
+                    result = CAN_Write(_channelHandle, ref message);
+                }
+                catch (Exception exception)
+                {
+                    return ErrorStatus(exception.Message);
+                }
+
+                if (result != PCAN_ERROR_OK)
+                {
+                    return ErrorStatus(ErrorText(result));
+                }
+
+                long sent = Interlocked.Increment(ref _sent);
+                _lastError = "";
+                return string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{{\"ok\":true,\"sent\":{0}}}",
+                    sent
+                );
+            }
+        }
+
         public static string StatusJson(bool ok)
         {
             return string.Format(
                 CultureInfo.InvariantCulture,
-                "{{\"ok\":{0},\"version\":\"1.0.0\",\"connected\":{1},\"channel\":{2},\"bitrate\":{3},\"listenOnly\":true,\"queued\":{4},\"dropped\":{5},\"error\":\"{6}\"}}",
+                "{{\"ok\":{0},\"version\":\"1.1.0\",\"connected\":{1},\"channel\":{2},\"bitrate\":{3},\"listenOnly\":{4},\"queued\":{5},\"dropped\":{6},\"sent\":{7},\"error\":\"{8}\"}}",
                 ok ? "true" : "false",
                 _connected ? "true" : "false",
                 _channelIndex,
                 _bitrate,
+                _listenOnly ? "true" : "false",
                 Math.Max(0, _queued),
                 Interlocked.Read(ref _dropped),
+                Interlocked.Read(ref _sent),
                 JsonEscape(_lastError)
             );
         }
@@ -410,6 +484,7 @@ namespace PcanLocalBridge
             }
             _queued = 0;
             _dropped = 0;
+            _sent = 0;
         }
     }
 
@@ -435,8 +510,8 @@ namespace PcanLocalBridge
 
             TcpListener listener = new TcpListener(IPAddress.Loopback, Port);
             listener.Start();
-            Console.WriteLine("PCAN Local Bridge v1.0.0");
-            Console.WriteLine("Listening only on http://127.0.0.1:" + Port);
+            Console.WriteLine("PCAN Local Bridge v1.1.0");
+            Console.WriteLine("Local API: http://127.0.0.1:" + Port);
             Console.WriteLine("Open https://bulentturk.com/can-viewer/ in Chrome or Edge.");
             Console.WriteLine("Press Ctrl+C to stop.");
             Console.WriteLine();
@@ -543,7 +618,8 @@ namespace PcanLocalBridge
                     {
                         int channel = JsonInteger(body, "channel", 1);
                         int bitrate = JsonInteger(body, "bitrate", 250000);
-                        response = Pcan.Connect(channel, bitrate);
+                        bool listenOnly = JsonBoolean(body, "listenOnly", true);
+                        response = Pcan.Connect(channel, bitrate, listenOnly);
                     }
                     else if (uri.AbsolutePath == "/api/disconnect" && method == "POST")
                     {
@@ -553,6 +629,13 @@ namespace PcanLocalBridge
                     {
                         int limit = QueryInteger(uri.Query, "limit", 5000);
                         response = Pcan.FramesJson(limit);
+                    }
+                    else if (uri.AbsolutePath == "/api/send" && method == "POST")
+                    {
+                        UInt32 id = JsonUInt32(body, "id", 0);
+                        bool extended = JsonBoolean(body, "extended", false);
+                        byte[] data = JsonByteArray(body, "data");
+                        response = Pcan.Send(id, extended, data);
                     }
                     else
                     {
@@ -585,6 +668,59 @@ namespace PcanLocalBridge
             return match.Success && Int32.TryParse(match.Groups[1].Value, out value)
                 ? value
                 : fallback;
+        }
+
+        private static UInt32 JsonUInt32(string json, string name, UInt32 fallback)
+        {
+            Match match = Regex.Match(
+                json ?? "",
+                "\"" + Regex.Escape(name) + "\"\\s*:\\s*(\\d+)",
+                RegexOptions.IgnoreCase
+            );
+            UInt32 value;
+            return match.Success && UInt32.TryParse(match.Groups[1].Value, out value)
+                ? value
+                : fallback;
+        }
+
+        private static bool JsonBoolean(string json, string name, bool fallback)
+        {
+            Match match = Regex.Match(
+                json ?? "",
+                "\"" + Regex.Escape(name) + "\"\\s*:\\s*(true|false)",
+                RegexOptions.IgnoreCase
+            );
+            bool value;
+            return match.Success && Boolean.TryParse(match.Groups[1].Value, out value)
+                ? value
+                : fallback;
+        }
+
+        private static byte[] JsonByteArray(string json, string name)
+        {
+            Match match = Regex.Match(
+                json ?? "",
+                "\"" + Regex.Escape(name) + "\"\\s*:\\s*\\[([^\\]]*)\\]",
+                RegexOptions.IgnoreCase
+            );
+            if (!match.Success || String.IsNullOrWhiteSpace(match.Groups[1].Value))
+            {
+                return new byte[0];
+            }
+
+            string[] tokens = match.Groups[1].Value.Split(',');
+            if (tokens.Length > 8) return null;
+            byte[] data = new byte[tokens.Length];
+            for (int index = 0; index < tokens.Length; index++)
+            {
+                int value;
+                if (!Int32.TryParse(tokens[index].Trim(), out value) || value < 0 || value > 255)
+                {
+                    return null;
+                }
+                data[index] = (byte)value;
+            }
+            return data;
         }
 
         private static int QueryInteger(string query, string name, int fallback)

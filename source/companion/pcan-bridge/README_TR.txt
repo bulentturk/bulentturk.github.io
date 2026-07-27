@@ -1,4 +1,4 @@
-BÜLENT TÜRK CAN VIEWER — PCAN LOCAL BRIDGE v1.0.0
+BÜLENT TÜRK CAN VIEWER — PCAN LOCAL BRIDGE v1.1.0
 ==================================================
 
 Bu küçük köprü, bulentturk.com üzerindeki CAN Viewer ile PEAK PCAN-Basic
@@ -14,15 +14,21 @@ KURULUM
 6. Chrome veya Edge ile şu adresi açın:
    https://bulentturk.com/can-viewer/
 7. PCAN kanalı ve CAN bit hızını seçip “CAN hattına bağlan” düğmesine basın.
+8. Güvenli izleme için “Yalnız dinle” modunu kullanın. Mesaj gönderecekseniz
+   “Gönderme açık” modunu seçip ekrandaki güvenlik onayını verin.
 
 GÜVENLİK VE GİZLİLİK
 - Köprü yalnızca 127.0.0.1:8765 üzerinde, yani kendi bilgisayarınızda çalışır.
 - Yalnız bulentturk.com ve yerel geliştirme adreslerinden gelen tarayıcı
   isteklerini kabul eder.
-- CAN mesajı gönderme fonksiyonu yoktur.
-- Bağlantı listen-only modunda açılır. Listen-only etkinleştirilemezse CAN
-  bağlantısı reddedilir.
+- Varsayılan bağlantı listen-only modunda açılır.
+- CAN mesajı gönderme yalnız kullanıcı “Gönderme açık” modunu seçip açık
+  güvenlik onayı verdiğinde kullanılabilir.
+- Gönderme modu bağlı makinede beklenmeyen hareket veya fonksiyon oluşturabilir.
+  Doğru CAN ID, veri ve makine durumunu doğrulamadan kullanmayın.
 - DBC dosyanız ve CAN veriniz herhangi bir sunucuya yüklenmez.
+- CAN kaydı tarayıcınızın belleğinde tutulur ve yalnız siz TRC/CSV indirirseniz
+  bilgisayarınıza kaydedilir.
 - Köprüyü kapatmak için siyah pencerede Ctrl+C tuşlarına basın veya pencereyi
   kapatın.
 

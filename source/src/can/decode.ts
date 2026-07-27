@@ -8,6 +8,7 @@ export type CanFrame = {
   extended: boolean;
   rtr: boolean;
   error: boolean;
+  direction?: "rx" | "tx" | "unknown";
   data: number[];
 };
 
