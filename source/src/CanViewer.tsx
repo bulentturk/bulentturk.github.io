@@ -601,9 +601,9 @@ export default function CanViewer() {
   }, []);
 
   const ingestFrames = useCallback(
-    (frames: CanFrame[]) => {
+    (frames: CanFrame[], direction: "rx" | "tx" = "rx") => {
       if (!frames.length) return;
-      recordFrames(frames, "rx");
+      recordFrames(frames, direction);
       if (paused) return;
       const now = performance.now();
       arrivalTimesRef.current.push(...frames.map(() => now));
@@ -715,7 +715,10 @@ export default function CanViewer() {
   }, [recordLimitReached, t.recordLimit]);
 
   useEffect(() => {
-    if (bridge.connected && bridge.listenOnly === false && connectionMode === "transmit") {
+    if (
+      demo ||
+      (bridge.connected && bridge.listenOnly === false && connectionMode === "transmit")
+    ) {
       return;
     }
     cycleSendingRef.current = false;
@@ -724,7 +727,7 @@ export default function CanViewer() {
       window.clearTimeout(cycleTimerRef.current);
       cycleTimerRef.current = null;
     }
-  }, [bridge.connected, bridge.listenOnly, connectionMode]);
+  }, [bridge.connected, bridge.listenOnly, connectionMode, demo]);
 
   useEffect(
     () => () => {
@@ -846,6 +849,7 @@ export default function CanViewer() {
 
   function toggleDemo() {
     if (demo) {
+      stopCycle(false);
       setDemo(false);
       return;
     }
@@ -1039,6 +1043,26 @@ export default function CanViewer() {
     announce: boolean,
     showBusy: boolean,
   ): Promise<boolean> {
+    if (demo) {
+      if (showBusy) setTxBusy(true);
+      const sequence = demoSequenceRef.current++;
+      const frame: CanFrame = {
+        sequence,
+        timestampMs: performance.now(),
+        id,
+        extended: txExtended,
+        rtr: false,
+        error: false,
+        direction: "tx",
+        data,
+      };
+      ingestFrames([frame], "tx");
+      setBridge((current) => ({ ...current, sent: (current.sent ?? 0) + 1 }));
+      if (announce) setToast(t.sendSuccess);
+      if (showBusy) setTxBusy(false);
+      return true;
+    }
+
     if (!bridge.connected || bridge.listenOnly !== false) {
       if (announce) setToast(t.requiresTxMode);
       return false;
@@ -1059,7 +1083,7 @@ export default function CanViewer() {
       }
       const frame: CanFrame = {
         sequence: result.sent ?? (bridge.sent ?? 0) + 1,
-        timestampMs: 0,
+        timestampMs: performance.now(),
         id,
         extended: txExtended,
         rtr: false,
@@ -1067,7 +1091,7 @@ export default function CanViewer() {
         direction: "tx",
         data,
       };
-      recordFrames([frame], "tx");
+      ingestFrames([frame], "tx");
       setBridge((current) => ({ ...current, sent: result.sent ?? current.sent }));
       if (announce) setToast(t.sendSuccess);
       return true;
@@ -1089,7 +1113,7 @@ export default function CanViewer() {
   }
 
   function startCycle() {
-    if (!bridge.connected || bridge.listenOnly !== false) {
+    if (!demo && (!bridge.connected || bridge.listenOnly !== false)) {
       setToast(t.requiresTxMode);
       return;
     }
@@ -1164,6 +1188,7 @@ export default function CanViewer() {
   }
 
   const active = demo || bridge.connected;
+  const transmitReady = demo || (bridge.connected && bridge.listenOnly === false);
   const activeText = paused
     ? t.paused
     : demo
@@ -1352,10 +1377,12 @@ export default function CanViewer() {
               <h2>{t.txTitle}</h2>
               <p>{t.txIntro}</p>
             </div>
-            <strong className={bridge.connected && bridge.listenOnly === false ? "is-ready" : ""}>
+            <strong className={transmitReady ? "is-ready" : ""}>
               {cycleSending
                 ? t.cyclicActive
-                : bridge.connected && bridge.listenOnly === false
+                : demo
+                  ? t.demoActive
+                  : bridge.connected && bridge.listenOnly === false
                   ? t.transmitMode
                   : t.receiveMode}
             </strong>
@@ -1445,8 +1472,7 @@ export default function CanViewer() {
                 disabled={
                   txBusy ||
                   cycleSending ||
-                  !bridge.connected ||
-                  bridge.listenOnly !== false
+                  !transmitReady
                 }
               >
                 {t.sendOnce}
@@ -1457,7 +1483,7 @@ export default function CanViewer() {
                 onClick={cycleSending ? () => stopCycle() : startCycle}
                 disabled={
                   !cycleSending &&
-                  (txBusy || !bridge.connected || bridge.listenOnly !== false)
+                  (txBusy || !transmitReady)
                 }
               >
                 {cycleSending ? t.stopCycle : t.startCycle}
