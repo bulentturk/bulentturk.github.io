@@ -57,6 +57,17 @@ type AggregateRow = {
   lastSeen: number;
 };
 
+type SentMessage = {
+  uid: number;
+  id: number;
+  extended: boolean;
+  data: number[];
+  cycleMs: number;
+  enabled: boolean;
+  sentCount: number;
+  lastSentAt: number | null;
+};
+
 const BRIDGE_URL = "http://127.0.0.1:8765/api";
 const MAX_DBC_SIZE = 20 * 1024 * 1024;
 const MAX_HISTORY = 5000;
@@ -174,7 +185,7 @@ const copy = {
     dropped: "Yerel kuyrukta düşen frame",
     framesShown: "En fazla son 500 kayıt gösterilir",
     txTitle: "CAN mesajı gönder",
-    txIntro: "Klasik CAN için tek seferlik veya periyodik STD / EXT frame gönderimi.",
+    txIntro: "Klasik CAN için birden fazla tek seferlik veya periyodik STD / EXT frame oluşturun.",
     txId: "CAN ID (hex)",
     txFormat: "Frame tipi",
     txDlc: "DLC (byte)",
@@ -182,7 +193,7 @@ const copy = {
     txCycle: "Cycle (ms)",
     txCycleHint: "10–60000 ms · tarayıcı zamanlaması",
     sendOnce: "Bir kez gönder",
-    startCycle: "Periyodik başlat",
+    startCycle: "Periyodik listeye ekle",
     stopCycle: "Periyodik durdur",
     sendSuccess: "CAN mesajı başarıyla gönderildi.",
     sendFailed: "CAN mesajı gönderilemedi.",
@@ -193,6 +204,26 @@ const copy = {
     requiresTxMode: "Gönderme için bağlantıyı “Gönderme açık” modunda kurun.",
     byteLabel: "Byte",
     cyclicActive: "Periyodik gönderim",
+    editingTx: "Gönderilen mesaj düzenleniyor",
+    newTx: "Yeni mesaj",
+    updateCycle: "Değişiklikleri uygula ve çalıştır",
+    sentTitle: "Gönderilen Mesajlar",
+    sentIntro:
+      "RX listesinden ayrı çalışan TX mesajları. Satıra tıklayarak düzenleyin; kutucuğu işaretleyerek çalıştırın veya kaldırarak durdurun.",
+    sentEmpty: "Henüz gönderilmiş veya çevrimsel listeye eklenmiş mesaj yok.",
+    sentEnabled: "Çalışıyor",
+    sentDisabled: "Durdu",
+    sentStatus: "Durum",
+    sentCycle: "Cycle",
+    sentCountLabel: "Gönderim",
+    sentLast: "Son gönderim",
+    sentActions: "İşlem",
+    stopAllTx: "Tümünü durdur",
+    deleteTx: "Sil",
+    editTx: "Düzenle",
+    allCyclesStopped: "Tüm periyodik CAN mesajları durduruldu.",
+    messageDeleted: "Gönderilen mesaj listeden silindi.",
+    messageUpdated: "Gönderilen mesaj güncellendi.",
     recordTitle: "CAN kaydı",
     recordIntro:
       "Görünüm dondurulsa bile gelen frame’leri kaydet; sonra TRC veya CSV olarak indir.",
@@ -303,7 +334,7 @@ const copy = {
     dropped: "Frames dropped in local queue",
     framesShown: "At most the latest 500 records are displayed",
     txTitle: "Transmit CAN message",
-    txIntro: "Send a classic CAN standard or extended frame once or cyclically.",
+    txIntro: "Create multiple classic CAN standard or extended frames for one-shot or cyclic transmission.",
     txId: "CAN ID (hex)",
     txFormat: "Frame type",
     txDlc: "DLC (bytes)",
@@ -311,7 +342,7 @@ const copy = {
     txCycle: "Cycle (ms)",
     txCycleHint: "10–60000 ms · browser timing",
     sendOnce: "Send once",
-    startCycle: "Start cyclic",
+    startCycle: "Add cyclic message",
     stopCycle: "Stop cyclic",
     sendSuccess: "CAN message transmitted successfully.",
     sendFailed: "The CAN message could not be transmitted.",
@@ -322,6 +353,26 @@ const copy = {
     requiresTxMode: "Reconnect with “Transmit enabled” to send messages.",
     byteLabel: "Byte",
     cyclicActive: "Cyclic transmission",
+    editingTx: "Editing transmitted message",
+    newTx: "New message",
+    updateCycle: "Apply changes and run",
+    sentTitle: "Transmitted Messages",
+    sentIntro:
+      "TX messages are kept separate from the RX list. Select a row to edit it; check the box to run it or clear the box to stop it.",
+    sentEmpty: "No message has been transmitted or added to the cyclic list yet.",
+    sentEnabled: "Running",
+    sentDisabled: "Stopped",
+    sentStatus: "Status",
+    sentCycle: "Cycle",
+    sentCountLabel: "Sent",
+    sentLast: "Last sent",
+    sentActions: "Action",
+    stopAllTx: "Stop all",
+    deleteTx: "Delete",
+    editTx: "Edit",
+    allCyclesStopped: "All cyclic CAN messages were stopped.",
+    messageDeleted: "The transmitted message was removed from the list.",
+    messageUpdated: "The transmitted message was updated.",
     recordTitle: "CAN recording",
     recordIntro:
       "Keep recording incoming frames even while the view is paused, then download TRC or CSV.",
@@ -483,6 +534,12 @@ function parseCanId(value: string, extended: boolean): number | null {
   return Number.isFinite(id) && id >= 0 && id <= maximum ? id : null;
 }
 
+function formatTxMessageId(message: Pick<SentMessage, "id" | "extended">): string {
+  return message.extended
+    ? `0x${message.id.toString(16).toUpperCase().padStart(8, "0")}`
+    : `0x${message.id.toString(16).toUpperCase().padStart(3, "0")}`;
+}
+
 function parseDataBytes(values: string[], dlc: number): number[] | null {
   const activeValues = values.slice(0, dlc);
   if (
@@ -542,7 +599,8 @@ export default function CanViewer() {
   const [txBytes, setTxBytes] = useState<string[]>(() => Array(8).fill("00"));
   const [txCycle, setTxCycle] = useState("100");
   const [txBusy, setTxBusy] = useState(false);
-  const [cycleSending, setCycleSending] = useState(false);
+  const [sentMessages, setSentMessages] = useState<SentMessage[]>([]);
+  const [editingTxUid, setEditingTxUid] = useState<number | null>(null);
   const [database, setDatabase] = useState<DbcDatabase | null>(null);
   const [dbcName, setDbcName] = useState("");
   const [rows, setRows] = useState<Map<string, AggregateRow>>(() => new Map());
@@ -570,8 +628,9 @@ export default function CanViewer() {
   const recordingBaseTimestampRef = useRef<number | null>(null);
   const recordingBaseElapsedRef = useRef(0);
   const txByteRefs = useRef<Array<HTMLInputElement | null>>([]);
-  const cycleSendingRef = useRef(false);
-  const cycleTimerRef = useRef<number | null>(null);
+  const sentMessagesRef = useRef<SentMessage[]>([]);
+  const cycleTimersRef = useRef<Map<number, number>>(new Map());
+  const nextTxUidRef = useRef(1);
   const t = copy[language];
 
   const recordFrames = useCallback((frames: CanFrame[], direction: "rx" | "tx") => {
@@ -604,6 +663,7 @@ export default function CanViewer() {
     (frames: CanFrame[], direction: "rx" | "tx" = "rx") => {
       if (!frames.length) return;
       recordFrames(frames, direction);
+      if (direction === "tx") return;
       if (paused) return;
       const now = performance.now();
       arrivalTimesRef.current.push(...frames.map(() => now));
@@ -721,21 +781,27 @@ export default function CanViewer() {
     ) {
       return;
     }
-    cycleSendingRef.current = false;
-    setCycleSending(false);
-    if (cycleTimerRef.current !== null) {
-      window.clearTimeout(cycleTimerRef.current);
-      cycleTimerRef.current = null;
+    for (const timer of cycleTimersRef.current.values()) window.clearTimeout(timer);
+    cycleTimersRef.current.clear();
+    if (sentMessagesRef.current.some((message) => message.enabled)) {
+      const next = sentMessagesRef.current.map((message) => ({
+        ...message,
+        enabled: false,
+      }));
+      sentMessagesRef.current = next;
+      setSentMessages(next);
     }
   }, [bridge.connected, bridge.listenOnly, connectionMode, demo]);
 
   useEffect(
     () => () => {
-      cycleSendingRef.current = false;
-      if (cycleTimerRef.current !== null) window.clearTimeout(cycleTimerRef.current);
+      for (const timer of cycleTimersRef.current.values()) window.clearTimeout(timer);
+      cycleTimersRef.current.clear();
     },
     [],
   );
+
+  const cycleSending = sentMessages.some((message) => message.enabled);
 
   const aggregateRows = useMemo(
     () =>
@@ -830,7 +896,7 @@ export default function CanViewer() {
   }
 
   async function disconnect() {
-    stopCycle(false);
+    stopAllCycles(false);
     setBusy(true);
     setDemo(false);
     try {
@@ -849,7 +915,7 @@ export default function CanViewer() {
 
   function toggleDemo() {
     if (demo) {
-      stopCycle(false);
+      stopAllCycles(false);
       setDemo(false);
       return;
     }
@@ -1020,25 +1086,57 @@ export default function CanViewer() {
     setToast(t.recordSaved);
   }
 
-  function stopCycle(showToast = true) {
-    const wasActive = cycleSendingRef.current;
-    cycleSendingRef.current = false;
-    setCycleSending(false);
-    if (cycleTimerRef.current !== null) {
-      window.clearTimeout(cycleTimerRef.current);
-      cycleTimerRef.current = null;
-    }
-    if (showToast && wasActive) setToast(t.cycleStopped);
+  function replaceSentMessages(next: SentMessage[]) {
+    sentMessagesRef.current = next;
+    setSentMessages(next);
   }
 
-  function preparedTx(): { id: number; data: number[] } | null {
+  function updateSentMessage(
+    uid: number,
+    updater: (message: SentMessage) => SentMessage,
+  ) {
+    replaceSentMessages(
+      sentMessagesRef.current.map((message) =>
+        message.uid === uid ? updater(message) : message,
+      ),
+    );
+  }
+
+  function stopMessage(uid: number, showToast = false) {
+    const timer = cycleTimersRef.current.get(uid);
+    if (timer !== undefined) window.clearTimeout(timer);
+    cycleTimersRef.current.delete(uid);
+    const message = sentMessagesRef.current.find((item) => item.uid === uid);
+    if (message?.enabled) {
+      updateSentMessage(uid, (item) => ({ ...item, enabled: false }));
+      if (showToast) setToast(t.cycleStopped);
+    }
+  }
+
+  function stopAllCycles(showToast = true) {
+    const hadActive = sentMessagesRef.current.some((message) => message.enabled);
+    for (const timer of cycleTimersRef.current.values()) window.clearTimeout(timer);
+    cycleTimersRef.current.clear();
+    if (hadActive) {
+      replaceSentMessages(
+        sentMessagesRef.current.map((message) => ({ ...message, enabled: false })),
+      );
+      if (showToast) setToast(t.allCyclesStopped);
+    }
+  }
+
+  function preparedTx(): { id: number; extended: boolean; data: number[]; cycleMs: number } | null {
     const id = parseCanId(txId, txExtended);
     const data = parseDataBytes(txBytes, txDlc);
-    return id === null || data === null ? null : { id, data };
+    const cycleMs = Number(txCycle);
+    return id === null || data === null
+      ? null
+      : { id, extended: txExtended, data, cycleMs };
   }
 
   async function transmitPrepared(
     id: number,
+    extended: boolean,
     data: number[],
     announce: boolean,
     showBusy: boolean,
@@ -1050,7 +1148,7 @@ export default function CanViewer() {
         sequence,
         timestampMs: performance.now(),
         id,
-        extended: txExtended,
+        extended,
         rtr: false,
         error: false,
         direction: "tx",
@@ -1074,7 +1172,7 @@ export default function CanViewer() {
         "/send",
         {
           method: "POST",
-          body: JSON.stringify({ id, extended: txExtended, data }),
+          body: JSON.stringify({ id, extended, data }),
         },
       );
       if (!result.ok) {
@@ -1085,7 +1183,7 @@ export default function CanViewer() {
         sequence: result.sent ?? (bridge.sent ?? 0) + 1,
         timestampMs: performance.now(),
         id,
-        extended: txExtended,
+        extended,
         rtr: false,
         error: false,
         direction: "tx",
@@ -1103,13 +1201,90 @@ export default function CanViewer() {
     }
   }
 
+  function saveMessageDefinition(
+    prepared: { id: number; extended: boolean; data: number[]; cycleMs: number },
+    enabled: boolean,
+    sentIncrement: number,
+  ): SentMessage {
+    const existing = editingTxUid === null
+      ? null
+      : sentMessagesRef.current.find((message) => message.uid === editingTxUid) ?? null;
+    const uid = existing?.uid ?? nextTxUidRef.current++;
+    if (existing?.enabled) stopMessage(uid);
+    const message: SentMessage = {
+      uid,
+      id: prepared.id,
+      extended: prepared.extended,
+      data: [...prepared.data],
+      cycleMs: prepared.cycleMs,
+      enabled,
+      sentCount: (existing?.sentCount ?? 0) + sentIncrement,
+      lastSentAt: sentIncrement ? Date.now() : (existing?.lastSentAt ?? null),
+    };
+    const next = existing
+      ? sentMessagesRef.current.map((item) => (item.uid === uid ? message : item))
+      : [...sentMessagesRef.current, message];
+    replaceSentMessages(next);
+    setEditingTxUid(uid);
+    return message;
+  }
+
   async function sendFrame() {
     const prepared = preparedTx();
     if (!prepared) {
       setToast(t.invalidTx);
       return;
     }
-    await transmitPrepared(prepared.id, prepared.data, true, true);
+    if (
+      !Number.isInteger(prepared.cycleMs) ||
+      prepared.cycleMs < 10 ||
+      prepared.cycleMs > 60000
+    ) {
+      setToast(t.invalidCycle);
+      return;
+    }
+    const sent = await transmitPrepared(
+      prepared.id,
+      prepared.extended,
+      prepared.data,
+      true,
+      true,
+    );
+    if (sent) saveMessageDefinition(prepared, false, 1);
+  }
+
+  async function runCyclicMessage(uid: number) {
+    const message = sentMessagesRef.current.find((item) => item.uid === uid);
+    if (!message?.enabled) return;
+    if (!demo && (!bridge.connected || bridge.listenOnly !== false)) {
+      stopMessage(uid);
+      setToast(t.requiresTxMode);
+      return;
+    }
+
+    const startedAt = performance.now();
+    const sent = await transmitPrepared(
+      message.id,
+      message.extended,
+      message.data,
+      false,
+      false,
+    );
+    if (!sent) {
+      stopMessage(uid);
+      setToast(t.sendFailed);
+      return;
+    }
+    updateSentMessage(uid, (item) => ({
+      ...item,
+      sentCount: item.sentCount + 1,
+      lastSentAt: Date.now(),
+    }));
+    const current = sentMessagesRef.current.find((item) => item.uid === uid);
+    if (!current?.enabled) return;
+    const remaining = Math.max(0, current.cycleMs - (performance.now() - startedAt));
+    const timer = window.setTimeout(() => void runCyclicMessage(uid), remaining);
+    cycleTimersRef.current.set(uid, timer);
   }
 
   function startCycle() {
@@ -1122,30 +1297,70 @@ export default function CanViewer() {
       setToast(t.invalidTx);
       return;
     }
-    const cycleMs = Number(txCycle);
-    if (!Number.isInteger(cycleMs) || cycleMs < 10 || cycleMs > 60000) {
+    if (
+      !Number.isInteger(prepared.cycleMs) ||
+      prepared.cycleMs < 10 ||
+      prepared.cycleMs > 60000
+    ) {
       setToast(t.invalidCycle);
       return;
     }
 
-    stopCycle(false);
-    cycleSendingRef.current = true;
-    setCycleSending(true);
-    setToast(t.cycleStarted);
+    const message = saveMessageDefinition(prepared, true, 0);
+    setToast(editingTxUid === null ? t.cycleStarted : t.messageUpdated);
+    void runCyclicMessage(message.uid);
+  }
 
-    const tick = async () => {
-      const startedAt = performance.now();
-      const sent = await transmitPrepared(prepared.id, prepared.data, false, false);
-      if (!sent) {
-        stopCycle(false);
-        setToast(t.sendFailed);
-        return;
-      }
-      if (!cycleSendingRef.current) return;
-      const remaining = Math.max(0, cycleMs - (performance.now() - startedAt));
-      cycleTimerRef.current = window.setTimeout(() => void tick(), remaining);
-    };
-    void tick();
+  function toggleSentMessage(uid: number) {
+    const message = sentMessagesRef.current.find((item) => item.uid === uid);
+    if (!message) return;
+    if (message.enabled) {
+      stopMessage(uid, true);
+      return;
+    }
+    if (!demo && (!bridge.connected || bridge.listenOnly !== false)) {
+      setToast(t.requiresTxMode);
+      return;
+    }
+    updateSentMessage(uid, (item) => ({ ...item, enabled: true }));
+    setToast(t.cycleStarted);
+    void runCyclicMessage(uid);
+  }
+
+  function editSentMessage(message: SentMessage) {
+    setEditingTxUid(message.uid);
+    setTxId(message.id.toString(16).toUpperCase());
+    setTxExtended(message.extended);
+    setTxDlc(message.data.length);
+    setTxBytes([
+      ...message.data.map((byte) => byte.toString(16).toUpperCase().padStart(2, "0")),
+      ...Array(Math.max(0, 8 - message.data.length)).fill("00"),
+    ].slice(0, 8));
+    setTxCycle(String(message.cycleMs));
+    window.requestAnimationFrame(() =>
+      document.querySelector(".can-tx-card")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      }),
+    );
+  }
+
+  function newTxMessage() {
+    setEditingTxUid(null);
+    setTxId("201");
+    setTxExtended(false);
+    setTxDlc(8);
+    setTxBytes(Array(8).fill("00"));
+    setTxCycle("100");
+  }
+
+  function deleteSentMessage(uid: number) {
+    stopMessage(uid);
+    replaceSentMessages(
+      sentMessagesRef.current.filter((message) => message.uid !== uid),
+    );
+    if (editingTxUid === uid) newTxMessage();
+    setToast(t.messageDeleted);
   }
 
   function updateTxByte(index: number, value: string) {
@@ -1387,6 +1602,12 @@ export default function CanViewer() {
                   : t.receiveMode}
             </strong>
           </div>
+          {editingTxUid !== null ? (
+            <div className="can-tx-editing">
+              <span>{t.editingTx} · #{editingTxUid}</span>
+              <button type="button" onClick={newTxMessage}>{t.newTx}</button>
+            </div>
+          ) : null}
           <div className="can-tx-fields">
             <label className="can-tx-id">
               <span>{t.txId}</span>
@@ -1395,7 +1616,6 @@ export default function CanViewer() {
                 onChange={(event) => setTxId(event.target.value)}
                 placeholder={txExtended ? "18FF50E5" : "201"}
                 spellCheck={false}
-                disabled={cycleSending}
               />
             </label>
             <label className="can-tx-format">
@@ -1403,7 +1623,6 @@ export default function CanViewer() {
               <select
                 value={txExtended ? "extended" : "standard"}
                 onChange={(event) => setTxExtended(event.target.value === "extended")}
-                disabled={cycleSending}
               >
                 <option value="standard">{t.standard} · 11 bit</option>
                 <option value="extended">{t.extended} · 29 bit</option>
@@ -1414,7 +1633,6 @@ export default function CanViewer() {
               <select
                 value={txDlc}
                 onChange={(event) => setTxDlc(Number(event.target.value))}
-                disabled={cycleSending}
               >
                 {Array.from({ length: 9 }, (_, dlc) => (
                   <option key={dlc} value={dlc}>{dlc}</option>
@@ -1431,7 +1649,6 @@ export default function CanViewer() {
                 inputMode="numeric"
                 value={txCycle}
                 onChange={(event) => setTxCycle(event.target.value)}
-                disabled={cycleSending}
               />
               <small>{t.txCycleHint}</small>
             </label>
@@ -1454,7 +1671,7 @@ export default function CanViewer() {
                         inputMode="text"
                         autoComplete="off"
                         spellCheck={false}
-                        disabled={!enabled || cycleSending}
+                        disabled={!enabled}
                         onFocus={(event) => event.currentTarget.select()}
                         onChange={(event) => updateTxByte(index, event.target.value)}
                         onKeyDown={(event) => onTxByteKeyDown(index, event)}
@@ -1471,22 +1688,17 @@ export default function CanViewer() {
                 onClick={() => void sendFrame()}
                 disabled={
                   txBusy ||
-                  cycleSending ||
                   !transmitReady
                 }
               >
                 {t.sendOnce}
               </button>
               <button
-                className={cycleSending ? "is-stop" : ""}
                 type="button"
-                onClick={cycleSending ? () => stopCycle() : startCycle}
-                disabled={
-                  !cycleSending &&
-                  (txBusy || !transmitReady)
-                }
+                onClick={startCycle}
+                disabled={txBusy || !transmitReady}
               >
-                {cycleSending ? t.stopCycle : t.startCycle}
+                {editingTxUid === null ? t.startCycle : t.updateCycle}
               </button>
             </div>
           </div>
@@ -1771,6 +1983,120 @@ export default function CanViewer() {
         {bridge.dropped ? (
           <p className="can-dropped">{t.dropped}: {bridge.dropped.toLocaleString()}</p>
         ) : null}
+      </section>
+
+      <section className="can-sent-panel" aria-labelledby="can-sent-title">
+        <div className="can-sent-head">
+          <div>
+            <span>TX / QUEUE</span>
+            <h2 id="can-sent-title">{t.sentTitle}</h2>
+            <p>{t.sentIntro}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => stopAllCycles()}
+            disabled={!cycleSending}
+          >
+            {t.stopAllTx}
+          </button>
+        </div>
+
+        {!sentMessages.length ? (
+          <div className="can-sent-empty">{t.sentEmpty}</div>
+        ) : (
+          <div className="can-sent-scroll">
+            <table className="can-sent-table">
+              <thead>
+                <tr>
+                  <th>{t.sentStatus}</th>
+                  <th>{t.id}</th>
+                  <th>{t.format}</th>
+                  <th>{t.dlc}</th>
+                  <th>{t.data}</th>
+                  <th>{t.sentCycle}</th>
+                  <th>{t.sentCountLabel}</th>
+                  <th>{t.sentLast}</th>
+                  <th>{t.sentActions}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sentMessages.map((message) => (
+                  <tr
+                    key={message.uid}
+                    className={`${message.enabled ? "is-running" : ""}${
+                      editingTxUid === message.uid ? " is-editing" : ""
+                    }`}
+                    tabIndex={0}
+                    onClick={() => editSentMessage(message)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        editSentMessage(message);
+                      }
+                    }}
+                  >
+                    <td>
+                      <label className="can-cycle-toggle" onClick={(event) => event.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={message.enabled}
+                          onChange={() => toggleSentMessage(message.uid)}
+                          aria-label={`${formatTxMessageId(message)} · ${
+                            message.enabled ? t.stopCycle : t.startCycle
+                          }`}
+                        />
+                        <span aria-hidden="true" />
+                        <strong>{message.enabled ? t.sentEnabled : t.sentDisabled}</strong>
+                      </label>
+                    </td>
+                    <td>
+                      <strong>{formatTxMessageId(message)}</strong>
+                    </td>
+                    <td>
+                      <span className={`can-frame-type${message.extended ? " is-ext" : ""}`}>
+                        {message.extended ? t.extended : t.standard}
+                      </span>
+                    </td>
+                    <td>{message.data.length}</td>
+                    <td><code>{formatData(message.data) || "—"}</code></td>
+                    <td>{message.cycleMs} ms</td>
+                    <td>{message.sentCount.toLocaleString()}</td>
+                    <td>
+                      {message.lastSentAt
+                        ? new Date(message.lastSentAt).toLocaleTimeString(
+                            language === "tr" ? "tr-TR" : "en-GB",
+                            { hour12: false },
+                          )
+                        : "—"}
+                    </td>
+                    <td>
+                      <div className="can-sent-actions">
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            editSentMessage(message);
+                          }}
+                        >
+                          {t.editTx}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            deleteSentMessage(message.uid);
+                          }}
+                        >
+                          {t.deleteTx}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       <footer className="can-footer">
