@@ -175,7 +175,7 @@ const copy = {
     bridgeMissing:
       "Yerel köprüye ulaşılamadı. ZIP’i çıkarıp Start-PCAN-Bridge.cmd dosyasını çalıştırın.",
     bridgeUpgrade:
-      "CAN gönderme için PCAN Local Bridge v1.1.0 gerekir. Yeni ZIP’i indirip eski köprünün yerine çalıştırın.",
+      "CAN gönderme için PCAN Local Bridge v1.2.0 gerekir. Yeni ZIP’i indirip eski köprünün yerine çalıştırın.",
     connectFailed: "PCAN bağlantısı kurulamadı.",
     csvEmpty: "Dışa aktarılacak CAN mesajı yok.",
     csvSaved: "CAN kaydı CSV olarak indirildi.",
@@ -324,7 +324,7 @@ const copy = {
     bridgeMissing:
       "The local bridge could not be reached. Extract the ZIP and run Start-PCAN-Bridge.cmd.",
     bridgeUpgrade:
-      "CAN transmission requires PCAN Local Bridge v1.1.0. Download and run the new ZIP instead of the old bridge.",
+      "CAN transmission requires PCAN Local Bridge v1.2.0. Download and run the new ZIP instead of the old bridge.",
     connectFailed: "The PCAN connection could not be established.",
     csvEmpty: "There are no CAN messages to export.",
     csvSaved: "The CAN capture was downloaded as CSV.",
@@ -1554,7 +1554,7 @@ export default function CanViewer() {
               <span>02</span>
               <h3>{t.bridgeTitle}</h3>
               <p>{t.bridgeText}</p>
-              <a href="/downloads/pcan-local-bridge-v1.1.0.zip" download>
+              <a href="/downloads/pcan-local-bridge-v1.2.0.zip" download>
                 {t.bridgeAction} ↓
               </a>
             </article>
@@ -1692,7 +1692,7 @@ export default function CanViewer() {
           {bridge.ok && bridge.version === "1.0.0" ? (
             <p className="can-bridge-upgrade">
               {t.bridgeUpgrade}{" "}
-              <a href="/downloads/pcan-local-bridge-v1.1.0.zip" download>
+              <a href="/downloads/pcan-local-bridge-v1.2.0.zip" download>
                 {t.bridgeAction} ↓
               </a>
             </p>

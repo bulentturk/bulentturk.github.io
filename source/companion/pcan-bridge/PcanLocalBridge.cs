@@ -493,9 +493,8 @@ namespace PcanLocalBridge
         private const int Port = 8765;
         private static readonly string[] AllowedOrigins =
         {
-            "https://bulentturk.com",
-            "https://www.bulentturk.com",
-            "https://bulentturk.github.io",
+            "https://algo-team.com",
+            "https://www.algo-team.com",
             "http://localhost:5173",
             "http://127.0.0.1:5173"
         };
@@ -510,9 +509,9 @@ namespace PcanLocalBridge
 
             TcpListener listener = new TcpListener(IPAddress.Loopback, Port);
             listener.Start();
-            Console.WriteLine("PCAN Local Bridge v1.1.0");
+            Console.WriteLine("PCAN Local Bridge v1.2.0");
             Console.WriteLine("Local API: http://127.0.0.1:" + Port);
-            Console.WriteLine("Open https://bulentturk.com/can-viewer/ in Chrome or Edge.");
+            Console.WriteLine("Open https://algo-team.com/can-viewer/ in Chrome or Edge.");
             Console.WriteLine("Press Ctrl+C to stop.");
             Console.WriteLine();
 

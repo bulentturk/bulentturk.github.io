@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import CanLogAnalyzer from "./CanLogAnalyzer";
 import CanViewer from "./CanViewer";
@@ -13,7 +13,8 @@ const isCanViewer = route === "/can-viewer";
 const isCanLogAnalyzer = route === "/can-log-analyzer";
 const isJ1939DtcAnalyzer = route === "/j1939-dtc-decoder";
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root")!;
+const application = (
   <StrictMode>
     {isDbcEditor
       ? <DbcEditor />
@@ -24,5 +25,11 @@ createRoot(document.getElementById("root")!).render(
           : isJ1939DtcAnalyzer
             ? <J1939DtcAnalyzer />
           : <App />}
-  </StrictMode>,
+  </StrictMode>
 );
+
+if (!isDbcEditor && !isCanViewer && !isCanLogAnalyzer && !isJ1939DtcAnalyzer && root.hasChildNodes()) {
+  hydrateRoot(root, application);
+} else {
+  createRoot(root).render(application);
+}
