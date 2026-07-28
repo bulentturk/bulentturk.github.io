@@ -1,7 +1,7 @@
-BÜLENT TÜRK CAN VIEWER — PCAN LOCAL BRIDGE v1.1.0
+BÜLENT TÜRK CAN VIEWER — PCAN LOCAL BRIDGE v1.2.0
 ==================================================
 
-This small bridge connects the CAN Viewer on bulentturk.com to the PEAK
+This small bridge connects the CAN Viewer on algo-team.com to the PEAK
 PCAN-Basic Windows driver. It runs only on your local computer.
 
 SETUP
@@ -12,14 +12,14 @@ SETUP
 4. Double-click Start-PCAN-Bridge.cmd.
 5. Keep the black console window open.
 6. Open this address in Chrome or Edge:
-   https://bulentturk.com/can-viewer/
+   https://algo-team.com/can-viewer/
 7. Choose the PCAN channel and CAN bit rate, then select “Connect to CAN”.
 8. Use “Receive only” for safe monitoring. To transmit, choose “Transmit
    enabled” and accept the on-screen safety acknowledgement.
 
 SECURITY AND PRIVACY
 - The bridge listens only on 127.0.0.1:8765, on your own computer.
-- It accepts browser requests only from bulentturk.com and local development
+- It accepts browser requests only from algo-team.com and local development
   addresses.
 - Connections use listen-only mode by default.
 - CAN transmission is available only after the user selects “Transmit enabled”
