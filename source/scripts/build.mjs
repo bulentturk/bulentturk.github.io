@@ -7,7 +7,10 @@ import { build } from "vite";
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const clientOutDir = resolve(projectRoot, "dist");
 const serverOutDir = resolve(projectRoot, ".ssr-build");
-const homepagePath = resolve(clientOutDir, "index.html");
+const staticPages = [
+  { route: "/", path: resolve(clientOutDir, "index.html") },
+  { route: "/blog/", path: resolve(clientOutDir, "blog/index.html") },
+];
 
 process.chdir(projectRoot);
 
@@ -29,19 +32,19 @@ await build({
   },
 });
 
-const { renderHomepage } = await import(
+const { renderPage } = await import(
   `${pathToFileURL(resolve(serverOutDir, "entry-server.mjs")).href}?t=${Date.now()}`
 );
-const renderedHomepage = renderHomepage();
-const template = await readFile(homepagePath, "utf8");
 const mountPoint = '<div id="root"></div>';
 
-if (!template.includes(mountPoint)) {
-  throw new Error("Homepage root mount point was not found in the client build.");
+for (const page of staticPages) {
+  const template = await readFile(page.path, "utf8");
+  if (!template.includes(mountPoint)) {
+    throw new Error(`Root mount point was not found in ${page.route}.`);
+  }
+  await writeFile(
+    page.path,
+    template.replace(mountPoint, `<div id="root">${renderPage(page.route)}</div>`),
+  );
 }
-
-await writeFile(
-  homepagePath,
-  template.replace(mountPoint, `<div id="root">${renderedHomepage}</div>`),
-);
 await rm(serverOutDir, { recursive: true, force: true });

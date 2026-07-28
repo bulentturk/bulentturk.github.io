@@ -1,5 +1,5 @@
 $ErrorActionPreference = "Stop"
-$host.UI.RawUI.WindowTitle = "Bülent Türk CAN Viewer - PCAN Local Bridge"
+$host.UI.RawUI.WindowTitle = "ALGO TEAM CAN Viewer - PCAN Local Bridge"
 
 Write-Host ""
 Write-Host "  PCAN Local Bridge v1.2.0" -ForegroundColor Cyan
