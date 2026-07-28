@@ -14,18 +14,10 @@ const copy = {
       contact: "İletişim",
     },
     hero: {
-      badge: "Ücretsiz · Tarayıcı tabanlı · Yerel veri işleme",
-      title: "Saha verisini anlamlandıran mühendislik araçları.",
-      intro:
-        "CAN, J1939 ve mobil makine sistemleri için pratik analiz araçları. Kurulum yükünü azaltmak, gerçek veriyi daha hızlı incelemek ve mühendislik kararlarını görünür kılmak için geliştiriliyor.",
-      primary: "Araçları kullan",
-      secondary: "Yol haritasını gör",
-      fields: ["CAN / J1939", "Off-highway machines", "Telemetry & diagnostics"],
-      active: "aktif araç",
-      local: "veri yükleme",
-      cost: "kullanım ücreti",
-      localValue: "Yok",
-      costValue: "Ücretsiz",
+      title: "Mühendislik Araçları",
+      fields: ["Mobil İş Makineleri", "CAN Bus", "J1939"],
+      fieldLabel: "Mühendislik alanları",
+      scroll: "Araçlar",
     },
     tools: {
       kicker: "01 / Kullanıma Açık",
@@ -185,18 +177,10 @@ const copy = {
       contact: "Contact",
     },
     hero: {
-      badge: "Free · Browser-based · Local data processing",
-      title: "Engineering tools that make field data useful.",
-      intro:
-        "Practical analysis tools for CAN, J1939, and mobile-machine systems. Built to reduce setup, inspect real data faster, and make engineering decisions visible.",
-      primary: "Use the tools",
-      secondary: "View roadmap",
-      fields: ["CAN / J1939", "Off-highway machines", "Telemetry & diagnostics"],
-      active: "active tools",
-      local: "data uploads",
-      cost: "usage fee",
-      localValue: "None",
-      costValue: "Free",
+      title: "Engineering Tools",
+      fields: ["Off-Highway Machinery", "CAN Bus", "J1939"],
+      fieldLabel: "Engineering fields",
+      scroll: "Tools",
     },
     tools: {
       kicker: "01 / Available Now",
@@ -417,38 +401,16 @@ export default function Home() {
 
       <section className="hero platform-hero" aria-labelledby="hero-title">
         <div className="hero-copy">
-          <p className="overline">{t.hero.badge}</p>
           <h1 id="hero-title">{t.hero.title}</h1>
           <div className="rule rule--accent" />
-          <p className="hero-intro">{t.hero.intro}</p>
-          <ul className="field-list" aria-label="Platform alanları">
+          <ul className="field-list" aria-label={t.hero.fieldLabel}>
             {t.hero.fields.map((field) => <li key={field}>{field}</li>)}
           </ul>
-          <div className="hero-actions">
-            <a className="button button--primary" href="#tools">
-              {t.hero.primary}
-              <Arrow />
-            </a>
-            <a className="text-link" href="#roadmap">
-              {t.hero.secondary}
-              <Arrow direction="down" />
-            </a>
-          </div>
-          <div className="hero-metrics" aria-label="Platform özeti">
-            <div><strong>04</strong><span>{t.hero.active}</span></div>
-            <div><strong>{t.hero.localValue}</strong><span>{t.hero.local}</span></div>
-            <div><strong>{t.hero.costValue}</strong><span>{t.hero.cost}</span></div>
-          </div>
+          <a className="hero-entry" href="#tools">
+            {t.hero.scroll}
+            <Arrow direction="down" />
+          </a>
         </div>
-        <figure className="hero-cover">
-          <img
-            src="/assets/og-cover.png"
-            alt="CAN, J1939, telemetri ve mobil makine sistemlerini gösteren teknik illüstrasyon"
-            width="1200"
-            height="630"
-          />
-        </figure>
-        <p className="scroll-note">SCROLL / 01—04</p>
       </section>
 
       <section className="section tools-section tools-section--platform" id="tools">

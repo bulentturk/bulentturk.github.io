@@ -33,68 +33,72 @@ body {
   margin-left: 0.18em;
 }
 
+.site-header {
+  backdrop-filter: blur(10px);
+  background: rgba(245, 242, 235, 0.84);
+}
+
+.hero.platform-hero {
+  align-items: center;
+  background:
+    url("/assets/engineering-tools-hero.webp") right center / auto 100% no-repeat,
+    var(--paper);
+  display: flex;
+  min-height: max(720px, 100svh);
+  padding-bottom: 0;
+}
+
+.hero.platform-hero::before {
+  background: linear-gradient(
+    90deg,
+    rgba(245, 242, 235, 0.98) 0%,
+    rgba(245, 242, 235, 0.9) 28%,
+    rgba(245, 242, 235, 0.38) 51%,
+    rgba(245, 242, 235, 0) 68%
+  );
+  inset: 82px 0 0;
+}
+
+.hero.platform-hero .hero-copy {
+  max-width: 710px;
+  padding-bottom: 82px;
+  padding-top: 118px;
+}
+
 .platform-hero h1 {
-  font-size: clamp(56px, 6.6vw, 108px);
-  line-height: 0.94;
-  max-width: 850px;
+  font-size: clamp(66px, 7.7vw, 124px);
+  line-height: 0.9;
+  margin-top: 0;
+  max-width: 760px;
   white-space: normal;
 }
 
-.hero-cover {
-  align-self: center;
-  margin: 74px -54px 50px 24px;
-  position: relative;
-  z-index: 2;
+.hero.platform-hero .field-list {
+  gap: 12px 34px;
+  margin-top: 30px;
 }
 
-.hero-cover::before {
-  border: 1px solid rgba(8, 127, 140, 0.34);
-  content: "";
-  inset: -15px 15px 15px -15px;
-  pointer-events: none;
-  position: absolute;
-}
-
-.hero-cover img {
-  display: block;
-  height: auto;
-  position: relative;
-  width: 100%;
-}
-
-.hero-metrics {
-  border-top: 1px solid var(--line);
-  display: grid;
-  gap: 0;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 52px;
-  max-width: 660px;
-}
-
-.hero-metrics div {
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 20px 22px 0 0;
-}
-
-.hero-metrics div + div {
-  padding-left: 22px;
-}
-
-.hero-metrics div:last-child {
-  border-right: 0;
-}
-
-.hero-metrics strong {
+.hero.platform-hero .field-list li {
+  color: var(--ink);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.hero-metrics span {
-  color: var(--ink-soft);
-  font-size: 12px;
+.hero-entry {
+  align-items: center;
+  border-top: 1px solid rgba(16, 34, 50, 0.28);
+  display: flex;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  gap: 14px;
+  letter-spacing: 0.13em;
+  margin-top: 58px;
+  padding-top: 15px;
+  text-transform: uppercase;
+  width: max-content;
 }
 
 .tools-section--platform {
@@ -2308,9 +2312,10 @@ footer p {
 
 /* Platform-specific overrides live after the original portfolio rules. */
 .hero.platform-hero h1 {
-  font-size: clamp(56px, 6.6vw, 108px);
-  line-height: 0.94;
-  max-width: 850px;
+  font-size: clamp(66px, 7.7vw, 124px);
+  line-height: 0.9;
+  margin: 0 0 30px -7px;
+  max-width: 760px;
   white-space: normal;
 }
 
@@ -2394,35 +2399,50 @@ section.contact-section .contact-submit .button--primary:hover {
 
 @media (max-width: 800px) {
   .hero.platform-hero {
-    min-height: 980px;
+    align-items: flex-start;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(245, 242, 235, 0.98) 0%,
+        rgba(245, 242, 235, 0.9) 38%,
+        rgba(245, 242, 235, 0.08) 63%
+      ),
+      url("/assets/engineering-tools-hero.webp") 70% bottom / auto 64% no-repeat,
+      var(--paper);
+    min-height: max(760px, 100svh);
+  }
+
+  .hero.platform-hero::before {
+    background: none;
+    inset: 70px 0 0;
   }
 
   .hero.platform-hero .hero-copy {
-    padding-bottom: 330px;
+    padding: 108px 0 0;
   }
 
   .hero.platform-hero h1 {
-    font-size: clamp(48px, 15vw, 72px);
+    font-size: clamp(54px, 15vw, 76px);
+    margin: 0 0 22px -3px;
   }
 
-  .hero.platform-hero .hero-cover {
-    bottom: 58px;
-    left: 34px;
-    margin: 0;
-    position: absolute;
-    right: -24px;
+  .hero.platform-hero .rule {
+    margin: 22px 0;
   }
 
-  .hero.platform-hero .hero-metrics {
-    grid-template-columns: 1fr;
-    margin-top: 36px;
+  .hero.platform-hero .field-list {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
   }
 
-  .hero.platform-hero .hero-metrics div,
-  .hero.platform-hero .hero-metrics div + div {
-    border-bottom: 1px solid var(--line);
-    border-right: 0;
-    padding: 13px 0;
+  .hero.platform-hero .field-list li::after {
+    display: none;
+  }
+
+  .hero-entry {
+    margin-top: 34px;
   }
 
   .roadmap-grid {
