@@ -426,6 +426,7 @@ function reachable(
   mode: "pressure" | "return" | "suction",
 ) {
   const adjacency = new Map<string, Set<string>>();
+  const tankIds = new Set(nodes.filter((node) => node.kind === "tank").map((node) => node.id));
   const link = (a: string, b: string) => {
     if (!adjacency.has(a)) adjacency.set(a, new Set());
     if (!adjacency.has(b)) adjacency.set(b, new Set());
@@ -440,6 +441,7 @@ function reachable(
   const queue = [...start];
   while (queue.length) {
     const current = queue.shift()!;
+    if (tankIds.has(current.split(":")[0])) continue;
     for (const next of adjacency.get(current) ?? []) {
       if (!seen.has(next)) {
         seen.add(next);
@@ -498,6 +500,11 @@ function calculateSimulation(nodes: HydraulicNode[], edges: HydraulicEdge[]): Si
   const returnPorts = actuator && !blocked
     ? reachable([key(actuator.id, returnPort)], nodes, edges, "return")
     : new Set<string>();
+  if (relief && reliefFlow > 0) {
+    for (const port of reachable([key(relief.id, "t")], nodes, edges, "return")) {
+      returnPorts.add(port);
+    }
+  }
   const suctionPorts = pump ? reachable([key(pump.id, "in")], nodes, edges, "suction") : new Set<string>();
 
   return {
