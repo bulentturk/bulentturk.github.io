@@ -30,7 +30,7 @@ import "./dbc-editor.css";
 type Language = "tr" | "en";
 type WorkspaceTab = "editor" | "source" | "validation";
 
-const DRAFT_KEY = "bulentturk-dbc-editor-draft-v1";
+const DRAFT_KEY = "algo-team-dbc-editor-draft-v1";
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
 const labels = {
@@ -437,7 +437,7 @@ export default function DbcEditor() {
   useEffect(() => {
     document.documentElement.lang = language;
     document.title =
-      language === "tr" ? "DBC Editör | Bülent Türk" : "DBC Editor | Bülent Türk";
+      language === "tr" ? "DBC Editör | ALGO TEAM" : "DBC Editor | ALGO TEAM";
   }, [language]);
 
   useEffect(() => {
@@ -673,7 +673,7 @@ export default function DbcEditor() {
         <div className="dbc-brand-block">
           <a href="/" className="dbc-back-link" aria-label={t.back}>
             <Icon>←</Icon>
-            <span>Bülent Türk</span>
+            <span>ALGO TEAM</span>
           </a>
           <span className="dbc-topbar-divider" />
           <div>

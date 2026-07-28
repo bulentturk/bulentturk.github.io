@@ -150,7 +150,7 @@ const copy = {
     reportSignalAnalysis: "DBC sinyal grafikleri",
     reportSignalAnalysisText:
       "Fiziksel değerler yüklenen DBC tanımına göre çözümlenmiştir.",
-    reportGeneratedBy: "Bülent Türk · Engineering Tools",
+    reportGeneratedBy: "ALGO TEAM · Engineering Tools",
     dbcFile: "DBC dosyası",
     notLoaded: "Yüklenmedi",
     filteredRange: "Analiz aralığı",
@@ -271,7 +271,7 @@ const copy = {
     reportSignalAnalysis: "DBC signal charts",
     reportSignalAnalysisText:
       "Physical values are decoded according to the loaded DBC definition.",
-    reportGeneratedBy: "Bülent Türk · Engineering Tools",
+    reportGeneratedBy: "ALGO TEAM · Engineering Tools",
     dbcFile: "DBC file",
     notLoaded: "Not loaded",
     filteredRange: "Analysis range",
@@ -466,7 +466,7 @@ export default function CanLogAnalyzer() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = `${t.title} | Bülent Türk`;
+    document.title = `${t.title} | ALGO TEAM`;
   }, [language, t.title]);
 
   useEffect(() => {

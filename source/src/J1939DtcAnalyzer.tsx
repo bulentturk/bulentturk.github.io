@@ -51,7 +51,7 @@ const copy = {
   tr: {
     title: "J1939 DM1 / DTC Analyzer",
     subtitle: "Motor CAN trace’inden arıza teşhisi",
-    back: "Bülent Türk",
+    back: "Engineering Tools",
     privacy: "Dosyalar tarayıcınızda işlenir · Sunucuya yüklenmez",
     loadTrace: "Trace Dosyası Yükle ve Teşhis Et",
     loadTraceShort: "Trace yükle",
@@ -187,7 +187,7 @@ const copy = {
     dtcSummary: "DTC özeti",
     networkSummary: "ECU ve ağ özeti",
     detailedFindings: "Ayrıntılı bulgular",
-    generatedBy: "Bülent Türk · Engineering Tools",
+    generatedBy: "ALGO TEAM · Engineering Tools",
     disclaimer:
       "Bu rapor bilgi amaçlı bir teşhis yardımcısıdır. Üretici servis prosedürleri ve güvenlik talimatlarının yerini almaz.",
     printHint: "Yazdırma penceresinde “PDF olarak kaydet” seçilebilir.",
@@ -205,7 +205,7 @@ const copy = {
   en: {
     title: "J1939 DM1 / DTC Analyzer",
     subtitle: "Fault diagnosis from an engine CAN trace",
-    back: "Bülent Türk",
+    back: "Engineering Tools",
     privacy: "Files are processed in your browser · Nothing is uploaded",
     loadTrace: "Load Trace File and Diagnose",
     loadTraceShort: "Load trace",
@@ -341,7 +341,7 @@ const copy = {
     dtcSummary: "DTC summary",
     networkSummary: "ECU and network summary",
     detailedFindings: "Detailed findings",
-    generatedBy: "Bülent Türk · Engineering Tools",
+    generatedBy: "ALGO TEAM · Engineering Tools",
     disclaimer:
       "This report is an informational diagnostic aid. It does not replace manufacturer service procedures or safety instructions.",
     printHint: "Choose “Save as PDF” in the print dialog.",

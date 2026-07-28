@@ -1,4 +1,4 @@
-BÜLENT TÜRK CAN VIEWER — PCAN LOCAL BRIDGE v1.2.0
+ALGO TEAM CAN VIEWER — PCAN LOCAL BRIDGE v1.2.0
 ==================================================
 
 This small bridge connects the CAN Viewer on algo-team.com to the PEAK

@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
+import EngineeringBlog from "./EngineeringBlog";
 import CanLogAnalyzer from "./CanLogAnalyzer";
 import CanViewer from "./CanViewer";
 import DbcEditor from "./DbcEditor";
@@ -12,6 +13,7 @@ const isDbcEditor = route === "/dbc-editor";
 const isCanViewer = route === "/can-viewer";
 const isCanLogAnalyzer = route === "/can-log-analyzer";
 const isJ1939DtcAnalyzer = route === "/j1939-dtc-decoder";
+const isEngineeringBlog = route === "/blog";
 
 const root = document.getElementById("root")!;
 const application = (
@@ -20,10 +22,12 @@ const application = (
       ? <DbcEditor />
       : isCanViewer
         ? <CanViewer />
-        : isCanLogAnalyzer
-          ? <CanLogAnalyzer />
-          : isJ1939DtcAnalyzer
-            ? <J1939DtcAnalyzer />
+      : isCanLogAnalyzer
+        ? <CanLogAnalyzer />
+        : isJ1939DtcAnalyzer
+          ? <J1939DtcAnalyzer />
+          : isEngineeringBlog
+            ? <EngineeringBlog />
           : <App />}
   </StrictMode>
 );

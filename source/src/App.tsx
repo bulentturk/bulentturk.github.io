@@ -7,295 +7,315 @@ type Language = "tr" | "en";
 const copy = {
   tr: {
     nav: {
-      about: "Hakkımda",
-      expertise: "Çalışma Alanları",
-      work: "Yaklaşım",
       tools: "Araçlar",
-      notes: "Teknik Notlar",
-      contact: "İletişim",
+      roadmap: "Yol Haritası",
+      blog: "Mühendislik Blogu",
+      principles: "Platform",
     },
     hero: {
-      role: "Electrical Design Specialist | Off-Highway Machines",
+      badge: "Ücretsiz · Tarayıcı tabanlı · Yerel veri işleme",
+      title: "Saha verisini anlamlandıran mühendislik araçları.",
       intro:
-        "İş makineleri için elektrik-elektronik sistemleri, kontrol çözümleri ve saha uygulamaları üzerine çalışıyorum. Teknik birikimimi sade, güvenilir ve uygulanabilir çözümlere dönüştürmeyi önemsiyorum.",
-      fields: ["İş makineleri", "Kontrol sistemleri", "Telemetri"],
-      primary: "Çalışma alanlarımı incele",
-      secondary: "Kısaca hakkımda",
+        "CAN, J1939 ve mobil makine sistemleri için pratik analiz araçları. Kurulum yükünü azaltmak, gerçek veriyi daha hızlı incelemek ve mühendislik kararlarını görünür kılmak için geliştiriliyor.",
+      primary: "Araçları kullan",
+      secondary: "Yol haritasını gör",
+      fields: ["CAN / J1939", "Off-highway machines", "Telemetry & diagnostics"],
+      active: "aktif araç",
+      local: "veri yükleme",
+      cost: "kullanım ücreti",
+      localValue: "Yok",
+      costValue: "Ücretsiz",
     },
-    about: {
-      kicker: "01 / Hakkımda",
-      title: "Mühendislik ile saha uygulaması arasında.",
-      body:
-        "Elektrik-elektronik mühendisliği altyapımı; mobil iş makinelerinin kontrol sistemleri, elektrifikasyonu, veri haberleşmesi ve üretim süreçleri üzerine geliştiriyorum. Tasarımdan devreye almaya kadar farklı disiplinlerin birlikte çalıştığı projelerde görev alıyorum.",
-      current:
-        "Profesyonel kariyerime hâlen Titan Makina’da Montaj Müdürü olarak devam ediyorum. Bu görevde elektrik, hidrolik ve mekanik montaj süreçlerinin koordinasyonu ile sahada uygulanabilir mühendislik çözümlerine odaklanıyorum.",
-      note: "Önceliğim; anlaşılır tasarım, güvenli çalışma ve sürdürülebilir saha performansı.",
-    },
-    expertise: {
-      kicker: "02 / Çalışma Alanları",
-      title: "Üzerinde çalıştığım teknik başlıklar",
+    tools: {
+      kicker: "01 / Kullanıma Açık",
+      title: "Gerçek mühendislik işi için çalışan araçlar.",
       intro:
-        "Aşağıdaki alanlar, günlük mühendislik çalışmalarımın ve öğrenme odağımın temelini oluşturuyor.",
+        "Dosyalar ve CAN verileri tarayıcıda işlenir. Mevcut araçlar doğrudan kullanılabilir; hesap açma veya kurulum gerekmez.",
+      open: "Aracı aç",
+      guide: "PDF kılavuzu",
       items: [
         {
           no: "01",
-          title: "Elektrik ve Kontrol Sistemleri",
-          text: "Mobil makinelerde elektrik mimarisi, sensörler, aktüatörler, kontrol üniteleri ve saha devreye alma çalışmaları.",
+          code: "DBC",
+          title: "DBC Editörü",
+          text: "Mesaj ve sinyalleri oluşturun, bit yerleşimini doğrulayın ve standart DBC çıktısı alın.",
+          features: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"],
+          href: "/dbc-editor/",
+          guide: "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf",
         },
         {
           no: "02",
-          title: "CAN Tabanlı Haberleşme",
-          text: "CAN, J1939 ve CANopen ağlarında mesaj analizi, cihaz entegrasyonu ve kontrol sistemi haberleşmesi.",
+          code: "LIVE CAN",
+          title: "CAN Viewer",
+          text: "PCAN-USB ile canlı trafiği izleyin, kontrollü mesaj gönderin ve TRC/CSV kaydı alın.",
+          features: ["PCAN-USB", "RX / TX", "TRC / CSV kayıt"],
+          href: "/can-viewer/",
         },
         {
           no: "03",
-          title: "İş Makinası Telemetrisi",
-          text: "Makine verilerinin toplanması, anlamlandırılması, olay tabanlı izlenmesi ve uzaktan değerlendirilmesi.",
+          code: "LOG ANALYSIS",
+          title: "CAN Log Analyzer",
+          text: "TRC, ASC, CSV ve SocketCAN kayıtlarında çevrim zamanı, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.",
+          features: ["Çoklu log formatı", "Periyot ve jitter", "Sinyal grafikleri"],
+          href: "/can-log-analyzer/",
         },
         {
           no: "04",
-          title: "Elektrikli ve Hibrit Sistemler",
-          text: "Batarya, motor sürücü, şarj ve kontrol bileşenlerinin mobil makine kullanım senaryolarına entegrasyonu.",
-        },
-        {
-          no: "05",
-          title: "Makine Emniyeti",
-          text: "Fonksiyonel emniyet yaklaşımı, risk değerlendirmesi ve güvenlikle ilgili kontrol fonksiyonlarının tasarımı.",
-        },
-        {
-          no: "06",
-          title: "Montaj ve Devreye Alma",
-          text: "Elektrik, hidrolik ve mekanik disiplinler arasında üretilebilirlik, test ve saha geri bildirimi odaklı koordinasyon.",
+          code: "J1939",
+          title: "DM1 / DTC Analyzer",
+          text: "DM1 arızalarını, BAM/TP.DT mesajlarını ve arıza anındaki motor çalışma koşullarını çözümleyin.",
+          features: ["SPN / FMI", "BAM / TP.DT", "Arıza anı raporu"],
+          href: "/j1939-dtc-decoder/",
         },
       ],
     },
-    approach: {
-      kicker: "03 / Yaklaşım",
-      title: "Teknik olarak doğru, sahada uygulanabilir.",
+    roadmap: {
+      kicker: "02 / Yol Haritası",
+      title: "Sıradaki mühendislik araçları.",
       intro:
-        "Bir çözümün yalnızca kâğıt üzerinde çalışması yeterli değil. Tasarımın üretilebilir, test edilebilir ve farklı disiplinlerce anlaşılabilir olmasına önem veriyorum.",
+        "Aşağıdaki başlıklar geliştirme havuzunda. Öncelik, sahada sık tekrarlanan hesapları ve teşhis adımlarını hızlandıran araçlarda.",
+      status: "Planlanıyor",
       items: [
         {
-          title: "Sistemi anlamak",
-          text: "İhtiyacı, çalışma koşullarını ve arızanın gerçek etkisini doğru tarif etmek.",
+          code: "J1939",
+          title: "SPN / FMI Sözlüğü",
+          text: "SPN, FMI ve arıza açıklamalarını üretici notlarıyla birlikte hızlı arama.",
         },
         {
-          title: "Sadeleştirmek",
-          text: "Gereksiz karmaşıklığı azaltan, izlenebilir ve bakımı kolay çözümler geliştirmek.",
+          code: "CAN",
+          title: "Bit Yerleşim Hesaplayıcı",
+          text: "Intel ve Motorola sinyaller için start bit, uzunluk, ölçek ve byte görünümü.",
         },
         {
-          title: "Sahada doğrulamak",
-          text: "Hesap, yazılım ve dokümantasyonu gerçek çalışma koşullarıyla birlikte değerlendirmek.",
+          code: "J1939",
+          title: "PGN Explorer",
+          text: "PGN, source address, priority ve veri alanlarını açıklayan etkileşimli gezgin.",
+        },
+        {
+          code: "LOG",
+          title: "CAN Trace Karşılaştırıcı",
+          text: "İki trace dosyası arasında yeni, kayıp veya davranışı değişen mesajları bulma.",
+        },
+        {
+          code: "TELEMETRY",
+          title: "Olay Kütüphanesi Oluşturucu",
+          text: "Sinyal, eşik, süre ve koşullardan telemetri olay tanımları hazırlama.",
+        },
+        {
+          code: "SAFETY",
+          title: "PL Hesaplama Çalışma Sayfası",
+          text: "ISO 13849 yaklaşımında kanal yapısı, MTTFd, DC ve CCF girdilerini düzenleme.",
         },
       ],
     },
-    notes: {
-      kicker: "05 / Teknik Notlar",
-      title: "Öğrendiklerimden kısa notlar.",
+    blog: {
+      kicker: "03 / Mühendislik Blogu",
+      title: "Sahadan kısa, kullanılabilir teknik notlar.",
       intro:
-        "İş makineleri, kontrol sistemleri ve saha uygulamaları üzerine zaman içinde paylaşacağım teknik yazılar için bir alan.",
-      status: "Hazırlanıyor",
+        "Uzun teorik anlatımlar yerine; bir problemi anlamaya, ölçmeye veya doğrulamaya yardım eden kısa mühendislik notları.",
+      all: "Blogu aç",
+      read: "Notu oku",
       items: [
         {
           type: "CAN Haberleşmesi",
-          title: "CAN hattında sağlıklı mesaj analizine başlarken",
-          text: "Bir sahadaki haberleşme sorununu anlamak için ilk bakılması gereken temel noktalar.",
+          title: "CAN hattında mesaj analizine nereden başlanır?",
+          text: "Bit hızı, terminasyon, çevrim zamanı ve alive counter üzerinden ilk teşhis sırası.",
+          href: "/blog/#can-analizi",
         },
         {
           type: "Telemetri",
-          title: "İş makinası telemetrisinde olay tabanlı veri",
-          text: "Her veriyi sürekli toplamak yerine anlamlı olayları ve doğru örnekleme yaklaşımını belirlemek.",
+          title: "Her veriyi değil, doğru olayı kaydetmek",
+          text: "Sürekli, koşula bağlı ve olay tabanlı sinyalleri ayırmak için pratik çerçeve.",
+          href: "/blog/#olay-tabanli-telemetri",
         },
         {
-          type: "Saha Notu",
-          title: "Kontrol sistemlerinde tasarımdan saha doğrulamasına",
-          text: "Hesap, yazılım ve dokümantasyonu gerçek çalışma koşullarıyla birlikte değerlendirmek.",
+          type: "Saha Doğrulaması",
+          title: "Hesap doğruysa makine neden farklı davranır?",
+          text: "Ölçeklendirme, örnekleme, tolerans ve çalışma koşullarını birlikte kontrol etme.",
+          href: "/blog/#saha-dogrulamasi",
         },
       ],
     },
-    tools: {
-      kicker: "04 / Mühendislik Araçları",
-      title: "CAN araçları, doğrudan tarayıcıda.",
-      text:
-        "CAN veritabanlarını hazırlamak ve gerçek CAN trafiğini incelemek için ücretsiz, yerel ve uygulamaya dönük araçlar.",
-      dbcTitle: "DBC Editörü",
-      dbcText:
-        "Mesaj ve sinyalleri oluşturun, bit yerleşimini doğrulayın ve DBC dosyanızı dışa aktarın.",
-      dbcAction: "DBC Editörü aç",
-      guide: "PDF kılavuzunu indir",
-      dbcFeatures: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"],
-      viewerTitle: "CAN Viewer",
-      viewerText:
-        "PCAN-USB ile canlı CAN mesajlarını izleyin, kontrollü mesaj gönderin ve TRC/CSV kaydı alın.",
-      viewerAction: "CAN Viewer aç",
-      viewerFeatures: ["PCAN-USB", "RX / TX", "TRC / CSV kayıt"],
-      analyzerTitle: "CAN Log Analyzer",
-      analyzerText:
-        "TRC, ASC, CSV ve SocketCAN kayıtlarını açın; çevrim zamanı, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.",
-      analyzerAction: "CAN Log Analyzer aç",
-      analyzerFeatures: ["TRC / ASC / CSV", "Periyot ve jitter", "Sinyal grafikleri"],
-      dtcTitle: "J1939 DM1 / DTC Analyzer",
-      dtcText:
-        "Motor CAN trace’inde DM1 arızalarını, çok paketli mesajları ve arıza anı çalışma koşullarını teşhis edin.",
-      dtcAction: "J1939 arıza teşhisini aç",
-      dtcFeatures: ["DM1 / SPN / FMI", "BAM / TP.DT", "Arıza anı raporu"],
-      privacy: "Dosyalar ve CAN verisi sunucuya yüklenmez · Ücretsiz kullanım",
+    platform: {
+      kicker: "04 / Platform",
+      title: "Kişisel portföy değil, büyüyen bir mühendislik çalışma alanı.",
+      intro:
+        "ALGO TEAM; mobil makineler, kontrol sistemleri ve saha verisi etrafında geliştirilen bağımsız araçları ve teknik notları tek yerde toplar.",
+      items: [
+        {
+          title: "Yerel ve gizli",
+          text: "Desteklenen işlemlerde dosya ve CAN verisi sunucuya gönderilmez.",
+        },
+        {
+          title: "Açıklanabilir",
+          text: "Sonuç kadar kullanılan ölçek, bit düzeni ve hesap adımları da görünür tutulur.",
+        },
+        {
+          title: "Saha odaklı",
+          text: "Araçlar gerçek loglar, cihaz entegrasyonu ve devreye alma ihtiyaçları üzerinden şekillenir.",
+        },
+      ],
     },
-    contact: {
-      kicker: "06 / İletişim",
-      title: "Teknik fikirler ve mesleki paylaşımlar için.",
-      text:
-        "İş makineleri, kontrol sistemleri ve mühendislik uygulamaları üzerine görüş alışverişine açığım.",
-      email: "E-posta",
-      linkedin: "LinkedIn",
+    footer: {
+      label: "ALGO TEAM · ENGINEERING TOOLS",
+      note: "CAN · J1939 · TELEMETRY · MOBILE MACHINES",
     },
-    footer: "Bülent Türk · Elektrik-Elektronik Mühendisi",
   },
   en: {
     nav: {
-      about: "About",
-      expertise: "Focus Areas",
-      work: "Approach",
       tools: "Tools",
-      notes: "Technical Notes",
-      contact: "Contact",
+      roadmap: "Roadmap",
+      blog: "Engineering Blog",
+      principles: "Platform",
     },
     hero: {
-      role: "Electrical Design Specialist | Off-Highway Machines",
+      badge: "Free · Browser-based · Local data processing",
+      title: "Engineering tools that make field data useful.",
       intro:
-        "I work on electrical and electronic systems, control solutions, and field applications for off-highway machines. I value turning technical knowledge into clear, reliable, and practical solutions.",
-      fields: ["Off-highway machines", "Control systems", "Telemetry"],
-      primary: "Explore my focus areas",
-      secondary: "A short introduction",
+        "Practical analysis tools for CAN, J1939, and mobile-machine systems. Built to reduce setup, inspect real data faster, and make engineering decisions visible.",
+      primary: "Use the tools",
+      secondary: "View roadmap",
+      fields: ["CAN / J1939", "Off-highway machines", "Telemetry & diagnostics"],
+      active: "active tools",
+      local: "data uploads",
+      cost: "usage fee",
+      localValue: "None",
+      costValue: "Free",
     },
-    about: {
-      kicker: "01 / About",
-      title: "Between engineering and field application.",
-      body:
-        "I continue to develop my electrical and electronics engineering background through work on mobile machine control systems, electrification, data communication, and production processes. I take part in multidisciplinary projects from design through commissioning.",
-      current:
-        "I currently continue my professional career as Assembly Manager at Titan Makina. In this role, I focus on coordinating electrical, hydraulic, and mechanical assembly processes and developing engineering solutions that can be applied in the field.",
-      note: "My priorities are clear design, safe operation, and sustainable field performance.",
-    },
-    expertise: {
-      kicker: "02 / Focus Areas",
-      title: "Technical subjects I work on",
+    tools: {
+      kicker: "01 / Available Now",
+      title: "Working tools for real engineering tasks.",
       intro:
-        "These areas form the core of my day-to-day engineering work and ongoing learning.",
+        "Files and CAN data are processed in the browser. Current tools are ready to use with no account or installation.",
+      open: "Open tool",
+      guide: "PDF guide",
       items: [
         {
           no: "01",
-          title: "Electrical & Control Systems",
-          text: "Electrical architecture, sensors, actuators, control units, and field commissioning for mobile machinery.",
+          code: "DBC",
+          title: "DBC Editor",
+          text: "Create messages and signals, verify the bit layout, and export a standards-compatible DBC.",
+          features: ["CAN / CAN FD", "Intel / Motorola", "DBC export"],
+          href: "/dbc-editor/",
+          guide: "/docs/dbc-editor-user-guide-en.pdf",
         },
         {
           no: "02",
-          title: "CAN-Based Communication",
-          text: "Message analysis, device integration, and control-system communication across CAN, J1939, and CANopen networks.",
+          code: "LIVE CAN",
+          title: "CAN Viewer",
+          text: "Monitor live traffic with PCAN-USB, transmit controlled frames, and record TRC/CSV logs.",
+          features: ["PCAN-USB", "RX / TX", "TRC / CSV recording"],
+          href: "/can-viewer/",
         },
         {
           no: "03",
-          title: "Machine Telemetry",
-          text: "Collecting and interpreting machine data for event-based monitoring and remote evaluation.",
+          code: "LOG ANALYSIS",
+          title: "CAN Log Analyzer",
+          text: "Inspect cycle time, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and SocketCAN logs.",
+          features: ["Multiple log formats", "Period and jitter", "Signal charts"],
+          href: "/can-log-analyzer/",
         },
         {
           no: "04",
-          title: "Electric & Hybrid Systems",
-          text: "Integrating batteries, motor drives, chargers, and controls into mobile-machine operating scenarios.",
-        },
-        {
-          no: "05",
-          title: "Machine Safety",
-          text: "Functional-safety thinking, risk assessment, and the design of safety-related control functions.",
-        },
-        {
-          no: "06",
-          title: "Assembly & Commissioning",
-          text: "Cross-disciplinary coordination focused on manufacturability, testing, and feedback from the field.",
+          code: "J1939",
+          title: "DM1 / DTC Analyzer",
+          text: "Decode DM1 faults, BAM/TP.DT messages, and engine operating conditions at fault onset.",
+          features: ["SPN / FMI", "BAM / TP.DT", "Fault-context report"],
+          href: "/j1939-dtc-decoder/",
         },
       ],
     },
-    approach: {
-      kicker: "03 / Approach",
-      title: "Technically sound, practical in the field.",
+    roadmap: {
+      kicker: "02 / Roadmap",
+      title: "Engineering tools coming next.",
       intro:
-        "A solution should do more than work on paper. I care about designs that can be built, tested, maintained, and clearly understood across disciplines.",
+        "These concepts are in the development pool. Priority goes to tools that accelerate repetitive field calculations and diagnostic steps.",
+      status: "Planned",
       items: [
         {
-          title: "Understand the system",
-          text: "Define the need, operating conditions, and real-world impact of a failure.",
+          code: "J1939",
+          title: "SPN / FMI Dictionary",
+          text: "Fast lookup for SPNs, FMIs, fault descriptions, and manufacturer notes.",
         },
         {
-          title: "Simplify",
-          text: "Reduce unnecessary complexity and develop traceable, maintainable solutions.",
+          code: "CAN",
+          title: "Bit Layout Calculator",
+          text: "Start bit, length, scale, and byte views for Intel and Motorola signals.",
         },
         {
-          title: "Validate in the field",
-          text: "Evaluate calculations, software, and documentation under real operating conditions.",
+          code: "J1939",
+          title: "PGN Explorer",
+          text: "An interactive guide to PGNs, source addresses, priority, and data fields.",
+        },
+        {
+          code: "LOG",
+          title: "CAN Trace Comparator",
+          text: "Find new, missing, or behaviorally changed messages across two trace files.",
+        },
+        {
+          code: "TELEMETRY",
+          title: "Event Library Builder",
+          text: "Build telemetry event definitions from signals, thresholds, durations, and conditions.",
+        },
+        {
+          code: "SAFETY",
+          title: "PL Calculation Worksheet",
+          text: "Organize channel architecture, MTTFd, DC, and CCF inputs for ISO 13849 work.",
         },
       ],
     },
-    notes: {
-      kicker: "05 / Technical Notes",
-      title: "Short notes from what I learn.",
+    blog: {
+      kicker: "03 / Engineering Blog",
+      title: "Short, usable technical notes from the field.",
       intro:
-        "A place for technical writing I plan to share over time on off-highway machines, control systems, and field applications.",
-      status: "In preparation",
+        "Instead of long theoretical essays: concise engineering notes that help understand, measure, or validate a problem.",
+      all: "Open blog",
+      read: "Read note",
       items: [
         {
           type: "CAN Communication",
-          title: "Getting started with reliable CAN message analysis",
-          text: "The fundamentals to examine first when investigating a communication issue in the field.",
+          title: "Where should CAN message analysis begin?",
+          text: "A first-pass diagnostic order using bitrate, termination, cycle time, and alive counters.",
+          href: "/blog/#can-analizi",
         },
         {
           type: "Telemetry",
-          title: "Event-based data in off-highway machine telemetry",
-          text: "Identifying meaningful events and suitable sampling instead of collecting every signal continuously.",
+          title: "Record the right event, not every value",
+          text: "A practical way to separate continuous, conditional, and event-based signals.",
+          href: "/blog/#olay-tabanli-telemetri",
         },
         {
-          type: "Field Note",
-          title: "From control-system design to field validation",
-          text: "Evaluating calculations, software, and documentation together under real operating conditions.",
+          type: "Field Validation",
+          title: "Why does the machine behave differently when the math is right?",
+          text: "Checking scaling, sampling, tolerances, and operating conditions together.",
+          href: "/blog/#saha-dogrulamasi",
         },
       ],
     },
-    tools: {
-      kicker: "04 / Engineering Tools",
-      title: "CAN tools, directly in your browser.",
-      text:
-        "Free, local, and practical tools for preparing CAN databases and inspecting real CAN traffic.",
-      dbcTitle: "DBC Editor",
-      dbcText:
-        "Create messages and signals, validate the bit layout, and export your DBC file.",
-      dbcAction: "Open DBC Editor",
-      guide: "Download PDF guide",
-      dbcFeatures: ["CAN / CAN FD", "Intel / Motorola", "DBC export"],
-      viewerTitle: "CAN Viewer",
-      viewerText:
-        "Monitor live CAN traffic with PCAN-USB, transmit controlled frames, and record TRC/CSV logs.",
-      viewerAction: "Open CAN Viewer",
-      viewerFeatures: ["PCAN-USB", "RX / TX", "TRC / CSV recording"],
-      analyzerTitle: "CAN Log Analyzer",
-      analyzerText:
-        "Open TRC, ASC, CSV, and SocketCAN captures; inspect cycle time, jitter, missing messages, and DBC signals.",
-      analyzerAction: "Open CAN Log Analyzer",
-      analyzerFeatures: ["TRC / ASC / CSV", "Period and jitter", "Signal charts"],
-      dtcTitle: "J1939 DM1 / DTC Analyzer",
-      dtcText:
-        "Diagnose DM1 faults, multi-packet messages, and operating conditions at fault onset from an engine CAN trace.",
-      dtcAction: "Open J1939 fault diagnosis",
-      dtcFeatures: ["DM1 / SPN / FMI", "BAM / TP.DT", "Fault-context report"],
-      privacy: "Files and CAN data are never uploaded · Free to use",
+    platform: {
+      kicker: "04 / Platform",
+      title: "Not a personal portfolio—a growing engineering workspace.",
+      intro:
+        "ALGO TEAM brings independent tools and technical notes for mobile machines, control systems, and field data into one focused platform.",
+      items: [
+        {
+          title: "Local and private",
+          text: "For supported workflows, files and CAN data never leave the browser.",
+        },
+        {
+          title: "Explainable",
+          text: "Scaling, bit layout, and calculation steps remain visible alongside the result.",
+        },
+        {
+          title: "Field-driven",
+          text: "Tools evolve around real logs, device integration, and commissioning needs.",
+        },
+      ],
     },
-    contact: {
-      kicker: "06 / Contact",
-      title: "For technical ideas and professional exchange.",
-      text:
-        "I am open to exchanging ideas on off-highway machines, control systems, and engineering practice.",
-      email: "Email",
-      linkedin: "LinkedIn",
+    footer: {
+      label: "ALGO TEAM · ENGINEERING TOOLS",
+      note: "CAN · J1939 · TELEMETRY · MOBILE MACHINES",
     },
-    footer: "Bülent Türk · Electrical & Electronics Engineer",
   },
 } as const;
 
@@ -325,7 +345,7 @@ function TechnicalCanvas() {
       <i className="node node--four" />
       <i className="node node--five" />
       <div className="datum datum--one">CAN</div>
-      <div className="datum datum--two">24V</div>
+      <div className="datum datum--two">J1939</div>
       <div className="datum datum--three">250k</div>
       <div className="measure measure--one">01</div>
       <div className="measure measure--two">02</div>
@@ -345,16 +365,14 @@ export default function Home() {
   return (
     <main id="top">
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Bülent Türk, ana sayfa">
-          Bülent Türk
+        <a className="brand" href="#top" aria-label="ALGO TEAM ana sayfa">
+          ALGO<span>TEAM</span>
         </a>
         <nav className="desktop-nav" aria-label="Ana menü">
-          <a href="#about">{t.nav.about}</a>
-          <a href="#expertise">{t.nav.expertise}</a>
-          <a href="#approach">{t.nav.work}</a>
           <a href="#tools">{t.nav.tools}</a>
-          <a href="#notes">{t.nav.notes}</a>
-          <a href="#contact">{t.nav.contact}</a>
+          <a href="#roadmap">{t.nav.roadmap}</a>
+          <a href="#blog">{t.nav.blog}</a>
+          <a href="#platform">{t.nav.principles}</a>
         </nav>
         <div className="language-switch" aria-label="Dil seçimi">
           <button
@@ -377,77 +395,122 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="hero" aria-labelledby="hero-title">
+      <section className="hero platform-hero" aria-labelledby="hero-title">
         <div className="hero-copy">
-          <p className="overline">Electrical · Control · Mobile Machines</p>
-          <h1 id="hero-title">Bülent Türk</h1>
-          <p className="role">{t.hero.role}</p>
+          <p className="overline">{t.hero.badge}</p>
+          <h1 id="hero-title">{t.hero.title}</h1>
           <div className="rule rule--accent" />
           <p className="hero-intro">{t.hero.intro}</p>
-          <ul className="field-list" aria-label="Çalışma alanları">
-            {t.hero.fields.map((field) => (
-              <li key={field}>{field}</li>
-            ))}
+          <ul className="field-list" aria-label="Platform alanları">
+            {t.hero.fields.map((field) => <li key={field}>{field}</li>)}
           </ul>
           <div className="hero-actions">
-            <a className="button button--primary" href="#expertise">
+            <a className="button button--primary" href="#tools">
               {t.hero.primary}
               <Arrow />
             </a>
-            <a className="text-link" href="#about">
+            <a className="text-link" href="#roadmap">
               {t.hero.secondary}
               <Arrow direction="down" />
             </a>
           </div>
-        </div>
-        <TechnicalCanvas />
-        <p className="scroll-note">SCROLL / 01—06</p>
-      </section>
-
-      <section className="section about-section" id="about">
-        <div className="section-label">
-          <p>{t.about.kicker}</p>
-        </div>
-        <div className="about-content">
-          <h2>{t.about.title}</h2>
-          <div className="about-grid">
-            <p className="lead">{t.about.body}</p>
-            <div>
-              <p>{t.about.current}</p>
-              <p className="quiet-note">{t.about.note}</p>
-            </div>
+          <div className="hero-metrics" aria-label="Platform özeti">
+            <div><strong>04</strong><span>{t.hero.active}</span></div>
+            <div><strong>{t.hero.localValue}</strong><span>{t.hero.local}</span></div>
+            <div><strong>{t.hero.costValue}</strong><span>{t.hero.cost}</span></div>
           </div>
         </div>
+        <TechnicalCanvas />
+        <p className="scroll-note">SCROLL / 01—04</p>
       </section>
 
-      <section className="section expertise-section" id="expertise">
-        <div className="section-head">
-          <p className="section-kicker">{t.expertise.kicker}</p>
-          <h2>{t.expertise.title}</h2>
-          <p>{t.expertise.intro}</p>
+      <section className="section tools-section tools-section--platform" id="tools">
+        <div className="tools-copy">
+          <div className="section-head compact-head">
+            <p className="section-kicker">{t.tools.kicker}</p>
+            <h2>{t.tools.title}</h2>
+            <p>{t.tools.intro}</p>
+          </div>
+          <div className="tools-choice-list">
+            {t.tools.items.map((item) => (
+              <article key={item.no}>
+                <span>{item.no} / {item.code}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+                <ul>
+                  {item.features.map((feature) => <li key={feature}>{feature}</li>)}
+                </ul>
+                <div className="tools-actions">
+                  <a className="button button--primary" href={item.href}>
+                    {t.tools.open}
+                    <Arrow />
+                  </a>
+                  {"guide" in item && item.guide ? (
+                    <a className="tools-guide-link" href={item.guide} download>
+                      {t.tools.guide}<span aria-hidden="true">PDF ↓</span>
+                    </a>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+          <small><i />CLIENT-SIDE PROCESSING · NO ACCOUNT</small>
         </div>
-        <div className="expertise-grid">
-          {t.expertise.items.map((item) => (
-            <article className="expertise-card" key={item.no}>
-              <span>{item.no}</span>
+      </section>
+
+      <section className="section roadmap-section" id="roadmap">
+        <div className="section-head">
+          <p className="section-kicker">{t.roadmap.kicker}</p>
+          <h2>{t.roadmap.title}</h2>
+          <p>{t.roadmap.intro}</p>
+        </div>
+        <div className="roadmap-grid">
+          {t.roadmap.items.map((item, index) => (
+            <article className="roadmap-card" key={item.title}>
+              <div className="roadmap-meta">
+                <span>0{index + 1}</span>
+                <span>{item.code}</span>
+              </div>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-              <div className="card-trace" aria-hidden="true">
-                <i />
-              </div>
+              <div className="planned-status"><i />{t.roadmap.status}</div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="section approach-section" id="approach">
+      <section className="section notes-section" id="blog">
+        <div className="notes-head">
+          <p className="section-kicker">{t.blog.kicker}</p>
+          <h2>{t.blog.title}</h2>
+          <p>{t.blog.intro}</p>
+          <a className="text-link blog-all-link" href="/blog/">
+            {t.blog.all}<Arrow />
+          </a>
+        </div>
+        <div className="notes-grid">
+          {t.blog.items.map((item, index) => (
+            <article className="note-card" key={item.title}>
+              <div className="note-meta">
+                <span>0{index + 1}</span>
+                <span>{item.type}</span>
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+              <a className="note-link" href={item.href}>{t.blog.read}<Arrow /></a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section approach-section platform-section" id="platform">
         <div className="approach-intro">
-          <p className="section-kicker">{t.approach.kicker}</p>
-          <h2>{t.approach.title}</h2>
-          <p>{t.approach.intro}</p>
+          <p className="section-kicker">{t.platform.kicker}</p>
+          <h2>{t.platform.title}</h2>
+          <p>{t.platform.intro}</p>
         </div>
         <ol className="approach-list">
-          {t.approach.items.map((item, index) => (
+          {t.platform.items.map((item, index) => (
             <li key={item.title}>
               <span>0{index + 1}</span>
               <div>
@@ -459,221 +522,9 @@ export default function Home() {
         </ol>
       </section>
 
-      <section className="section tools-section" id="tools">
-        <div className="tools-copy">
-          <p className="section-kicker">{t.tools.kicker}</p>
-          <h2>{t.tools.title}</h2>
-          <p>{t.tools.text}</p>
-          <div className="tools-choice-list">
-            <article>
-              <span>01 / DBC</span>
-              <h3>{t.tools.dbcTitle}</h3>
-              <p>{t.tools.dbcText}</p>
-              <ul>
-                {t.tools.dbcFeatures.map((feature) => <li key={feature}>{feature}</li>)}
-              </ul>
-              <div className="tools-actions">
-                <a className="button button--primary" href="/dbc-editor/">
-                  {t.tools.dbcAction}
-                  <Arrow />
-                </a>
-                <a
-                  className="tools-guide-link"
-                  href={language === "tr"
-                    ? "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf"
-                    : "/docs/dbc-editor-user-guide-en.pdf"}
-                  download
-                >
-                  {t.tools.guide}
-                  <span aria-hidden="true">PDF ↓</span>
-                </a>
-              </div>
-            </article>
-            <article>
-              <span>02 / LIVE CAN</span>
-              <h3>{t.tools.viewerTitle}</h3>
-              <p>{t.tools.viewerText}</p>
-              <ul>
-                {t.tools.viewerFeatures.map((feature) => <li key={feature}>{feature}</li>)}
-              </ul>
-              <div className="tools-actions">
-                <a className="button button--primary" href="/can-viewer/">
-                  {t.tools.viewerAction}
-                  <Arrow />
-                </a>
-              </div>
-            </article>
-            <article>
-              <span>03 / OFFLINE ANALYSIS</span>
-              <h3>{t.tools.analyzerTitle}</h3>
-              <p>{t.tools.analyzerText}</p>
-              <ul>
-                {t.tools.analyzerFeatures.map((feature) => <li key={feature}>{feature}</li>)}
-              </ul>
-              <div className="tools-actions">
-                <a className="button button--primary" href="/can-log-analyzer/">
-                  {t.tools.analyzerAction}
-                  <Arrow />
-                </a>
-              </div>
-            </article>
-            <article>
-              <span>04 / J1939 DIAGNOSTICS</span>
-              <h3>{t.tools.dtcTitle}</h3>
-              <p>{t.tools.dtcText}</p>
-              <ul>
-                {t.tools.dtcFeatures.map((feature) => <li key={feature}>{feature}</li>)}
-              </ul>
-              <div className="tools-actions">
-                <a className="button button--primary" href="/j1939-dtc-decoder/">
-                  {t.tools.dtcAction}
-                  <Arrow />
-                </a>
-              </div>
-            </article>
-          </div>
-          <small><i />{t.tools.privacy}</small>
-        </div>
-        <div className="tools-preview-stack" aria-hidden="true">
-          <div className="dbc-tool-preview">
-            <div className="preview-top">
-              <span>DBC / CAN DATABASE</span>
-              <i />
-            </div>
-            <div className="preview-body">
-              <div className="preview-list">
-                <span>0x201</span>
-                <strong>VCU_Status</strong>
-                <span>0x18FF50E5</span>
-                <strong>Charger_Status</strong>
-                <span>0x301</span>
-                <strong>Telemetry_Data</strong>
-              </div>
-              <div className="preview-editor">
-                <small>SG_ ENGINE_SPEED</small>
-                <strong>0|16@1+</strong>
-                <div className="preview-bits">
-                  {Array.from({ length: 16 }, (_, index) => <i key={index} />)}
-                </div>
-                <p>(0.125,0) [0|8031.875] "rpm"</p>
-              </div>
-            </div>
-            <div className="preview-status"><i /> VALID · CLIENT-SIDE</div>
-          </div>
-          <div className="can-tool-preview">
-            <div className="preview-top">
-              <span>PCAN-USB / LIVE MONITOR</span>
-              <i />
-            </div>
-            <div className="can-preview-status">
-              <span><i /> RX / TX · LOG</span>
-              <strong>250 kbit/s</strong>
-            </div>
-            {[
-              ["0x201", "VCU_Status", "40 2E E2 04 01 00 00 00"],
-              ["0x18FF50E5", "Charger_Status", "98 03 B4 00 10 00 45 00"],
-              ["0x301", "Telemetry_Data", "7E 20 18 00 00 01 00 00"],
-            ].map(([id, name, data]) => (
-              <div className="can-preview-row" key={id}>
-                <strong>{id}</strong>
-                <span>{name}</span>
-                <code>{data}</code>
-              </div>
-            ))}
-            <div className="preview-status"><i /> LIVE · DBC DECODED</div>
-          </div>
-          <div className="dtc-tool-preview">
-            <div className="preview-top">
-              <span>J1939 DM1 / DTC ANALYSIS</span>
-              <i />
-            </div>
-            <div className="dtc-preview-summary">
-              <span><i /> MOTOR ECU #1</span>
-              <strong>2 ACTIVE DTC</strong>
-            </div>
-            <div className="dtc-preview-row">
-              <div>
-                <span>SPN 100</span>
-                <strong>FMI 01</strong>
-              </div>
-              <p>Engine Oil Pressure</p>
-              <small>ACTIVE</small>
-            </div>
-            <div className="dtc-preview-row">
-              <div>
-                <span>SPN 110</span>
-                <strong>FMI 15</strong>
-              </div>
-              <p>Engine Coolant Temperature</p>
-              <small>WARNING</small>
-            </div>
-            <div className="dtc-preview-context">
-              <div><span>ENGINE</span><strong>1842 rpm</strong></div>
-              <div><span>TORQUE</span><strong>68 %</strong></div>
-              <div><span>HOURS</span><strong>4286 h</strong></div>
-            </div>
-            <div className="preview-status"><i /> DM1 DECODED · TRACE ANALYZED</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section notes-section" id="notes">
-        <div className="notes-head">
-          <p className="section-kicker">{t.notes.kicker}</p>
-          <h2>{t.notes.title}</h2>
-          <p>{t.notes.intro}</p>
-        </div>
-        <div className="notes-grid">
-          {t.notes.items.map((item, index) => (
-            <article className="note-card" key={item.title}>
-              <div className="note-meta">
-                <span>0{index + 1}</span>
-                <span>{item.type}</span>
-              </div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-              <div className="note-status">
-                <i aria-hidden="true" />
-                {t.notes.status}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section contact-section" id="contact">
-        <div>
-          <p className="section-kicker">{t.contact.kicker}</p>
-          <h2>{t.contact.title}</h2>
-        </div>
-        <div className="contact-copy">
-          <p>{t.contact.text}</p>
-          <div className="contact-links">
-            <a href="mailto:bulentturk459@gmail.com">
-              <span>{t.contact.email}</span>
-              <strong>bulentturk459@gmail.com</strong>
-              <Arrow />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/b%C3%BClent-t%C3%BCrk-ba29a577/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span>{t.contact.linkedin}</span>
-              <strong>linkedin.com/in/bülent-türk</strong>
-              <Arrow />
-            </a>
-          </div>
-        </div>
-        <div className="contact-diagram" aria-hidden="true">
-          <span />
-          <i />
-          <span />
-        </div>
-      </section>
-
       <footer>
-        <p>{t.footer}</p>
+        <p>{t.footer.label}</p>
+        <p>{t.footer.note}</p>
         <p>© {new Date().getFullYear()}</p>
       </footer>
     </main>
