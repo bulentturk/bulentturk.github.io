@@ -11,6 +11,7 @@ const copy = {
       roadmap: "Yol Haritası",
       blog: "Mühendislik Blogu",
       principles: "Platform",
+      contact: "İletişim",
     },
     hero: {
       badge: "Ücretsiz · Tarayıcı tabanlı · Yerel veri işleme",
@@ -138,9 +139,9 @@ const copy = {
     },
     platform: {
       kicker: "04 / Platform",
-      title: "Kişisel portföy değil, büyüyen bir mühendislik çalışma alanı.",
+      title: "Mobil makineler için araçlar ve teknik notlar.",
       intro:
-        "ALGO TEAM; mobil makineler, kontrol sistemleri ve saha verisi etrafında geliştirilen bağımsız araçları ve teknik notları tek yerde toplar.",
+        "CAN, J1939, kontrol sistemleri ve saha verisi üzerine; işe yaradığı ölçüde büyüyen bir çalışma alanı.",
       items: [
         {
           title: "Yerel ve gizli",
@@ -156,6 +157,20 @@ const copy = {
         },
       ],
     },
+    contact: {
+      kicker: "05 / İletişim",
+      title: "Bir konu varsa, yazabilirsiniz.",
+      intro: "Araçlarla ilgili hata, öneri veya teknik iş birliği için.",
+      name: "İsim",
+      email: "E-posta",
+      message: "Mesaj",
+      namePlaceholder: "Adınız",
+      emailPlaceholder: "ornek@firma.com",
+      messagePlaceholder: "Kısaca anlatın…",
+      send: "Mesajı hazırla",
+      direct: "Doğrudan e-posta",
+      note: "Gönder düğmesi, mesajı e-posta uygulamanızda hazırlar.",
+    },
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
       note: "CAN · J1939 · TELEMETRY · MOBILE MACHINES",
@@ -167,6 +182,7 @@ const copy = {
       roadmap: "Roadmap",
       blog: "Engineering Blog",
       principles: "Platform",
+      contact: "Contact",
     },
     hero: {
       badge: "Free · Browser-based · Local data processing",
@@ -294,9 +310,9 @@ const copy = {
     },
     platform: {
       kicker: "04 / Platform",
-      title: "Not a personal portfolio—a growing engineering workspace.",
+      title: "Tools and technical notes for mobile machines.",
       intro:
-        "ALGO TEAM brings independent tools and technical notes for mobile machines, control systems, and field data into one focused platform.",
+        "A working space for CAN, J1939, control systems, and field data—growing only where it proves useful.",
       items: [
         {
           title: "Local and private",
@@ -311,6 +327,20 @@ const copy = {
           text: "Tools evolve around real logs, device integration, and commissioning needs.",
         },
       ],
+    },
+    contact: {
+      kicker: "05 / Contact",
+      title: "If there is something to discuss, write.",
+      intro: "For tool feedback, bug reports, or technical collaboration.",
+      name: "Name",
+      email: "Email",
+      message: "Message",
+      namePlaceholder: "Your name",
+      emailPlaceholder: "name@company.com",
+      messagePlaceholder: "A short note…",
+      send: "Prepare message",
+      direct: "Email directly",
+      note: "The button prepares the message in your email application.",
     },
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
@@ -327,33 +357,6 @@ function Arrow({ direction = "right" }: { direction?: "right" | "down" }) {
   );
 }
 
-function TechnicalCanvas() {
-  return (
-    <div className="technical-canvas" aria-hidden="true">
-      <div className="canvas-grid" />
-      <div className="orbit orbit--one" />
-      <div className="orbit orbit--two" />
-      <div className="axis axis--x" />
-      <div className="axis axis--y" />
-      <div className="signal signal--one" />
-      <div className="signal signal--two" />
-      <div className="signal signal--three" />
-      <div className="signal signal--four" />
-      <i className="node node--one" />
-      <i className="node node--two" />
-      <i className="node node--three" />
-      <i className="node node--four" />
-      <i className="node node--five" />
-      <div className="datum datum--one">CAN</div>
-      <div className="datum datum--two">J1939</div>
-      <div className="datum datum--three">250k</div>
-      <div className="measure measure--one">01</div>
-      <div className="measure measure--two">02</div>
-      <div className="measure measure--three">03</div>
-    </div>
-  );
-}
-
 export default function Home() {
   const [language, setLanguage] = useState<Language>("tr");
   const t = copy[language];
@@ -361,6 +364,22 @@ export default function Home() {
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
+
+  function prepareEmail(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const name = String(form.get("name") ?? "").trim();
+    const email = String(form.get("email") ?? "").trim();
+    const message = String(form.get("message") ?? "").trim();
+    const subject = language === "tr"
+      ? `ALGO TEAM iletişim — ${name}`
+      : `ALGO TEAM contact — ${name}`;
+    const body = language === "tr"
+      ? `İsim: ${name}\nE-posta: ${email}\n\n${message}`
+      : `Name: ${name}\nEmail: ${email}\n\n${message}`;
+
+    window.location.href = `mailto:info@algo-team.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
 
   return (
     <main id="top">
@@ -373,6 +392,7 @@ export default function Home() {
           <a href="#roadmap">{t.nav.roadmap}</a>
           <a href="#blog">{t.nav.blog}</a>
           <a href="#platform">{t.nav.principles}</a>
+          <a href="#contact">{t.nav.contact}</a>
         </nav>
         <div className="language-switch" aria-label="Dil seçimi">
           <button
@@ -420,16 +440,25 @@ export default function Home() {
             <div><strong>{t.hero.costValue}</strong><span>{t.hero.cost}</span></div>
           </div>
         </div>
-        <TechnicalCanvas />
+        <figure className="hero-cover">
+          <img
+            src="/assets/og-cover.png"
+            alt="CAN, J1939, telemetri ve mobil makine sistemlerini gösteren teknik illüstrasyon"
+            width="1200"
+            height="630"
+          />
+        </figure>
         <p className="scroll-note">SCROLL / 01—04</p>
       </section>
 
       <section className="section tools-section tools-section--platform" id="tools">
         <div className="tools-copy">
-          <div className="section-head compact-head">
-            <p className="section-kicker">{t.tools.kicker}</p>
-            <h2>{t.tools.title}</h2>
-            <p>{t.tools.intro}</p>
+          <div className="section-head compact-head tools-section-head">
+            <div>
+              <p className="section-kicker">{t.tools.kicker}</p>
+              <h2>{t.tools.title}</h2>
+            </div>
+            <p className="tools-availability-note">{t.tools.intro}</p>
           </div>
           <div className="tools-choice-list">
             {t.tools.items.map((item) => (
@@ -520,6 +549,58 @@ export default function Home() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="section contact-section" id="contact">
+        <div className="contact-copy">
+          <p className="section-kicker">{t.contact.kicker}</p>
+          <h2>{t.contact.title}</h2>
+          <p>{t.contact.intro}</p>
+          <a className="contact-email" href="mailto:info@algo-team.com">
+            <span>{t.contact.direct}</span>
+            info@algo-team.com
+          </a>
+        </div>
+        <form className="contact-form" onSubmit={prepareEmail}>
+          <div className="contact-field-row">
+            <label>
+              <span>{t.contact.name}</span>
+              <input
+                name="name"
+                placeholder={t.contact.namePlaceholder}
+                required
+                type="text"
+                autoComplete="name"
+              />
+            </label>
+            <label>
+              <span>{t.contact.email}</span>
+              <input
+                name="email"
+                placeholder={t.contact.emailPlaceholder}
+                required
+                type="email"
+                autoComplete="email"
+              />
+            </label>
+          </div>
+          <label>
+            <span>{t.contact.message}</span>
+            <textarea
+              name="message"
+              placeholder={t.contact.messagePlaceholder}
+              required
+              rows={6}
+            />
+          </label>
+          <div className="contact-submit">
+            <button className="button button--primary" type="submit">
+              {t.contact.send}
+              <Arrow />
+            </button>
+            <small>{t.contact.note}</small>
+          </div>
+        </form>
       </section>
 
       <footer>
