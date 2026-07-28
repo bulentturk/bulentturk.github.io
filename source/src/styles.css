@@ -40,6 +40,28 @@ body {
   white-space: normal;
 }
 
+.hero-cover {
+  align-self: center;
+  margin: 74px -54px 50px 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-cover::before {
+  border: 1px solid rgba(8, 127, 140, 0.34);
+  content: "";
+  inset: -15px 15px 15px -15px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.hero-cover img {
+  display: block;
+  height: auto;
+  position: relative;
+  width: 100%;
+}
+
 .hero-metrics {
   border-top: 1px solid var(--line);
   display: grid;
@@ -85,7 +107,28 @@ body {
 
 .compact-head {
   margin-bottom: 54px;
-  max-width: 860px;
+  max-width: none;
+}
+
+.tools-section-head {
+  align-items: end;
+  display: grid;
+  gap: 70px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.58fr);
+}
+
+.tools-section-head h2 {
+  margin-bottom: 0;
+}
+
+.tools-availability-note {
+  border-left: 2px solid var(--signal);
+  color: var(--ink-soft);
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+  margin: 0 0 7px !important;
+  max-width: 520px !important;
+  padding: 2px 0 2px 22px;
 }
 
 .roadmap-section {
@@ -176,6 +219,118 @@ body {
 
 .platform-section {
   background: var(--paper-bright);
+}
+
+.contact-section {
+  background: var(--blueprint);
+  display: grid;
+  gap: clamp(60px, 8vw, 130px);
+  grid-template-columns: minmax(280px, 0.72fr) minmax(500px, 1.28fr);
+}
+
+.contact-copy h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(48px, 5.4vw, 78px);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+  margin: 28px 0 30px;
+  max-width: 650px;
+}
+
+.contact-copy > p:last-of-type {
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1.65;
+  max-width: 480px;
+}
+
+.contact-email {
+  border-bottom: 1px solid var(--line-strong);
+  display: inline-flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 42px;
+  padding-bottom: 12px;
+}
+
+.contact-email span {
+  color: var(--signal);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.contact-email {
+  font-size: 18px;
+}
+
+.contact-form {
+  border-top: 1px solid rgba(16, 34, 50, 0.22);
+  padding-top: 30px;
+}
+
+.contact-field-row {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.contact-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.contact-form label > span {
+  color: var(--ink-soft);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.contact-form input,
+.contact-form textarea {
+  background: rgba(251, 250, 247, 0.46);
+  border: 1px solid rgba(16, 34, 50, 0.22);
+  border-radius: 0;
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+  padding: 15px 16px;
+  transition: background 160ms ease, border-color 160ms ease;
+  width: 100%;
+}
+
+.contact-form textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  background: var(--paper-bright);
+  border-color: var(--signal);
+}
+
+.contact-submit {
+  align-items: center;
+  display: flex;
+  gap: 22px;
+}
+
+.contact-submit button {
+  cursor: pointer;
+}
+
+.contact-submit small {
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.5;
+  max-width: 250px;
 }
 
 .blog-page {
@@ -307,6 +462,11 @@ body {
 }
 
 @media (max-width: 980px) {
+  .tools-section-head {
+    gap: 42px;
+    grid-template-columns: 1fr;
+  }
+
   .roadmap-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -314,6 +474,11 @@ body {
   .blog-article {
     gap: 28px;
     grid-template-columns: 110px minmax(0, 1fr);
+  }
+
+  .contact-section {
+    gap: 60px;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -324,6 +489,14 @@ body {
 
   .hero-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .hero-cover {
+    margin: 0 0 52px;
+  }
+
+  .hero-cover::before {
+    inset: -8px 8px 8px -8px;
   }
 
   .hero-metrics div,
@@ -359,6 +532,15 @@ body {
 
   .blog-back {
     display: none;
+  }
+
+  .contact-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-submit {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
@@ -2140,6 +2322,76 @@ section.approach-section.platform-section {
   background: var(--paper-bright);
 }
 
+section.contact-section {
+  align-items: start;
+  background: var(--ink);
+  color: var(--paper-bright);
+  gap: clamp(60px, 8vw, 130px);
+  grid-template-columns: minmax(280px, 0.72fr) minmax(500px, 1.28fr);
+}
+
+section.contact-section .contact-copy > .section-kicker {
+  color: #65c4c9;
+  font-size: 11px;
+  line-height: 1;
+  margin: 0;
+}
+
+section.contact-section .contact-copy h2 {
+  margin: 28px 0 30px;
+}
+
+section.contact-section .contact-copy > p:last-of-type {
+  color: #b7c5c9;
+  margin: 0;
+}
+
+section.contact-section .contact-email {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+section.contact-section .contact-email span {
+  color: #65c4c9;
+}
+
+section.contact-section .contact-form {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+section.contact-section .contact-form label > span,
+section.contact-section .contact-submit small {
+  color: #9eb0b5;
+}
+
+section.contact-section .contact-form input,
+section.contact-section .contact-form textarea {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: var(--paper-bright);
+}
+
+section.contact-section .contact-form input::placeholder,
+section.contact-section .contact-form textarea::placeholder {
+  color: #7f9298;
+}
+
+section.contact-section .contact-form input:focus,
+section.contact-section .contact-form textarea:focus {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: #65c4c9;
+}
+
+section.contact-section .contact-submit .button--primary {
+  background: #f5f3ed;
+  border-color: #f5f3ed;
+  color: var(--ink);
+}
+
+section.contact-section .contact-submit .button--primary:hover {
+  background: #65c4c9;
+  border-color: #65c4c9;
+}
+
 @media (max-width: 800px) {
   .hero.platform-hero {
     min-height: 980px;
@@ -2151,6 +2403,14 @@ section.approach-section.platform-section {
 
   .hero.platform-hero h1 {
     font-size: clamp(48px, 15vw, 72px);
+  }
+
+  .hero.platform-hero .hero-cover {
+    bottom: 58px;
+    left: 34px;
+    margin: 0;
+    position: absolute;
+    right: -24px;
   }
 
   .hero.platform-hero .hero-metrics {
@@ -2167,5 +2427,9 @@ section.approach-section.platform-section {
 
   .roadmap-grid {
     grid-template-columns: 1fr;
+  }
+
+  section.contact-section .contact-form {
+    margin-top: 58px;
   }
 }
