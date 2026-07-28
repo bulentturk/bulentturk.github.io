@@ -444,7 +444,7 @@ function makeDemoFrames(
   timestampMs: number,
   database: DbcDatabase | null,
 ): CanFrame[] {
-  if (database && database.name !== "off_highway_example.dbc") {
+  if (database && database.name !== "j1939_eec_example.dbc") {
     return database.messages.slice(0, 6).map((message, index) => ({
       sequence: sequence + index,
       timestampMs,
@@ -462,62 +462,49 @@ function makeDemoFrames(
   const phase = sequence / 16;
   const rpm = Math.round(1450 + Math.sin(phase) * 620);
   const rpmRaw = Math.max(0, Math.round(rpm / 0.125));
-  const speed = Math.max(0, 12.5 + Math.sin(phase / 2) * 8);
-  const speedRaw = Math.round(speed / 0.01);
-  const status = [
-    rpmRaw & 0xff,
-    (rpmRaw >> 8) & 0xff,
-    speedRaw & 0xff,
-    (speedRaw >> 8) & 0xff,
-    Math.floor(sequence / 80) % 2,
-    0,
-    0,
-    0,
-  ];
-  const voltageRaw = Math.round((92 + Math.sin(phase / 4) * 1.8) / 0.1);
-  const currentRaw = Math.round((18 + Math.sin(phase / 3) * 7) / 0.1);
+  const pedalPercent = Math.max(0, Math.min(100, 42 + Math.sin(phase / 2) * 28));
+  const loadPercent = Math.max(0, Math.min(100, 48 + Math.sin(phase / 3) * 24));
+  const demandTorquePercent = Math.round(loadPercent * 0.82);
+  const actualTorquePercent = Math.round(loadPercent * 0.76);
+  const pedalRaw = Math.round(pedalPercent / 0.4);
 
   return [
     {
       sequence,
       timestampMs,
-      id: 0x201,
-      extended: false,
-      rtr: false,
-      error: false,
-      data: status,
-    },
-    {
-      sequence: sequence + 1,
-      timestampMs: timestampMs + 0.4,
-      id: 0x18ff50e5,
+      id: 0x0cf00400,
       extended: true,
       rtr: false,
       error: false,
       data: [
-        voltageRaw & 0xff,
-        (voltageRaw >> 8) & 0xff,
-        currentRaw & 0xff,
-        (currentRaw >> 8) & 0xff,
-        0x10,
-        0,
-        0x45,
-        0,
+        0x01,
+        Math.max(0, Math.min(250, demandTorquePercent + 125)),
+        Math.max(0, Math.min(250, actualTorquePercent + 125)),
+        rpmRaw & 0xff,
+        (rpmRaw >> 8) & 0xff,
+        0x00,
+        0x00,
+        Math.max(0, Math.min(250, demandTorquePercent + 125)),
       ],
     },
-    ...(sequence % 4 === 0
-      ? [
-          {
-            sequence: sequence + 2,
-            timestampMs: timestampMs + 0.8,
-            id: 0x301,
-            extended: false,
-            rtr: false,
-            error: false,
-            data: [sequence & 0xff, 0x7e, 0x20, 0x00, 0x18, 0x00, 0x00, 0x01],
-          },
-        ]
-      : []),
+    {
+      sequence: sequence + 1,
+      timestampMs: timestampMs + 0.4,
+      id: 0x0cf00300,
+      extended: true,
+      rtr: false,
+      error: false,
+      data: [
+        pedalPercent < 1 ? 0x01 : 0x00,
+        Math.max(0, Math.min(250, pedalRaw)),
+        Math.round(loadPercent),
+        0xff,
+        0xff,
+        0xff,
+        0xff,
+        0xff,
+      ],
+    },
   ];
 }
 
