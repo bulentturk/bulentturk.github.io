@@ -6,6 +6,7 @@ import CanLogAnalyzer from "./CanLogAnalyzer";
 import CanViewer from "./CanViewer";
 import DbcEditor from "./DbcEditor";
 import J1939DtcAnalyzer from "./J1939DtcAnalyzer";
+import HydraulicSimulator from "./HydraulicSimulator";
 import "./styles.css";
 
 const route = window.location.pathname.replace(/\/+$/, "");
@@ -14,6 +15,7 @@ const isCanViewer = route === "/can-viewer";
 const isCanLogAnalyzer = route === "/can-log-analyzer";
 const isJ1939DtcAnalyzer = route === "/j1939-dtc-decoder";
 const isEngineeringBlog = route === "/blog";
+const isHydraulicSimulator = route === "/hydraulic-simulator";
 
 const root = document.getElementById("root")!;
 const application = (
@@ -26,13 +28,15 @@ const application = (
         ? <CanLogAnalyzer />
         : isJ1939DtcAnalyzer
           ? <J1939DtcAnalyzer />
+          : isHydraulicSimulator
+            ? <HydraulicSimulator />
           : isEngineeringBlog
             ? <EngineeringBlog />
           : <App />}
   </StrictMode>
 );
 
-if (!isDbcEditor && !isCanViewer && !isCanLogAnalyzer && !isJ1939DtcAnalyzer && root.hasChildNodes()) {
+if (!isDbcEditor && !isCanViewer && !isCanLogAnalyzer && !isJ1939DtcAnalyzer && !isHydraulicSimulator && root.hasChildNodes()) {
   hydrateRoot(root, application);
 } else {
   createRoot(root).render(application);
