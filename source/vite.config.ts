@@ -15,6 +15,7 @@ export default defineConfig({
         "can-viewer": resolve(__dirname, "can-viewer/index.html"),
         "can-log-analyzer": resolve(__dirname, "can-log-analyzer/index.html"),
         "j1939-dtc-decoder": resolve(__dirname, "j1939-dtc-decoder/index.html"),
+        "hydraulic-simulator": resolve(__dirname, "hydraulic-simulator/index.html"),
         blog: resolve(__dirname, "blog/index.html"),
       },
     },
