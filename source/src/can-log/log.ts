@@ -628,53 +628,59 @@ export function analyzeMessages(frames: LogFrame[]): MessageStats[] {
 export function createExampleLog(): ParsedLog {
   const frames: LogFrame[] = [];
   let sequence = 1;
-  for (let time = 0; time <= 12_000; time += 20) {
-    const rpm = Math.round(700 + 1050 * (0.5 + 0.5 * Math.sin(time / 1700)));
-    const speed = Math.max(0, Math.round((rpm - 650) * 0.015 * 100));
+  for (let time = 0; time <= 12_000; time += 10) {
+    const phase = time / 1700;
+    const rpm = Math.round(1450 + 620 * Math.sin(phase));
+    const rpmRaw = Math.max(0, Math.round(rpm / 0.125));
+    const pedalPercent = Math.max(0, Math.min(100, 42 + 28 * Math.sin(phase / 2)));
+    const loadPercent = Math.max(0, Math.min(100, 48 + 24 * Math.sin(phase / 3)));
+    const demandTorquePercent = Math.round(loadPercent * 0.82);
+    const actualTorquePercent = Math.round(loadPercent * 0.76);
     if (time % 100 === 0 && time !== 7_000) {
-      const rpmRaw = Math.round(rpm / 0.125);
       frames.push({
         sequence: sequence++,
         timestampMs: time,
-        id: 0x201,
-        extended: false,
-        rtr: false,
-        error: false,
-        data: [rpmRaw & 0xff, (rpmRaw >> 8) & 0xff, speed & 0xff, (speed >> 8) & 0xff, time > 8000 ? 1 : 0, 0, 0, 0],
-        direction: "rx",
-        channel: "1",
-        sourceLine: sequence,
-        type: "can",
-      });
-    }
-    if (time % 500 === 0) {
-      const voltage = Math.round((91.5 + 0.7 * Math.sin(time / 2200)) * 10);
-      const current = Math.round((18 + 3 * Math.cos(time / 1500)) * 10);
-      frames.push({
-        sequence: sequence++,
-        timestampMs: time + 2,
-        id: 0x18ff50e5,
+        id: 0x0cf00400,
         extended: true,
         rtr: false,
         error: false,
-        data: [voltage & 0xff, (voltage >> 8) & 0xff, current & 0xff, (current >> 8) & 0xff, 0x10, 0, 0x45, 0],
+        data: [
+          0x01,
+          Math.max(0, Math.min(250, demandTorquePercent + 125)),
+          Math.max(0, Math.min(250, actualTorquePercent + 125)),
+          rpmRaw & 0xff,
+          (rpmRaw >> 8) & 0xff,
+          0x00,
+          0x00,
+          Math.max(0, Math.min(250, demandTorquePercent + 125)),
+        ],
         direction: "rx",
         channel: "1",
         sourceLine: sequence,
         type: "can",
       });
     }
-    if (time % 20 === 0) {
+    if (time % 50 === 0) {
+      const pedalRaw = Math.round(pedalPercent / 0.4);
       frames.push({
         sequence: sequence++,
-        timestampMs: time + 4,
-        id: 0x301,
-        extended: false,
+        timestampMs: time + 0.4,
+        id: 0x0cf00300,
+        extended: true,
         rtr: false,
         error: false,
-        data: [Math.round(time / 20) & 0xff, rpm & 0xff, speed & 0xff, time > 8000 ? 1 : 0, 0, 0, 0, 0],
+        data: [
+          pedalPercent < 1 ? 0x01 : 0x00,
+          Math.max(0, Math.min(250, pedalRaw)),
+          Math.round(loadPercent),
+          0xff,
+          0xff,
+          0xff,
+          0xff,
+          0xff,
+        ],
         direction: "rx",
-        channel: "2",
+        channel: "1",
         sourceLine: sequence,
         type: "can",
       });
