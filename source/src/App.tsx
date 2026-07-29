@@ -30,6 +30,7 @@ const copy = {
         {
           no: "01",
           code: "DBC",
+          discipline: "CAN / J1939",
           title: "DBC Editörü",
           text: "Mesaj ve sinyalleri oluşturun, bit yerleşimini doğrulayın ve standart DBC çıktısı alın.",
           features: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"],
@@ -39,6 +40,7 @@ const copy = {
         {
           no: "02",
           code: "LIVE CAN",
+          discipline: "CAN / J1939",
           title: "CAN Viewer",
           text: "PCAN-USB ile canlı trafiği izleyin, kontrollü mesaj gönderin ve TRC/CSV kaydı alın.",
           features: ["PCAN-USB", "RX / TX", "TRC / CSV kayıt"],
@@ -47,6 +49,7 @@ const copy = {
         {
           no: "03",
           code: "LOG ANALYSIS",
+          discipline: "Veri Analizi",
           title: "CAN Log Analyzer",
           text: "TRC, ASC, CSV ve SocketCAN kayıtlarında çevrim zamanı, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.",
           features: ["Çoklu log formatı", "Periyot ve jitter", "Sinyal grafikleri"],
@@ -55,6 +58,7 @@ const copy = {
         {
           no: "04",
           code: "J1939",
+          discipline: "CAN / J1939",
           title: "DM1 / DTC Analyzer",
           text: "DM1 arızalarını, BAM/TP.DT mesajlarını ve arıza anındaki motor çalışma koşullarını çözümleyin.",
           features: ["SPN / FMI", "BAM / TP.DT", "Arıza anı raporu"],
@@ -63,6 +67,7 @@ const copy = {
         {
           no: "05",
           code: "HYDRAULICS",
+          discipline: "Hidrolik",
           title: "Hidrolik Devre Simülatörü",
           text: "Devre elemanlarını sürükleyip bağlayın; basınç, debi ve silindir hareketini çalıştırarak bağlantıları doğrulayın.",
           features: ["Sürükle ve bırak", "Canlı akış görünümü", "Devre doğrulama"],
@@ -74,38 +79,68 @@ const copy = {
       kicker: "02 / Yol Haritası",
       title: "Sıradaki mühendislik araçları.",
       intro:
-        "Aşağıdaki başlıklar geliştirme havuzunda. Öncelik, sahada sık tekrarlanan hesapları ve teşhis adımlarını hızlandıran araçlarda.",
+        "Hidrolik, mekanik, elektrik, kontrol, CAN/J1939, telemetri ve makine emniyeti aynı araç altyapısında adım adım büyüyecek.",
       status: "Planlanıyor",
       items: [
         {
           code: "J1939",
+          discipline: "CAN / J1939",
           title: "SPN / FMI Sözlüğü",
           text: "SPN, FMI ve arıza açıklamalarını üretici notlarıyla birlikte hızlı arama.",
         },
         {
           code: "CAN",
+          discipline: "CAN / J1939",
           title: "Bit Yerleşim Hesaplayıcı",
           text: "Intel ve Motorola sinyaller için start bit, uzunluk, ölçek ve byte görünümü.",
         },
         {
           code: "J1939",
+          discipline: "CAN / J1939",
           title: "PGN Explorer",
           text: "PGN, source address, priority ve veri alanlarını açıklayan etkileşimli gezgin.",
         },
         {
           code: "LOG",
+          discipline: "Veri Analizi",
           title: "CAN Trace Karşılaştırıcı",
           text: "İki trace dosyası arasında yeni, kayıp veya davranışı değişen mesajları bulma.",
         },
         {
           code: "TELEMETRY",
+          discipline: "Telemetri",
           title: "Olay Kütüphanesi Oluşturucu",
           text: "Sinyal, eşik, süre ve koşullardan telemetri olay tanımları hazırlama.",
         },
         {
           code: "SAFETY",
+          discipline: "Makine Emniyeti",
           title: "PL Hesaplama Çalışma Sayfası",
           text: "ISO 13849 yaklaşımında kanal yapısı, MTTFd, DC ve CCF girdilerini düzenleme.",
+        },
+        {
+          code: "MECHANICAL",
+          discipline: "Mekanik",
+          title: "Pim, Mil ve Burç Geçme Asistanı",
+          text: "Yataklama tipi, tolerans, yüzey basıncı ve montaj boşluğu için kontrollü seçim.",
+        },
+        {
+          code: "HYDRAULICS",
+          discipline: "Hidrolik",
+          title: "Silindir ve Hat Boyutlandırma",
+          text: "Kuvvet, hız, debi, boru çapı ve hat hızını birlikte hesaplama.",
+        },
+        {
+          code: "ELECTRICAL",
+          discipline: "Elektrik",
+          title: "24 V Kablo ve Gerilim Düşümü",
+          text: "Akım, kablo uzunluğu, kesit, sigorta ve izin verilen gerilim düşümü kontrolü.",
+        },
+        {
+          code: "CONTROL",
+          discipline: "Kontrol Sistemleri",
+          title: "Emniyet Kilidi Mantık Oluşturucu",
+          text: "Sensör, izin, engelleme ve hata koşullarından okunabilir interlock akışı hazırlama.",
         },
       ],
     },
@@ -201,6 +236,7 @@ const copy = {
         {
           no: "01",
           code: "DBC",
+          discipline: "CAN / J1939",
           title: "DBC Editor",
           text: "Create messages and signals, verify the bit layout, and export a standards-compatible DBC.",
           features: ["CAN / CAN FD", "Intel / Motorola", "DBC export"],
@@ -210,6 +246,7 @@ const copy = {
         {
           no: "02",
           code: "LIVE CAN",
+          discipline: "CAN / J1939",
           title: "CAN Viewer",
           text: "Monitor live traffic with PCAN-USB, transmit controlled frames, and record TRC/CSV logs.",
           features: ["PCAN-USB", "RX / TX", "TRC / CSV recording"],
@@ -218,6 +255,7 @@ const copy = {
         {
           no: "03",
           code: "LOG ANALYSIS",
+          discipline: "Data Analysis",
           title: "CAN Log Analyzer",
           text: "Inspect cycle time, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and SocketCAN logs.",
           features: ["Multiple log formats", "Period and jitter", "Signal charts"],
@@ -226,6 +264,7 @@ const copy = {
         {
           no: "04",
           code: "J1939",
+          discipline: "CAN / J1939",
           title: "DM1 / DTC Analyzer",
           text: "Decode DM1 faults, BAM/TP.DT messages, and engine operating conditions at fault onset.",
           features: ["SPN / FMI", "BAM / TP.DT", "Fault-context report"],
@@ -234,6 +273,7 @@ const copy = {
         {
           no: "05",
           code: "HYDRAULICS",
+          discipline: "Hydraulics",
           title: "Hydraulic Circuit Simulator",
           text: "Drag and connect circuit components, then run pressure, flow, and cylinder motion to validate the design.",
           features: ["Drag and drop", "Live flow view", "Circuit validation"],
@@ -245,38 +285,68 @@ const copy = {
       kicker: "02 / Roadmap",
       title: "Engineering tools coming next.",
       intro:
-        "These concepts are in the development pool. Priority goes to tools that accelerate repetitive field calculations and diagnostic steps.",
+        "Hydraulics, mechanical, electrical, controls, CAN/J1939, telemetry, and machine safety will grow step by step on one tool foundation.",
       status: "Planned",
       items: [
         {
           code: "J1939",
+          discipline: "CAN / J1939",
           title: "SPN / FMI Dictionary",
           text: "Fast lookup for SPNs, FMIs, fault descriptions, and manufacturer notes.",
         },
         {
           code: "CAN",
+          discipline: "CAN / J1939",
           title: "Bit Layout Calculator",
           text: "Start bit, length, scale, and byte views for Intel and Motorola signals.",
         },
         {
           code: "J1939",
+          discipline: "CAN / J1939",
           title: "PGN Explorer",
           text: "An interactive guide to PGNs, source addresses, priority, and data fields.",
         },
         {
           code: "LOG",
+          discipline: "Data Analysis",
           title: "CAN Trace Comparator",
           text: "Find new, missing, or behaviorally changed messages across two trace files.",
         },
         {
           code: "TELEMETRY",
+          discipline: "Telemetry",
           title: "Event Library Builder",
           text: "Build telemetry event definitions from signals, thresholds, durations, and conditions.",
         },
         {
           code: "SAFETY",
+          discipline: "Machine Safety",
           title: "PL Calculation Worksheet",
           text: "Organize channel architecture, MTTFd, DC, and CCF inputs for ISO 13849 work.",
+        },
+        {
+          code: "MECHANICAL",
+          discipline: "Mechanical",
+          title: "Pin, Shaft & Bushing Fit Assistant",
+          text: "Controlled selection of bearing arrangement, tolerance, surface pressure, and assembly clearance.",
+        },
+        {
+          code: "HYDRAULICS",
+          discipline: "Hydraulics",
+          title: "Cylinder & Line Sizing",
+          text: "Calculate force, speed, flow, pipe diameter, and line velocity together.",
+        },
+        {
+          code: "ELECTRICAL",
+          discipline: "Electrical",
+          title: "24 V Cable & Voltage Drop",
+          text: "Check current, cable length, conductor size, fuse, and allowable voltage drop.",
+        },
+        {
+          code: "CONTROL",
+          discipline: "Control Systems",
+          title: "Safety Interlock Logic Builder",
+          text: "Build a readable interlock flow from sensors, permissions, inhibit conditions, and faults.",
         },
       ],
     },
@@ -441,7 +511,7 @@ export default function Home() {
           <div className="tools-choice-list">
             {t.tools.items.map((item) => (
               <article key={item.no}>
-                <span>{item.no} / {item.code}</span>
+                <span>{item.no} / {item.discipline} / {item.code}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
                 <ul>
@@ -476,7 +546,7 @@ export default function Home() {
             <article className="roadmap-card" key={item.title}>
               <div className="roadmap-meta">
                 <span>0{index + 1}</span>
-                <span>{item.code}</span>
+                <span>{item.discipline} · {item.code}</span>
               </div>
               <h3>{item.title}</h3>
               <p>{item.text}</p>

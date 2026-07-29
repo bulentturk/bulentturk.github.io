@@ -15,8 +15,10 @@
 .hyd-app {
   background: var(--hyd-paper);
   color: var(--hyd-ink);
-  height: 100vh;
-  min-height: 720px;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -27,6 +29,7 @@
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr) 110px;
   height: 78px;
+  flex: 0 0 78px;
   padding: 0 24px;
 }
 
@@ -94,6 +97,7 @@
   background: var(--hyd-ink);
   color: #fff;
   display: flex;
+  flex: 0 0 52px;
   height: 52px;
   padding: 0 18px;
 }
@@ -178,9 +182,11 @@
 
 .hyd-layout {
   display: grid;
+  flex: 1 1 auto;
   grid-template-columns: 250px minmax(560px, 1fr) 320px;
-  height: calc(100vh - 130px);
-  min-height: 590px;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .hyd-palette,
@@ -193,7 +199,9 @@
   border-right: 1px solid var(--hyd-line);
   display: flex;
   flex-direction: column;
-  padding: 19px 14px 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 19px 14px 12px;
 }
 
 .hyd-panel-heading {
@@ -201,6 +209,15 @@
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
+}
+
+.hyd-standard {
+  color: #7a888d;
+  font-family: var(--hyd-mono);
+  font-size: 7px;
+  font-weight: 500;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .hyd-panel-heading > span,
@@ -237,8 +254,11 @@
 
 .hyd-palette-scroll,
 .hyd-inspector-scroll {
+  flex: 1 1 auto;
   min-height: 0;
+  overscroll-behavior: contain;
   overflow-y: auto;
+  padding-bottom: 26px;
   scrollbar-color: #b8bfbe transparent;
   scrollbar-width: thin;
 }
@@ -285,8 +305,8 @@
 }
 
 .hyd-palette-group button svg {
-  height: 38px;
-  width: 58px;
+  height: 42px;
+  width: 72px;
 }
 
 .hyd-palette-group button > span {
@@ -396,6 +416,8 @@
 }
 
 .hyd-line-visible {
+  stroke-linecap: round;
+  stroke-linejoin: round;
   pointer-events: none;
   stroke: #a7afb0;
   stroke-width: 3;
@@ -457,9 +479,9 @@
 }
 
 .hyd-node-symbol {
-  height: 52px;
+  height: 55px;
   position: relative;
-  width: 78px;
+  width: 104px;
 }
 
 .hyd-node-symbol svg {
@@ -470,6 +492,12 @@
 .hyd-node-symbol .symbol-active {
   stroke: var(--hyd-pressure) !important;
   stroke-width: 3 !important;
+}
+
+.hyd-node-symbol .symbol-active-box {
+  fill: rgba(8, 127, 140, 0.08);
+  stroke: var(--hyd-signal) !important;
+  stroke-width: 2.4 !important;
 }
 
 .hyd-node strong {
@@ -527,6 +555,10 @@
 
 .hyd-inspector {
   border-left: 1px solid var(--hyd-line);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
   padding: 19px 15px 0;
 }
 
@@ -822,6 +854,7 @@
 
   .hyd-layout {
     display: grid;
+    overflow: visible;
     grid-template-columns: 1fr;
     height: auto;
   }
