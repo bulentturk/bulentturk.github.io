@@ -431,6 +431,16 @@
   stroke-width: 14;
 }
 
+.hyd-app.is-connecting .hyd-line-hit {
+  cursor: copy;
+}
+
+.hyd-app.is-connecting .hyd-line:hover .hyd-line-visible {
+  filter: drop-shadow(0 0 3px rgba(8, 127, 140, 0.55));
+  stroke: var(--hyd-signal);
+  stroke-width: 5;
+}
+
 .hyd-line--pressure .hyd-line-visible {
   filter: drop-shadow(0 0 2px rgba(224, 86, 63, 0.34));
   stroke: var(--hyd-pressure);
@@ -447,17 +457,23 @@
   stroke-dasharray: 7 4;
 }
 
+.hyd-line--pilot .hyd-line-visible {
+  stroke: #8b5ca7;
+  stroke-dasharray: 4 5;
+  stroke-width: 2;
+}
+
 .hyd-node {
   align-items: center;
-  background: rgba(255, 255, 255, 0.97);
-  border: 1px solid #bdc4c3;
-  box-shadow: 0 4px 12px rgba(16, 34, 50, 0.07);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   cursor: move;
   display: flex;
   flex-direction: column;
-  height: 102px;
-  justify-content: center;
-  padding: 5px 7px 8px;
+  height: 72px;
+  justify-content: flex-start;
+  padding: 0;
   position: absolute;
   user-select: none;
   width: 142px;
@@ -465,23 +481,65 @@
 }
 
 .hyd-node.is-selected {
-  border-color: var(--hyd-signal);
-  box-shadow: 0 0 0 2px rgba(8, 127, 140, 0.17), 0 6px 18px rgba(16, 34, 50, 0.1);
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: 0 0 0 2px rgba(8, 127, 140, 0.22);
+}
+
+.hyd-node--junction {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+  padding: 0;
+}
+
+.hyd-node--junction.is-selected {
+  border: 0;
+  box-shadow: 0 0 0 5px rgba(8, 127, 140, 0.14);
+}
+
+.hyd-node--junction .hyd-node-code,
+.hyd-node--junction > strong {
+  display: none;
+}
+
+.hyd-node--junction .hyd-node-symbol {
+  color: var(--hyd-ink);
+  height: 30px;
+  width: 30px;
+}
+
+.hyd-node--junction .hyd-port {
+  height: 10px;
+  width: 10px;
+}
+
+.hyd-node--junction .hyd-port span {
+  display: none;
 }
 
 .hyd-node-code {
+  background: rgba(248, 247, 242, 0.92);
+  bottom: -13px;
   color: var(--hyd-signal);
   font-family: var(--hyd-mono);
   font-size: 7px;
+  opacity: 0;
+  padding: 1px 3px;
   position: absolute;
   right: 6px;
-  top: 5px;
+  transition: opacity 120ms ease;
+}
+
+.hyd-node:hover .hyd-node-code,
+.hyd-node.is-selected .hyd-node-code {
+  opacity: 1;
 }
 
 .hyd-node-symbol {
-  height: 55px;
+  height: 72px;
   position: relative;
-  width: 104px;
+  width: 142px;
 }
 
 .hyd-node-symbol svg {
@@ -501,12 +559,7 @@
 }
 
 .hyd-node strong {
-  font-size: 9px;
-  font-weight: 600;
-  max-width: 124px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: none;
 }
 
 .hyd-piston {
@@ -750,6 +803,7 @@
 .hyd-legend i.pressure { background: var(--hyd-pressure); }
 .hyd-legend i.return { background: var(--hyd-return); }
 .hyd-legend i.suction { background: var(--hyd-suction); }
+.hyd-legend i.pilot { background: #8b5ca7; }
 
 .hyd-validation-head {
   align-items: center;
