@@ -55,6 +55,13 @@ type HydraulicEdge = {
   toPort: PortName;
 };
 
+type Point = { x: number; y: number };
+type RoutedEdge = {
+  edge: HydraulicEdge;
+  points: Point[];
+  bridges: Map<number, number[]>;
+};
+
 type PortRef = { nodeId: string; port: PortName };
 type Issue = { level: "error" | "warning" | "ok"; text: string };
 
@@ -76,6 +83,10 @@ type SimulationResult = {
 
 const NODE_WIDTH = 142;
 const NODE_HEIGHT = 102;
+const CANVAS_WIDTH = 1350;
+const CANVAS_HEIGHT = 800;
+const ROUTE_MARGIN = 24;
+const BRIDGE_RADIUS = 7;
 const STORAGE_KEY = "algo-team-hydraulic-circuit-v1";
 
 const palette: Array<{
@@ -123,6 +134,7 @@ const text = {
     back: "Engineering Tools",
     subtitle: "Devreyi kurun, bağlantıları doğrulayın ve akışı çalıştırın.",
     components: "Devre Elemanları",
+    symbolStandard: "ISO 1219 sembol dili",
     search: "Eleman ara…",
     workspace: "Çalışma Alanı",
     properties: "Özellikler",
@@ -184,6 +196,7 @@ const text = {
     back: "Engineering Tools",
     subtitle: "Build the circuit, validate connections, and run the flow.",
     components: "Circuit Components",
+    symbolStandard: "ISO 1219 symbol language",
     search: "Search components…",
     workspace: "Workspace",
     properties: "Properties",
@@ -312,6 +325,249 @@ function portPosition(kind: ComponentKind, port: PortName) {
 
 function key(nodeId: string, port: PortName) {
   return `${nodeId}:${port}`;
+}
+
+function portDirection(kind: ComponentKind, port: PortName): Point {
+  const position = portPosition(kind, port);
+  if (position.x === 0) return { x: -1, y: 0 };
+  if (position.x === NODE_WIDTH) return { x: 1, y: 0 };
+  if (position.y === 0) return { x: 0, y: -1 };
+  return { x: 0, y: 1 };
+}
+
+function normalizePoints(points: Point[]) {
+  const unique = points.filter((point, index) => (
+    index === 0
+    || point.x !== points[index - 1].x
+    || point.y !== points[index - 1].y
+  ));
+  const result: Point[] = [];
+  for (const point of unique) {
+    const a = result.at(-2);
+    const b = result.at(-1);
+    if (a && b && ((a.x === b.x && b.x === point.x) || (a.y === b.y && b.y === point.y))) {
+      result[result.length - 1] = point;
+    } else {
+      result.push(point);
+    }
+  }
+  return result;
+}
+
+function segmentLength(a: Point, b: Point) {
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+}
+
+function segmentCrossesRect(a: Point, b: Point, node: HydraulicNode) {
+  const margin = 14;
+  const left = node.x - margin;
+  const right = node.x + NODE_WIDTH + margin;
+  const top = node.y - margin;
+  const bottom = node.y + NODE_HEIGHT + margin;
+  if (a.y === b.y) {
+    const minX = Math.min(a.x, b.x);
+    const maxX = Math.max(a.x, b.x);
+    return a.y > top && a.y < bottom && maxX > left && minX < right;
+  }
+  const minY = Math.min(a.y, b.y);
+  const maxY = Math.max(a.y, b.y);
+  return a.x > left && a.x < right && maxY > top && minY < bottom;
+}
+
+function segmentRelationship(a1: Point, a2: Point, b1: Point, b2: Point) {
+  const aHorizontal = a1.y === a2.y;
+  const bHorizontal = b1.y === b2.y;
+  if (aHorizontal !== bHorizontal) {
+    const horizontal = aHorizontal ? [a1, a2] : [b1, b2];
+    const vertical = aHorizontal ? [b1, b2] : [a1, a2];
+    const x = vertical[0].x;
+    const y = horizontal[0].y;
+    const insideHorizontal = x > Math.min(horizontal[0].x, horizontal[1].x)
+      && x < Math.max(horizontal[0].x, horizontal[1].x);
+    const insideVertical = y > Math.min(vertical[0].y, vertical[1].y)
+      && y < Math.max(vertical[0].y, vertical[1].y);
+    return insideHorizontal && insideVertical ? { type: "cross" as const, x, y } : null;
+  }
+  if (aHorizontal && a1.y === b1.y) {
+    const overlap = Math.min(Math.max(a1.x, a2.x), Math.max(b1.x, b2.x))
+      - Math.max(Math.min(a1.x, a2.x), Math.min(b1.x, b2.x));
+    return overlap > 0 ? { type: "overlap" as const, length: overlap } : null;
+  }
+  if (!aHorizontal && a1.x === b1.x) {
+    const overlap = Math.min(Math.max(a1.y, a2.y), Math.max(b1.y, b2.y))
+      - Math.max(Math.min(a1.y, a2.y), Math.min(b1.y, b2.y));
+    return overlap > 0 ? { type: "overlap" as const, length: overlap } : null;
+  }
+  return null;
+}
+
+function scoreRoute(
+  points: Point[],
+  nodes: HydraulicNode[],
+  previousRoutes: Point[][],
+  fromNodeId: string,
+  toNodeId: string,
+) {
+  let score = Math.max(0, points.length - 2) * 18;
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const a = points[index];
+    const b = points[index + 1];
+    score += segmentLength(a, b);
+    if (
+      Math.min(a.x, b.x) < 0
+      || Math.max(a.x, b.x) > CANVAS_WIDTH
+      || Math.min(a.y, b.y) < 0
+      || Math.max(a.y, b.y) > CANVAS_HEIGHT
+    ) score += 500_000;
+
+    for (const node of nodes) {
+      const allowedEndpointSegment = (index === 0 && node.id === fromNodeId)
+        || (index === points.length - 2 && node.id === toNodeId);
+      if (!allowedEndpointSegment && segmentCrossesRect(a, b, node)) score += 1_000_000;
+    }
+
+    for (const route of previousRoutes) {
+      for (let otherIndex = 0; otherIndex < route.length - 1; otherIndex += 1) {
+        const relationship = segmentRelationship(a, b, route[otherIndex], route[otherIndex + 1]);
+        if (relationship?.type === "overlap") score += 2_000 + relationship.length * 30;
+        if (relationship?.type === "cross") score += 180;
+      }
+    }
+  }
+  return score;
+}
+
+function routeConnection(
+  edge: HydraulicEdge,
+  nodes: HydraulicNode[],
+  previousRoutes: Point[][],
+) {
+  const from = nodes.find((node) => node.id === edge.fromNode);
+  const to = nodes.find((node) => node.id === edge.toNode);
+  if (!from || !to) return [];
+  const fromPort = portPosition(from.kind, edge.fromPort);
+  const toPort = portPosition(to.kind, edge.toPort);
+  const start = { x: from.x + fromPort.x, y: from.y + fromPort.y };
+  const end = { x: to.x + toPort.x, y: to.y + toPort.y };
+  const startDirection = portDirection(from.kind, edge.fromPort);
+  const endDirection = portDirection(to.kind, edge.toPort);
+  const startLead = {
+    x: start.x + startDirection.x * ROUTE_MARGIN,
+    y: start.y + startDirection.y * ROUTE_MARGIN,
+  };
+  const endLead = {
+    x: end.x + endDirection.x * ROUTE_MARGIN,
+    y: end.y + endDirection.y * ROUTE_MARGIN,
+  };
+
+  const xCandidates = new Set<number>([
+    18,
+    CANVAS_WIDTH - 18,
+    startLead.x,
+    endLead.x,
+    Math.round(((startLead.x + endLead.x) / 2) / 10) * 10,
+  ]);
+  const yCandidates = new Set<number>([
+    18,
+    CANVAS_HEIGHT - 18,
+    startLead.y,
+    endLead.y,
+    Math.round(((startLead.y + endLead.y) / 2) / 10) * 10,
+  ]);
+  for (const node of nodes) {
+    xCandidates.add(Math.max(18, node.x - 28));
+    xCandidates.add(Math.min(CANVAS_WIDTH - 18, node.x + NODE_WIDTH + 28));
+    yCandidates.add(Math.max(18, node.y - 28));
+    yCandidates.add(Math.min(CANVAS_HEIGHT - 18, node.y + NODE_HEIGHT + 28));
+  }
+
+  const candidates: Point[][] = [];
+  for (const x of xCandidates) {
+    candidates.push(normalizePoints([
+      start,
+      startLead,
+      { x, y: startLead.y },
+      { x, y: endLead.y },
+      endLead,
+      end,
+    ]));
+  }
+  for (const y of yCandidates) {
+    candidates.push(normalizePoints([
+      start,
+      startLead,
+      { x: startLead.x, y },
+      { x: endLead.x, y },
+      endLead,
+      end,
+    ]));
+  }
+
+  return candidates.reduce((best, candidate) => (
+    scoreRoute(candidate, nodes, previousRoutes, edge.fromNode, edge.toNode)
+      < scoreRoute(best, nodes, previousRoutes, edge.fromNode, edge.toNode)
+      ? candidate
+      : best
+  ));
+}
+
+function routeEdges(nodes: HydraulicNode[], edges: HydraulicEdge[]): RoutedEdge[] {
+  const routes: Array<{ edge: HydraulicEdge; points: Point[] }> = [];
+  for (const edge of edges) {
+    const points = routeConnection(edge, nodes, routes.map((route) => route.points));
+    if (points.length) routes.push({ edge, points });
+  }
+  const bridgeMaps = routes.map(() => new Map<number, number[]>());
+
+  for (let first = 0; first < routes.length; first += 1) {
+    for (let second = first + 1; second < routes.length; second += 1) {
+      const a = routes[first].points;
+      const b = routes[second].points;
+      for (let ai = 0; ai < a.length - 1; ai += 1) {
+        for (let bi = 0; bi < b.length - 1; bi += 1) {
+          const relationship = segmentRelationship(a[ai], a[ai + 1], b[bi], b[bi + 1]);
+          if (relationship?.type !== "cross") continue;
+          const horizontalRoute = a[ai].y === a[ai + 1].y ? first : second;
+          const horizontalSegment = horizontalRoute === first ? ai : bi;
+          const map = bridgeMaps[horizontalRoute];
+          map.set(horizontalSegment, [...(map.get(horizontalSegment) ?? []), relationship.x]);
+        }
+      }
+    }
+  }
+
+  return routes.map((route, index) => ({
+    ...route,
+    bridges: bridgeMaps[index],
+  }));
+}
+
+function routePath(points: Point[], bridges: Map<number, number[]>) {
+  if (!points.length) return "";
+  let path = `M ${points[0].x} ${points[0].y}`;
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const start = points[index];
+    const end = points[index + 1];
+    if (start.y !== end.y) {
+      path += ` L ${end.x} ${end.y}`;
+      continue;
+    }
+    const direction = end.x >= start.x ? 1 : -1;
+    const crossings = [...(bridges.get(index) ?? [])]
+      .sort((a, b) => direction > 0 ? a - b : b - a)
+      .filter((value, crossingIndex, values) => (
+        Math.abs(value - start.x) > BRIDGE_RADIUS + 2
+        && Math.abs(value - end.x) > BRIDGE_RADIUS + 2
+        && (crossingIndex === 0 || Math.abs(value - values[crossingIndex - 1]) > BRIDGE_RADIUS * 2.5)
+      ));
+    for (const x of crossings) {
+      const before = x - direction * BRIDGE_RADIUS;
+      const after = x + direction * BRIDGE_RADIUS;
+      path += ` L ${before} ${start.y} Q ${x} ${start.y - BRIDGE_RADIUS * 1.35} ${after} ${start.y}`;
+    }
+    path += ` L ${end.x} ${end.y}`;
+  }
+  return path;
 }
 
 function circuitExample(language: Language, type: "cylinder" | "motor") {
@@ -525,87 +781,168 @@ function calculateSimulation(nodes: HydraulicNode[], edges: HydraulicEdge[]): Si
 }
 
 function SymbolGraphic({ kind, state = "neutral" }: { kind: ComponentKind; state?: string }) {
-  const line = { fill: "none", stroke: "currentColor", strokeWidth: 2 };
+  const line = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeLinecap: "square" as const,
+    strokeLinejoin: "miter" as const,
+    strokeWidth: 1.8,
+    vectorEffect: "non-scaling-stroke" as const,
+  };
+  const svgProps = {
+    "aria-hidden": true,
+    viewBox: "0 0 120 72",
+  };
+  const spring = "m0 0 4-5 8 10 8-10 8 10 4-5";
   if (kind === "tank") {
-    return <svg viewBox="0 0 72 46"><path {...line} d="M12 8v28h48V8M18 18h36" /></svg>;
+    return (
+      <svg {...svgProps}>
+        <path {...line} d="M24 12v46h72V12M31 24h58" />
+        <path {...line} d="M60 4v20" />
+      </svg>
+    );
   }
   if (kind === "pump" || kind === "variablePump") {
     return (
-      <svg viewBox="0 0 72 46">
-        <circle {...line} cx="36" cy="23" r="18" />
-        <path d="M43 23 30 15v16Z" fill="currentColor" />
-        {kind === "variablePump" ? <path {...line} d="m18 38 36-30m-7 0h7v7" /> : null}
+      <svg {...svgProps}>
+        <path {...line} d="M8 36h28m48 0h28" />
+        <circle {...line} cx="60" cy="36" r="24" />
+        <path d="m54 24 22 12-22 12Z" fill="currentColor" />
+        {kind === "variablePump" ? (
+          <path {...line} d="M34 62 86 10m-10 0h10v10" />
+        ) : null}
       </svg>
     );
   }
   if (kind === "cylinder" || kind === "singleCylinder") {
     return (
-      <svg viewBox="0 0 72 46">
-        <rect {...line} x="8" y="9" width="46" height="28" />
-        <path {...line} d="M30 9v28m0-14h34" />
-        {kind === "singleCylinder" ? <path {...line} d="m12 34 5-8 5 8 5-8" /> : null}
+      <svg {...svgProps}>
+        <rect {...line} x="13" y="18" width="75" height="36" />
+        <path {...line} d="M45 18v36m0-18h66M25 54v10" />
+        {kind === "cylinder" ? <path {...line} d="M76 54v10" /> : null}
+        {kind === "singleCylinder" ? (
+          <path {...line} d="m51 36 5-8 8 16 8-16 8 16 5-8" />
+        ) : null}
       </svg>
     );
   }
   if (kind === "motor") {
-    return <svg viewBox="0 0 72 46"><circle {...line} cx="36" cy="23" r="18" /><path d="m29 23 13-8v16Z" fill="currentColor" /></svg>;
-  }
-  if (kind === "valve43" || kind === "valve42") {
     return (
-      <svg viewBox="0 0 82 46">
-        <rect {...line} x="5" y="7" width="72" height="32" />
-        <path {...line} d="M29 7v32m24-32v32" />
-        <path
-          {...line}
-          className={state === "extend" ? "symbol-active" : ""}
-          d="m8 32 18-18m-6 0h6v6"
-        />
-        <path
-          {...line}
-          className={state === "retract" ? "symbol-active" : ""}
-          d="m56 14 18 18m-6 0h6v-6"
-        />
-        <path {...line} className={state === "neutral" ? "symbol-active" : ""} d="M35 14v18m12-18v18" />
+      <svg {...svgProps}>
+        <path {...line} d="M8 36h28m48 0h28" />
+        <circle {...line} cx="60" cy="36" r="24" />
+        <path d="m70 24-22 12 22 12Z" fill="currentColor" />
+      </svg>
+    );
+  }
+  if (kind === "valve43") {
+    return (
+      <svg {...svgProps}>
+        <rect {...line} className={state === "extend" ? "symbol-active-box" : ""} x="15" y="16" width="30" height="40" />
+        <rect {...line} className={state === "neutral" ? "symbol-active-box" : ""} x="45" y="16" width="30" height="40" />
+        <rect {...line} className={state === "retract" ? "symbol-active-box" : ""} x="75" y="16" width="30" height="40" />
+        <path {...line} d="m20 48 20-24m-7 1 7-1-1 7M20 24l20 24m0-7v7l-7-1" />
+        <path {...line} d="M53 25v14m-5 0h10M67 25v14m-5 0h10" />
+        <path {...line} d="m80 24 20 24m-1-7 1 7-7-1M80 48l20-24m-7 1 7-1-1 7" />
+        <path {...line} d="M15 24H7m8 24H7m98-24h8m-8 24h8" />
+      </svg>
+    );
+  }
+  if (kind === "valve42") {
+    return (
+      <svg {...svgProps}>
+        <rect {...line} className={state === "extend" || state === "neutral" ? "symbol-active-box" : ""} x="30" y="16" width="30" height="40" />
+        <rect {...line} className={state === "retract" ? "symbol-active-box" : ""} x="60" y="16" width="30" height="40" />
+        <path {...line} d="m35 48 20-24m-7 1 7-1-1 7M35 24l20 24m0-7v7l-7-1" />
+        <path {...line} d="m65 24 20 24m-1-7 1 7-7-1M65 48l20-24m-7 1 7-1-1 7" />
+        <path {...line} d={`M30 36h-8${spring}M90 36h8`} />
+      </svg>
+    );
+  }
+  if (kind === "check" || kind === "pilotCheck") {
+    return (
+      <svg {...svgProps}>
+        <path {...line} d="M8 36h34m36 0h34M42 22v28l30-14Zm36-14v28" />
+        {kind === "pilotCheck" ? (
+          <path {...line} strokeDasharray="5 4" d="M60 64V48l18-12" />
+        ) : null}
+      </svg>
+    );
+  }
+  if (kind === "shuttle") {
+    return (
+      <svg {...svgProps}>
+        <path {...line} d="M8 20h36l16 16 16-16h36M60 36v28" />
+        <circle cx="60" cy="36" r="4.5" fill="currentColor" />
+        <path {...line} d="M44 12v16m32-16v16" />
       </svg>
     );
   }
   if (kind === "relief" || kind === "reducer" || kind === "sequence" || kind === "unloading") {
+    const isReducer = kind === "reducer";
     return (
-      <svg viewBox="0 0 72 46">
-        <rect {...line} x="20" y="7" width="32" height="32" />
-        <path {...line} d="m25 34 22-22m-6 1h7v7M56 11l5 5-5 5 5 5-5 5" />
+      <svg {...svgProps}>
+        <path {...line} d="M60 4v16m0 32v16" />
+        <rect {...line} x="42" y="20" width="36" height="32" />
+        <path {...line} d={isReducer ? "M60 46V26m-6 7 6-7 6 7" : "M60 46V26m-6 7 6-7 6 7"} />
+        <path {...line} d={`M78 36h6${spring}`} />
+        {kind === "relief" ? <path {...line} strokeDasharray="5 4" d="M42 46H28V12h32" /> : null}
+        {kind === "reducer" ? <path {...line} strokeDasharray="5 4" d="M78 46h14v18H60" /> : null}
+        {kind === "sequence" ? <path {...line} strokeDasharray="5 4" d="M42 46H30V10h30" /> : null}
+        {kind === "unloading" ? <path {...line} strokeDasharray="5 4" d="M42 28H28V60h32" /> : null}
       </svg>
     );
   }
-  if (kind === "check" || kind === "pilotCheck" || kind === "shuttle") {
+  if (kind === "flow" || kind === "needle") {
     return (
-      <svg viewBox="0 0 72 46">
-        <path {...line} d="M8 23h19m18 0h19M27 12v22l18-11Z" />
-        <path {...line} d="M45 12v22" />
-        {kind === "pilotCheck" ? <path {...line} d="M36 38v-8" /> : null}
+      <svg {...svgProps}>
+        <path {...line} d="M8 36h40m24 0h40M48 22v28l24-28v28Z" />
+        {kind === "needle" ? <path {...line} d="M40 60 80 12m-10 0h10v10" /> : null}
       </svg>
     );
   }
-  if (kind === "flow" || kind === "needle" || kind === "divider") {
+  if (kind === "divider") {
     return (
-      <svg viewBox="0 0 72 46">
-        <path {...line} d="M8 23h56M28 12l16 22m0-22L28 34m-4 6L49 6m-6 0h6v6" />
+      <svg {...svgProps}>
+        <path {...line} d="M8 36h34m36-14h34M78 50h34" />
+        <rect {...line} x="42" y="16" width="36" height="40" />
+        <path {...line} d="M48 36h24m0 0-10-10m10 10L62 46" />
       </svg>
     );
   }
   if (kind === "filter") {
-    return <svg viewBox="0 0 72 46"><path {...line} d="M8 23h16m24 0h16M24 8h24v30H24Zm2 27L46 11" /></svg>;
+    return (
+      <svg {...svgProps}>
+        <path {...line} d="M8 36h28m48 0h28M36 36l24-24 24 24-24 24Z" />
+        <path {...line} d="M44 52 76 20" />
+      </svg>
+    );
   }
   if (kind === "cooler") {
-    return <svg viewBox="0 0 72 46"><path {...line} d="M8 23h14m28 0h14M22 9h28v28H22Zm4 24 20-20m0 20L26 13" /></svg>;
+    return (
+      <svg {...svgProps}>
+        <path {...line} d="M8 36h28m48 0h28M36 36l24-24 24 24-24 24Z" />
+        <path {...line} d="m48 45 9-18m6 18 9-18M50 55l-4-8 8 1m10 7-4-8 8 1" />
+      </svg>
+    );
   }
   if (kind === "accumulator") {
-    return <svg viewBox="0 0 72 46"><path {...line} d="M24 39V21a12 12 0 0 1 24 0v18M24 24h24" /></svg>;
+    return (
+      <svg {...svgProps}>
+        <path {...line} d="M60 66V56M34 56V31a26 26 0 0 1 52 0v25ZM34 36h52" />
+        <path {...line} d="M40 26h40" />
+      </svg>
+    );
   }
   if (kind === "gauge") {
-    return <svg viewBox="0 0 72 46"><circle {...line} cx="36" cy="22" r="16" /><path {...line} d="m36 22 8-8m-8 24v8" /></svg>;
+    return (
+      <svg {...svgProps}>
+        <circle {...line} cx="60" cy="32" r="25" />
+        <path {...line} d="m60 32 14-14M60 57v11" />
+      </svg>
+    );
   }
-  return <svg viewBox="0 0 72 46"><path {...line} d="M8 23h56" /></svg>;
+  return <svg {...svgProps}><path {...line} d="M8 36h104" /></svg>;
 }
 
 function PropertyField({
@@ -653,6 +990,7 @@ export default function HydraulicSimulator() {
   const selected = nodes.find((node) => node.id === selectedId);
   const issues = useMemo(() => validateCircuit(nodes, edges, language), [nodes, edges, language]);
   const simulation = useMemo(() => calculateSimulation(nodes, edges), [nodes, edges]);
+  const routedEdges = useMemo(() => routeEdges(nodes, edges), [nodes, edges]);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -895,6 +1233,7 @@ export default function HydraulicSimulator() {
           <div className="hyd-panel-heading">
             <span>01</span>
             <h2>{t.components}</h2>
+            <small className="hyd-standard">{t.symbolStandard}</small>
           </div>
           <input
             className="hyd-search"
@@ -952,24 +1291,14 @@ export default function HydraulicSimulator() {
             onClick={() => setSelectedId(null)}
           >
             <div className="hyd-canvas" aria-label={t.workspace}>
-              <svg className="hyd-lines" viewBox="0 0 1350 800" preserveAspectRatio="none">
-                {edges.map((edge) => {
-                  const from = nodes.find((node) => node.id === edge.fromNode);
-                  const to = nodes.find((node) => node.id === edge.toNode);
-                  if (!from || !to) return null;
-                  const p1 = portPosition(from.kind, edge.fromPort);
-                  const p2 = portPosition(to.kind, edge.toPort);
-                  const x1 = from.x + p1.x;
-                  const y1 = from.y + p1.y;
-                  const x2 = to.x + p2.x;
-                  const y2 = to.y + p2.y;
-                  const midX = (x1 + x2) / 2;
-                  const path = `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+              <svg className="hyd-lines" viewBox={`0 0 ${CANVAS_WIDTH} ${CANVAS_HEIGHT}`} preserveAspectRatio="none">
+                {routedEdges.map((route) => {
+                  const path = routePath(route.points, route.bridges);
                   return (
-                    <g className={`hyd-line hyd-line--${edgeClass(edge)}`} key={edge.id}>
+                    <g className={`hyd-line hyd-line--${edgeClass(route.edge)}`} key={route.edge.id}>
                       <path className="hyd-line-hit" d={path} onClick={(event) => {
                         event.stopPropagation();
-                        setEdges((current) => current.filter((item) => item.id !== edge.id));
+                        setEdges((current) => current.filter((item) => item.id !== route.edge.id));
                       }} />
                       <path className="hyd-line-visible" d={path} />
                     </g>
