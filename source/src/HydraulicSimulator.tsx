@@ -9,6 +9,7 @@ import {
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import HydraulicSymbolGraphic, { hydraulicSymbolMeta } from "./HydraulicSymbolGraphic";
 import "./hydraulic-simulator.css";
 
 type Language = "tr" | "en";
@@ -116,14 +117,13 @@ type SimulationResult = {
   suctionPorts: Set<string>;
 };
 
-const NODE_WIDTH = 142;
-const NODE_HEIGHT = 72;
-const SYMBOL_HEIGHT = 72;
 const JUNCTION_SIZE = 30;
 const CANVAS_WIDTH = 1350;
 const CANVAS_HEIGHT = 800;
 const ROUTE_MARGIN = 24;
 const BRIDGE_RADIUS = 7;
+const MIN_ZOOM = 0.4;
+const MAX_ZOOM = 1.8;
 const STORAGE_KEY = "algo-team-hydraulic-circuit-v2";
 
 const PUMP_KINDS: ComponentKind[] = ["pump", "gearPump", "variablePump", "lsPump", "epPump", "handPump"];
@@ -265,7 +265,8 @@ const text = {
     cylinderExample: "Silindir Kontrolü",
     motorExample: "Motor Kontrolü",
     empty: "Boş Sayfa",
-    hint: "İki porta sırayla tıklayın. Mevcut hatta dal vermek için önce portu, sonra hattı seçin.",
+    hint: "İki porta sırayla tıklayın. Hatta dal vermek için önce portu, sonra hattı seçin. Ctrl + tekerlek: yakınlaştır.",
+    runningLock: "Simülasyon çalışıyor: yalnız eleman ayarları değiştirilebilir.",
     select: "Ayarlarını değiştirmek için bir devre elemanı seçin.",
     delete: "Elemanı Sil",
     valvePosition: "Valf konumu",
@@ -331,7 +332,8 @@ const text = {
     cylinderExample: "Cylinder Control",
     motorExample: "Motor Control",
     empty: "Blank Sheet",
-    hint: "Click two ports in sequence. To branch, select a port and then click an existing line.",
+    hint: "Click two ports in sequence. To branch, select a port and then click a line. Ctrl + wheel: zoom.",
+    runningLock: "Simulation is running: only component settings can be changed.",
     select: "Select a circuit component to edit its settings.",
     delete: "Delete Component",
     valvePosition: "Valve position",
@@ -387,7 +389,8 @@ function portsFor(kind: ComponentKind): PortName[] {
   if (kind === "lsValvePvg16") return ["p", "t", "a", "b", "ls"];
   if (FOUR_WAY_VALVE_KINDS.includes(kind)) return ["p", "t", "a", "b"];
   if (kind === "valve32NC" || kind === "valve32NO") return ["p", "t", "a"];
-  if (kind === "valve22NC" || kind === "logic2Way") return ["a", "b"];
+  if (kind === "pilotCheck" || kind === "logic2Way") return ["a", "b", "x"];
+  if (kind === "valve22NC") return ["a", "b"];
   if (CYLINDER_KINDS.includes(kind) && kind !== "singleCylinder") return ["a", "b"];
   if (MOTOR_KINDS.includes(kind)) return ["a", "b"];
   if (["singleCylinder", "gauge", "accumulator", "pressureSwitch", "breather"].includes(kind)) return ["p"];
@@ -438,72 +441,29 @@ function makeNode(kind: ComponentKind, x: number, y: number, language: Language,
 }
 
 function nodeSize(kind: ComponentKind) {
-  return kind === "junction"
-    ? { width: JUNCTION_SIZE, height: JUNCTION_SIZE }
-    : { width: NODE_WIDTH, height: NODE_HEIGHT };
+  if (kind === "junction") return { width: JUNCTION_SIZE, height: JUNCTION_SIZE };
+  const meta = hydraulicSymbolMeta(kind);
+  return { width: meta.width, height: meta.height };
 }
 
 function portPosition(kind: ComponentKind, port: PortName) {
-  const { width, height } = nodeSize(kind);
-  const middleY = kind === "junction" ? height / 2 : SYMBOL_HEIGHT / 2;
   if (kind === "junction") {
-    if (port === "a") return { x: 0, y: middleY };
-    if (port === "b") return { x: width, y: middleY };
-    return { x: width / 2, y: 0 };
+    if (port === "a") return { x: 0, y: JUNCTION_SIZE / 2 };
+    if (port === "b") return { x: JUNCTION_SIZE, y: JUNCTION_SIZE / 2 };
+    return { x: JUNCTION_SIZE / 2, y: 0 };
   }
-  if (kind === "tank") return { x: width / 2, y: 0 };
-  if (CYLINDER_KINDS.includes(kind)) {
-    if (kind === "singleCylinder") return { x: 30, y: SYMBOL_HEIGHT };
-    return port === "a"
-      ? { x: 30, y: SYMBOL_HEIGHT }
-      : { x: 91, y: SYMBOL_HEIGHT };
-  }
-  if (["gauge", "accumulator", "pressureSwitch", "breather"].includes(kind)) {
-    return { x: width / 2, y: SYMBOL_HEIGHT };
-  }
-  if (kind === "relief" || kind === "unloading" || kind === "pilotRelief") {
-    if (port === "x") return { x: 0, y: middleY };
-    return port === "p"
-      ? { x: width / 2, y: 0 }
-      : { x: width / 2, y: SYMBOL_HEIGHT };
-  }
-  if (FOUR_WAY_VALVE_KINDS.includes(kind)) {
-    const positions: Record<PortName, { x: number; y: number }> = {
-      p: { x: 42, y: SYMBOL_HEIGHT },
-      t: { x: 100, y: SYMBOL_HEIGHT },
-      a: { x: 42, y: 0 },
-      b: { x: 100, y: 0 },
-      in: { x: 0, y: middleY },
-      out: { x: width, y: middleY },
-      c: { x: width / 2, y: 0 },
-      ls: { x: width, y: 56 },
-      x: { x: 0, y: 56 },
-    };
-    return positions[port];
-  }
-  if (kind === "valve32NC" || kind === "valve32NO") {
-    if (port === "a") return { x: width / 2, y: 0 };
-    return port === "p" ? { x: 42, y: SYMBOL_HEIGHT } : { x: 100, y: SYMBOL_HEIGHT };
-  }
-  if (["divider", "dividerCombiner", "shuttle", "diverter3Way", "priorityFlow"].includes(kind)) {
-    if (port === "a") return { x: 0, y: middleY };
-    if (port === "b") return { x: width, y: 22 };
-    return { x: width, y: 50 };
-  }
-  if (kind === "counterbalance" || kind === "brakeValve") {
-    if (port === "a") return { x: 0, y: middleY };
-    if (port === "b") return { x: width, y: middleY };
-    return { x: width / 2, y: SYMBOL_HEIGHT };
-  }
-  if (kind === "lsPump" && port === "ls") {
-    return { x: width / 2, y: 0 };
-  }
-  const leftPort = port === "in" || port === "a";
-  return { x: leftPort ? 0 : width, y: middleY };
+  const meta = hydraulicSymbolMeta(kind);
+  return meta.ports[port] ?? { x: meta.width / 2, y: meta.height / 2 };
 }
 
 function key(nodeId: string, port: PortName) {
   return `${nodeId}:${port}`;
+}
+
+function portLabel(port: PortName) {
+  if (port === "in") return "S";
+  if (port === "out") return "P";
+  return port.toUpperCase();
 }
 
 function portDirection(kind: ComponentKind, port: PortName): Point {
@@ -512,7 +472,7 @@ function portDirection(kind: ComponentKind, port: PortName): Point {
   if (position.x === 0) return { x: -1, y: 0 };
   if (position.x === width) return { x: 1, y: 0 };
   if (position.y === 0) return { x: 0, y: -1 };
-  if (position.y === SYMBOL_HEIGHT || position.y === height) return { x: 0, y: 1 };
+  if (position.y === height) return { x: 0, y: 1 };
   return { x: 0, y: 1 };
 }
 
@@ -754,21 +714,23 @@ function routePath(points: Point[], bridges: Map<number, number[]>) {
 }
 
 function circuitExample(language: Language, type: "cylinder" | "motor") {
-  const tank = makeNode("tank", 50, 430, language, "tank-1");
-  const pump = makeNode("pump", 250, 410, language, "pump-1");
-  const junction = makeNode("junction", 410, 431, language, "junction-1");
-  const relief = makeNode("relief", 440, 250, language, "relief-1");
-  const valve = makeNode("valve43", 670, 275, language, "valve-1");
+  const tank = makeNode("tank", 80, 620, language, "tank-1");
+  const pump = makeNode("pump", 220, 560, language, "pump-1");
+  const junction = makeNode("junction", 330, 520, language, "junction-1");
+  const returnJunction = makeNode("junction", 500, 560, language, "return-junction-1");
+  const relief = makeNode("relief", 410, 400, language, "relief-1");
+  const valve = makeNode("valve43", 650, 360, language, "valve-1");
   valve.params.state = "extend";
-  const actuator = makeNode(type === "cylinder" ? "cylinder" : "motor", 940, 210, language, "actuator-1");
-  const nodes = [tank, pump, junction, relief, valve, actuator];
+  const actuator = makeNode(type === "cylinder" ? "cylinder" : "motor", 680, 160, language, "actuator-1");
+  const nodes = [tank, pump, junction, returnJunction, relief, valve, actuator];
   const edges: HydraulicEdge[] = [
     { id: "e1", fromNode: tank.id, fromPort: "t", toNode: pump.id, toPort: "in" },
     { id: "e2", fromNode: pump.id, fromPort: "out", toNode: junction.id, toPort: "a" },
     { id: "e3", fromNode: junction.id, fromPort: "b", toNode: valve.id, toPort: "p" },
     { id: "e3b", fromNode: junction.id, fromPort: "c", toNode: relief.id, toPort: "p" },
-    { id: "e4", fromNode: relief.id, fromPort: "t", toNode: tank.id, toPort: "t" },
-    { id: "e5", fromNode: valve.id, fromPort: "t", toNode: tank.id, toPort: "t" },
+    { id: "e4", fromNode: relief.id, fromPort: "t", toNode: returnJunction.id, toPort: "a" },
+    { id: "e5", fromNode: valve.id, fromPort: "t", toNode: returnJunction.id, toPort: "b" },
+    { id: "e5b", fromNode: returnJunction.id, fromPort: "c", toNode: tank.id, toPort: "t" },
     { id: "e6", fromNode: valve.id, fromPort: "a", toNode: actuator.id, toPort: "a" },
     { id: "e7", fromNode: valve.id, fromPort: "b", toNode: actuator.id, toPort: "b" },
   ];
@@ -792,6 +754,32 @@ function validateCircuit(nodes: HydraulicNode[], edges: HydraulicEdge[], languag
   if (!has(PUMP_KINDS)) issues.push({ level: "error", text: tr ? "Devrede pompa bulunmuyor." : "The circuit has no pump." });
   if (!has(RELIEF_KINDS)) issues.push({ level: "error", text: tr ? "Pompayı koruyan basınç emniyet valfi bulunmuyor." : "No pressure relief valve protects the pump." });
   if (!has([...CYLINDER_KINDS, ...MOTOR_KINDS])) issues.push({ level: "warning", text: tr ? "Devrede hareket elemanı bulunmuyor." : "The circuit has no actuator." });
+
+  const pumps = nodes.filter((node) => PUMP_KINDS.includes(node.kind));
+  const tanks = nodes.filter((node) => node.kind === "tank");
+  for (const relief of nodes.filter((node) => RELIEF_KINDS.includes(node.kind))) {
+    const pressureReach = pumps.some((pump) => (
+      reachable([key(pump.id, "out")], nodes, edges, "pressure").has(key(relief.id, "p"))
+    ));
+    const tankReach = reachable([key(relief.id, "t")], nodes, edges, "return");
+    const returnReach = tanks.some((tank) => tankReach.has(key(tank.id, "t")));
+    if (!pressureReach) {
+      issues.push({
+        level: "error",
+        text: tr
+          ? `${relief.label}: P portu pompa basınç hattına bağlı değil.`
+          : `${relief.label}: port P is not connected to the pump pressure line.`,
+      });
+    }
+    if (!returnReach) {
+      issues.push({
+        level: "error",
+        text: tr
+          ? `${relief.label}: T portu tanka bağlı değil.`
+          : `${relief.label}: port T is not connected to the reservoir.`,
+      });
+    }
+  }
 
   const connected = connectedPorts(edges);
   for (const node of nodes) {
@@ -981,7 +969,24 @@ function calculateSimulation(nodes: HydraulicNode[], edges: HydraulicEdge[]): Si
   const motorDisplacement = Number(motor?.params.displacement ?? 50) * motorCommand;
   const motorTorque = Number(motor?.params.torque ?? 0);
   const motorLoadPressure = motorTorque * 20 * Math.PI / Math.max(1, motorDisplacement);
-  const blocked = state === "neutral" || !actuator || !pump;
+  const activePort: PortName = state === "retract" ? "b" : "a";
+  const returnPort: PortName = state === "retract" ? "a" : "b";
+  const pressureStart = pump ? [key(pump.id, "out")] : [];
+  const pressurePorts = reachable(pressureStart, nodes, edges, "pressure");
+  const candidateReturnPorts = actuator
+    ? reachable([key(actuator.id, returnPort)], nodes, edges, "return")
+    : new Set<string>();
+  const suctionPorts = pump ? reachable([key(pump.id, "in")], nodes, edges, "suction") : new Set<string>();
+  const tankPorts = nodes.filter((node) => node.kind === "tank").map((node) => key(node.id, "t"));
+  const pressureConnected = actuator ? pressurePorts.has(key(actuator.id, activePort)) : false;
+  const returnConnected = tankPorts.some((tankPort) => candidateReturnPorts.has(tankPort));
+  const suctionConnected = tankPorts.some((tankPort) => suctionPorts.has(tankPort));
+  const blocked = state === "neutral"
+    || !actuator
+    || !pump
+    || !pressureConnected
+    || !returnConnected
+    || !suctionConnected;
   const unloadedCenter = state === "neutral"
     && (valve?.kind === "valve43Open" || valve?.kind === "valve43Tandem");
   const pressureMargin = pump?.kind === "lsPump" ? Number(pump.params.lsMargin ?? 18) : 8;
@@ -1002,21 +1007,12 @@ function calculateSimulation(nodes: HydraulicNode[], edges: HydraulicEdge[]): Si
     : pressure * workingArea / 10_000;
   const power = pressure * pumpFlow / 600;
 
-  const pressureStart = pump ? [key(pump.id, "out")] : [];
-  const pressurePorts = reachable(pressureStart, nodes, edges, "pressure");
-  if (relief) pressurePorts.add(key(relief.id, "p"));
-  const activePort: PortName = state === "retract" ? "b" : "a";
-  const returnPort: PortName = state === "retract" ? "a" : "b";
-  const returnPorts = actuator && !blocked
-    ? reachable([key(actuator.id, returnPort)], nodes, edges, "return")
-    : new Set<string>();
+  const returnPorts = actuator && !blocked ? candidateReturnPorts : new Set<string>();
   if (relief && reliefFlow > 0) {
     for (const port of reachable([key(relief.id, "t")], nodes, edges, "return")) {
       returnPorts.add(port);
     }
   }
-  const suctionPorts = pump ? reachable([key(pump.id, "in")], nodes, edges, "suction") : new Set<string>();
-
   return {
     pressure,
     flow,
@@ -1436,9 +1432,11 @@ export default function HydraulicSimulator() {
   const [search, setSearch] = useState("");
   const [issuesOpen, setIssuesOpen] = useState(true);
   const [saveStatus, setSaveStatus] = useState("");
+  const [zoom, setZoom] = useState(1);
   const [pistonPositions, setPistonPositions] = useState<Record<string, number>>({ "actuator-1": 24 });
   const [dragging, setDragging] = useState<{ id: string; offsetX: number; offsetY: number } | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const canvasSurfaceRef = useRef<HTMLDivElement>(null);
   const t = text[language];
   const selected = nodes.find((node) => node.id === selectedId);
   const issues = useMemo(() => validateCircuit(nodes, edges, language), [nodes, edges, language]);
@@ -1448,6 +1446,36 @@ export default function HydraulicSimulator() {
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
+
+  useEffect(() => {
+    const wrapper = canvasRef.current;
+    if (!wrapper) return;
+    const onWheel = (event: WheelEvent) => {
+      if (!event.ctrlKey) return;
+      event.preventDefault();
+      changeZoom(zoom + (event.deltaY < 0 ? 0.1 : -0.1), event.clientX, event.clientY);
+    };
+    wrapper.addEventListener("wheel", onWheel, { passive: false });
+    return () => wrapper.removeEventListener("wheel", onWheel);
+  }, [zoom]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (running || !selectedId) return;
+      const target = event.target as HTMLElement | null;
+      if (
+        target?.isContentEditable
+        || target?.tagName === "INPUT"
+        || target?.tagName === "TEXTAREA"
+        || target?.tagName === "SELECT"
+      ) return;
+      if (event.key !== "Delete" && event.key !== "Backspace") return;
+      event.preventDefault();
+      deleteSelected();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [running, selectedId]);
 
   useEffect(() => {
     if (
@@ -1473,17 +1501,17 @@ export default function HydraulicSimulator() {
   }, [running, simulation.activeActuator, simulation.actuatorKind, simulation.direction, simulation.speed, nodes]);
 
   useEffect(() => {
-    if (!dragging) return;
+    if (!dragging || running) return;
     const move = (event: PointerEvent) => {
-      const rect = canvasRef.current?.getBoundingClientRect();
+      const rect = canvasSurfaceRef.current?.getBoundingClientRect();
       if (!rect) return;
       setNodes((current) => current.map((node) => {
         if (node.id !== dragging.id) return node;
         const { width, height } = nodeSize(node.kind);
         return {
           ...node,
-          x: Math.max(8, Math.min(CANVAS_WIDTH - width - 8, event.clientX - rect.left - dragging.offsetX + canvasRef.current!.scrollLeft)),
-          y: Math.max(8, Math.min(CANVAS_HEIGHT - height - 8, event.clientY - rect.top - dragging.offsetY + canvasRef.current!.scrollTop)),
+          x: Math.max(8, Math.min(CANVAS_WIDTH - width - 8, (event.clientX - rect.left) / zoom - dragging.offsetX)),
+          y: Math.max(8, Math.min(CANVAS_HEIGHT - height - 8, (event.clientY - rect.top) / zoom - dragging.offsetY)),
         };
       }));
     };
@@ -1494,7 +1522,7 @@ export default function HydraulicSimulator() {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
     };
-  }, [dragging]);
+  }, [dragging, running, zoom]);
 
   function updateNode(id: string, updates: Partial<HydraulicNode>) {
     setNodes((current) => current.map((node) => node.id === id ? { ...node, ...updates } : node));
@@ -1515,6 +1543,7 @@ export default function HydraulicSimulator() {
   }
 
   function addNode(kind: ComponentKind, x = 520, y = 340) {
+    if (running) return;
     const node = makeNode(kind, x, y, language);
     setNodes((current) => [...current, node]);
     setSelectedId(node.id);
@@ -1522,17 +1551,20 @@ export default function HydraulicSimulator() {
 
   function onDrop(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
+    if (running) return;
     const kind = event.dataTransfer.getData("application/x-hydraulic-component") as ComponentKind;
-    if (!kind || !canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
+    if (!kind || !canvasSurfaceRef.current) return;
+    const rect = canvasSurfaceRef.current.getBoundingClientRect();
+    const { width, height } = nodeSize(kind);
     addNode(
       kind,
-      event.clientX - rect.left + canvasRef.current.scrollLeft - NODE_WIDTH / 2,
-      event.clientY - rect.top + canvasRef.current.scrollTop - NODE_HEIGHT / 2,
+      (event.clientX - rect.left) / zoom - width / 2,
+      (event.clientY - rect.top) / zoom - height / 2,
     );
   }
 
   function onPortClick(nodeId: string, port: PortName) {
+    if (running) return;
     if (!pendingPort) {
       setPendingPort({ nodeId, port });
       return;
@@ -1566,6 +1598,7 @@ export default function HydraulicSimulator() {
 
   function onLineClick(route: RoutedEdge, event: ReactMouseEvent<SVGPathElement>) {
     event.stopPropagation();
+    if (running) return;
     if (!pendingPort) {
       setEdges((current) => current.filter((item) => item.id !== route.edge.id));
       return;
@@ -1608,7 +1641,7 @@ export default function HydraulicSimulator() {
   }
 
   function deleteSelected() {
-    if (!selectedId) return;
+    if (running || !selectedId) return;
     setNodes((current) => current.filter((node) => node.id !== selectedId));
     setEdges((current) => current.filter((edge) => edge.fromNode !== selectedId && edge.toNode !== selectedId));
     setSelectedId(null);
@@ -1637,6 +1670,7 @@ export default function HydraulicSimulator() {
   }
 
   function loadCircuit() {
+    if (running) return;
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     try {
@@ -1666,6 +1700,25 @@ export default function HydraulicSimulator() {
     return "inactive";
   }
 
+  function changeZoom(nextZoom: number, clientX?: number, clientY?: number) {
+    const wrapper = canvasRef.current;
+    const next = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, Math.round(nextZoom * 10) / 10));
+    if (!wrapper || next === zoom) {
+      setZoom(next);
+      return;
+    }
+    const rect = wrapper.getBoundingClientRect();
+    const focusX = clientX === undefined ? wrapper.clientWidth / 2 : clientX - rect.left;
+    const focusY = clientY === undefined ? wrapper.clientHeight / 2 : clientY - rect.top;
+    const canvasX = (wrapper.scrollLeft + focusX) / zoom;
+    const canvasY = (wrapper.scrollTop + focusY) / zoom;
+    setZoom(next);
+    window.requestAnimationFrame(() => {
+      wrapper.scrollLeft = canvasX * next - focusX;
+      wrapper.scrollTop = canvasY * next - focusY;
+    });
+  }
+
   const filteredPalette = palette
     .map((group) => ({
       ...group,
@@ -1678,7 +1731,7 @@ export default function HydraulicSimulator() {
     .filter((group) => group.items.length > 0);
 
   return (
-    <main className={`hyd-app ${pendingPort ? "is-connecting" : ""}`}>
+    <main className={`hyd-app ${pendingPort ? "is-connecting" : ""} ${running ? "is-running" : ""}`}>
       <header className="hyd-header">
         <a className="hyd-brand" href="/">
           ALGO<span>TEAM</span>
@@ -1697,7 +1750,17 @@ export default function HydraulicSimulator() {
 
       <section className="hyd-toolbar" aria-label="Circuit toolbar">
         <div className="hyd-toolbar-group">
-          <button className={`hyd-run ${running ? "is-running" : ""}`} onClick={() => setRunning((value) => !value)}>
+          <button
+            className={`hyd-run ${running ? "is-running" : ""}`}
+            onClick={() => setRunning((value) => {
+              const next = !value;
+              if (next) {
+                setPendingPort(null);
+                setDragging(null);
+              }
+              return next;
+            })}
+          >
             <i />{running ? t.stop : t.run}
           </button>
           <button onClick={() => setIssuesOpen(true)}>{t.validate}</button>
@@ -1706,6 +1769,7 @@ export default function HydraulicSimulator() {
           <label>
             <span>{t.examples}</span>
             <select
+              disabled={running}
               defaultValue=""
               onChange={(event) => {
                 loadExample(event.target.value as "cylinder" | "motor" | "empty");
@@ -1719,10 +1783,29 @@ export default function HydraulicSimulator() {
             </select>
           </label>
         </div>
+        <div className="hyd-toolbar-group hyd-zoom" aria-label={language === "tr" ? "Tuval yakınlaştırma" : "Canvas zoom"}>
+          <button
+            type="button"
+            onClick={() => changeZoom(zoom - 0.1)}
+            title={language === "tr" ? "Uzaklaştır" : "Zoom out"}
+          >
+            −
+          </button>
+          <button type="button" onClick={() => changeZoom(1)} title={language === "tr" ? "Gerçek boyut" : "Actual size"}>
+            {Math.round(zoom * 100)}%
+          </button>
+          <button
+            type="button"
+            onClick={() => changeZoom(zoom + 0.1)}
+            title={language === "tr" ? "Yakınlaştır" : "Zoom in"}
+          >
+            +
+          </button>
+        </div>
         <div className="hyd-toolbar-group hyd-toolbar-group--right">
           <button onClick={saveCircuit}>{t.save}</button>
-          <button onClick={loadCircuit}>{t.load}</button>
-          <button onClick={() => loadExample("empty")}>{t.clear}</button>
+          <button disabled={running} onClick={loadCircuit}>{t.load}</button>
+          <button disabled={running} onClick={() => loadExample("empty")}>{t.clear}</button>
           {saveStatus ? <span className="hyd-save-status">{saveStatus}</span> : null}
         </div>
       </section>
@@ -1748,7 +1831,8 @@ export default function HydraulicSimulator() {
                 <div>
                   {group.items.map((kind) => (
                     <button
-                      draggable
+                      disabled={running}
+                      draggable={!running}
                       key={kind}
                       onClick={() => addNode(kind)}
                       onDragStart={(event) => {
@@ -1757,7 +1841,7 @@ export default function HydraulicSimulator() {
                       }}
                       title={names[kind][language]}
                     >
-                      <SymbolGraphic kind={kind} />
+                      <HydraulicSymbolGraphic kind={kind} />
                       <span>{names[kind][language]}</span>
                       <small>{names[kind].code}</small>
                     </button>
@@ -1774,7 +1858,7 @@ export default function HydraulicSimulator() {
               <span>02</span>
               <h2>{t.workspace}</h2>
             </div>
-            <p>{t.hint}</p>
+            <p className={running ? "is-running-note" : ""}>{running ? t.runningLock : t.hint}</p>
           </div>
           {pendingPort ? (
             <div className="hyd-connect-notice">
@@ -1789,7 +1873,16 @@ export default function HydraulicSimulator() {
             onDrop={onDrop}
             onClick={() => setSelectedId(null)}
           >
-            <div className="hyd-canvas" aria-label={t.workspace}>
+            <div
+              className="hyd-canvas-sizer"
+              style={{ width: CANVAS_WIDTH * zoom, height: CANVAS_HEIGHT * zoom }}
+            >
+            <div
+              className="hyd-canvas"
+              aria-label={t.workspace}
+              ref={canvasSurfaceRef}
+              style={{ transform: `scale(${zoom})` }}
+            >
               <svg className="hyd-lines" viewBox={`0 0 ${CANVAS_WIDTH} ${CANVAS_HEIGHT}`} preserveAspectRatio="none">
                 {routedEdges.map((route) => {
                   const path = routePath(route.points, route.bridges);
@@ -1818,20 +1911,23 @@ export default function HydraulicSimulator() {
                     setSelectedId(node.id);
                   }}
                   onPointerDown={(event: ReactPointerEvent<HTMLElement>) => {
+                    if (running) return;
                     if ((event.target as HTMLElement).closest(".hyd-port")) return;
                     const rect = event.currentTarget.getBoundingClientRect();
-                    setDragging({ id: node.id, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top });
+                    setDragging({
+                      id: node.id,
+                      offsetX: (event.clientX - rect.left) / zoom,
+                      offsetY: (event.clientY - rect.top) / zoom,
+                    });
                   }}
                 >
                   <div className="hyd-node-code">{names[node.kind].code}</div>
                   <div className="hyd-node-symbol">
-                    <SymbolGraphic kind={node.kind} state={String(node.params.state ?? "neutral")} />
-                    {(node.kind === "cylinder" || node.kind === "singleCylinder") ? (
-                      <i
-                        className="hyd-piston"
-                        style={{ left: `${18 + (pistonPositions[node.id] ?? 20) * 0.48}%` }}
-                      />
-                    ) : null}
+                    <HydraulicSymbolGraphic
+                      kind={node.kind}
+                      position={pistonPositions[node.id] ?? 24}
+                      state={String(node.params.state ?? "neutral")}
+                    />
                   </div>
                   <strong>{node.label}</strong>
                   {portsFor(node.kind).map((port) => {
@@ -1840,20 +1936,22 @@ export default function HydraulicSimulator() {
                     return (
                       <button
                         className={`hyd-port ${active ? "is-pending" : ""}`}
+                        disabled={running}
                         key={port}
                         style={{ left: position.x, top: position.y }}
                         onClick={(event) => {
                           event.stopPropagation();
                           onPortClick(node.id, port);
                         }}
-                        title={`${node.label} · ${port.toUpperCase()}`}
+                        title={`${node.label} · ${portLabel(port)}`}
                       >
-                        <span>{port.toUpperCase()}</span>
+                        <span>{portLabel(port)}</span>
                       </button>
                     );
                   })}
                 </article>
               ))}
+            </div>
             </div>
           </div>
         </section>
@@ -1868,7 +1966,7 @@ export default function HydraulicSimulator() {
               {selected ? (
                 <div className="hyd-properties">
                   <div className="hyd-selected-title">
-                    <SymbolGraphic kind={selected.kind} state={String(selected.params.state ?? "neutral")} />
+                    <HydraulicSymbolGraphic kind={selected.kind} state={String(selected.params.state ?? "neutral")} />
                     <div><small>{names[selected.kind].code}</small><strong>{selected.label}</strong></div>
                   </div>
                   <label className="hyd-field">
@@ -1929,7 +2027,7 @@ export default function HydraulicSimulator() {
                       </select>
                     </label>
                   ) : null}
-                  <button className="hyd-delete" onClick={deleteSelected}>{t.delete}</button>
+                  <button className="hyd-delete" disabled={running} onClick={deleteSelected}>{t.delete}</button>
                 </div>
               ) : <p className="hyd-empty-selection">{t.select}</p>}
             </section>

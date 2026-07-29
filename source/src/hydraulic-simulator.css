@@ -17,8 +17,8 @@
   color: var(--hyd-ink);
   display: flex;
   flex-direction: column;
-  height: 100dvh;
-  min-height: 0;
+  height: max(720px, 100dvh);
+  min-height: 720px;
   overflow: hidden;
 }
 
@@ -132,6 +132,12 @@
   color: #fff;
 }
 
+.hyd-toolbar button:disabled,
+.hyd-toolbar select:disabled {
+  color: #63737a;
+  cursor: not-allowed;
+}
+
 .hyd-toolbar option {
   color: var(--hyd-ink);
 }
@@ -178,6 +184,19 @@
   right: 8px;
   white-space: nowrap;
   z-index: 30;
+}
+
+.hyd-zoom button {
+  font-family: var(--hyd-mono);
+  min-width: 30px;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.hyd-zoom button:nth-child(2) {
+  color: #fff;
+  font-size: 9px;
+  min-width: 46px;
 }
 
 .hyd-layout {
@@ -304,6 +323,12 @@
   transform: translateY(-1px);
 }
 
+.hyd-palette-group button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
 .hyd-palette-group button svg {
   height: 42px;
   width: 72px;
@@ -356,6 +381,11 @@
   text-align: right;
 }
 
+.hyd-workspace-head p.is-running-note {
+  color: #b44737;
+  font-weight: 650;
+}
+
 .hyd-connect-notice {
   align-items: center;
   background: var(--hyd-signal);
@@ -385,6 +415,30 @@
   flex: 1;
   min-height: 0;
   overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #8c999d #e3e2dc;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: auto;
+}
+
+.hyd-canvas-wrap::-webkit-scrollbar {
+  height: 13px;
+  width: 13px;
+}
+
+.hyd-canvas-wrap::-webkit-scrollbar-thumb {
+  background: #8c999d;
+  border: 3px solid #e3e2dc;
+}
+
+.hyd-canvas-wrap::-webkit-scrollbar-track {
+  background: #e3e2dc;
+}
+
+.hyd-canvas-sizer {
+  min-height: 1px;
+  min-width: 1px;
+  position: relative;
 }
 
 .hyd-canvas {
@@ -397,8 +451,11 @@
   background-position: -1px -1px;
   background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
   height: 800px;
-  min-width: 1350px;
+  left: 0;
   position: relative;
+  top: 0;
+  transform-origin: 0 0;
+  width: 1350px;
 }
 
 .hyd-lines {
@@ -471,13 +528,15 @@
   cursor: move;
   display: flex;
   flex-direction: column;
-  height: 72px;
   justify-content: flex-start;
   padding: 0;
   position: absolute;
   user-select: none;
-  width: 142px;
   z-index: 5;
+}
+
+.hyd-app.is-running .hyd-node {
+  cursor: default;
 }
 
 .hyd-node.is-selected {
@@ -537,14 +596,53 @@
 }
 
 .hyd-node-symbol {
-  height: 72px;
+  height: 100%;
   position: relative;
-  width: 142px;
+  width: 100%;
 }
 
 .hyd-node-symbol svg {
   height: 100%;
+  overflow: visible;
   width: 100%;
+}
+
+.hyd-iso-symbol {
+  color: var(--hyd-ink);
+  overflow: visible;
+}
+
+.hyd-iso-symbol :is(path, circle, rect, polygon, polyline) {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.hyd-iso-symbol .thin {
+  stroke-width: 1.15;
+}
+
+.hyd-iso-symbol .thick {
+  stroke-width: 3.2;
+}
+
+.hyd-iso-symbol .dash {
+  stroke-dasharray: 5 4;
+}
+
+.hyd-iso-symbol .f,
+.hyd-iso-symbol .hyd-arrow-head {
+  fill: currentColor;
+  stroke: none;
+}
+
+.hyd-iso-symbol .active-box {
+  fill: rgba(8, 127, 140, 0.09);
+  stroke: var(--hyd-signal);
+  stroke-width: 2.3;
 }
 
 .hyd-node-symbol .symbol-active {
@@ -562,16 +660,6 @@
   display: none;
 }
 
-.hyd-piston {
-  background: var(--hyd-pressure);
-  height: 25px;
-  opacity: 0.75;
-  position: absolute;
-  top: 13px;
-  transition: left 100ms linear;
-  width: 2px;
-}
-
 .hyd-port {
   align-items: center;
   background: var(--hyd-ink);
@@ -580,12 +668,12 @@
   color: #fff;
   cursor: crosshair;
   display: flex;
-  height: 14px;
+  height: 12px;
   justify-content: center;
   padding: 0;
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 14px;
+  width: 12px;
   z-index: 9;
 }
 
@@ -598,12 +686,25 @@
   position: absolute;
   top: 13px;
   transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
 }
 
 .hyd-port:hover,
 .hyd-port.is-pending {
   background: var(--hyd-signal);
   box-shadow: 0 0 0 4px rgba(8, 127, 140, 0.18);
+}
+
+.hyd-port:hover span,
+.hyd-port.is-pending span,
+.hyd-node.is-selected .hyd-port span {
+  opacity: 1;
+}
+
+.hyd-port:disabled {
+  cursor: default;
 }
 
 .hyd-inspector {
@@ -699,6 +800,11 @@
   margin-top: 7px;
   padding: 7px 10px;
   width: 100%;
+}
+
+.hyd-delete:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
 }
 
 .hyd-empty-selection,
