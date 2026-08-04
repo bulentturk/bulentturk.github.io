@@ -374,6 +374,291 @@ body {
   max-width: 780px;
 }
 
+.daily-brief {
+  margin: 0 auto;
+  max-width: 1480px;
+  padding: 90px 48px 110px;
+}
+
+.daily-brief-head {
+  align-items: end;
+  display: grid;
+  gap: 70px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.daily-brief-head h2,
+.blog-archive-head h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(46px, 5.2vw, 78px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  margin: 24px 0 26px;
+  max-width: 900px;
+}
+
+.daily-brief-head > div:first-child > p:last-child,
+.blog-archive-head > p:last-child {
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 760px;
+}
+
+.daily-brief-meta {
+  border-left: 1px solid var(--line-strong);
+  display: grid;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  gap: 11px;
+  letter-spacing: 0.1em;
+  min-width: 205px;
+  padding: 6px 0 6px 24px;
+  text-transform: uppercase;
+}
+
+.daily-brief-meta span:first-child {
+  color: var(--signal);
+  font-weight: 700;
+}
+
+.daily-topic-strip {
+  border-left: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 60px;
+}
+
+.daily-topic {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  display: grid;
+  gap: 18px;
+  grid-template-columns: auto 1fr;
+  padding: 22px 24px;
+}
+
+.daily-topic span {
+  color: var(--signal);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 31px;
+}
+
+.daily-topic strong {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.daily-card-grid {
+  border-left: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.daily-card {
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  display: grid;
+  grid-template-rows: auto 210px 1fr;
+  min-width: 0;
+  padding: 26px;
+}
+
+.daily-card-topline,
+.daily-card-evidence {
+  align-items: center;
+  display: flex;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  justify-content: space-between;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.daily-card-topline {
+  color: var(--signal);
+  padding-bottom: 22px;
+}
+
+.daily-card-visual {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    var(--ink);
+  background-size: 28px 28px;
+  color: var(--paper-bright);
+  overflow: hidden;
+  position: relative;
+}
+
+.daily-card-visual::before {
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  content: "";
+  height: 190px;
+  opacity: 0.22;
+  position: absolute;
+  right: -30px;
+  top: -72px;
+  width: 190px;
+}
+
+.daily-card-visual::after {
+  border: 1px solid currentColor;
+  content: "";
+  height: 94px;
+  opacity: 0.22;
+  position: absolute;
+  right: 46px;
+  top: 58px;
+  transform: rotate(45deg);
+  width: 94px;
+}
+
+.daily-card-visual span {
+  bottom: 22px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 72px;
+  left: 24px;
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+  position: absolute;
+}
+
+.daily-card-visual i {
+  background: currentColor;
+  height: 1px;
+  opacity: 0.4;
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  width: 132px;
+}
+
+.daily-card-visual i:last-child {
+  right: 89px;
+  transform: rotate(90deg);
+}
+
+.daily-card-visual--machines {
+  background-color: #123848;
+  color: #71c7cd;
+}
+
+.daily-card-visual--ai {
+  background-color: #2d2949;
+  color: #b8a6e5;
+}
+
+.daily-card-visual--science {
+  background-color: #314337;
+  color: #9dc6a4;
+}
+
+.daily-card-copy {
+  display: flex;
+  flex-direction: column;
+  padding-top: 26px;
+}
+
+.daily-card-evidence {
+  color: #7c898f;
+}
+
+.daily-card-evidence span {
+  color: var(--signal);
+}
+
+.daily-card-copy h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 2.6vw, 39px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  margin: 34px 0 20px;
+}
+
+.daily-card-copy > p,
+.daily-card-copy aside p {
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.68;
+  margin: 0;
+}
+
+.daily-card-copy aside {
+  border-left: 2px solid var(--signal);
+  margin: 26px 0 0;
+  padding: 3px 0 3px 18px;
+}
+
+.daily-card-copy aside strong,
+.daily-health-note strong {
+  display: block;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.daily-card-copy > a {
+  align-items: end;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.daily-card-copy > a span {
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.45;
+  max-width: 65%;
+}
+
+.daily-card-copy > a strong {
+  color: var(--signal);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.daily-health-note {
+  background: var(--blueprint);
+  border-left: 3px solid var(--signal);
+  margin-top: 32px;
+  padding: 22px 26px;
+}
+
+.daily-health-note p {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.blog-archive-head {
+  background: var(--ink);
+  color: var(--paper-bright);
+  margin: 0 auto;
+  max-width: 1480px;
+  padding: 90px 48px;
+}
+
+.blog-archive-head > p:last-child {
+  color: #b7c1c7;
+}
+
 .blog-articles {
   margin: 0 auto;
   max-width: 1480px;
@@ -480,6 +765,15 @@ body {
     grid-template-columns: 110px minmax(0, 1fr);
   }
 
+  .daily-brief-head {
+    align-items: start;
+    grid-template-columns: 1fr;
+  }
+
+  .daily-card {
+    grid-template-rows: auto 180px 1fr;
+  }
+
   .contact-section {
     gap: 60px;
     grid-template-columns: 1fr;
@@ -515,7 +809,9 @@ body {
   }
 
   .blog-hero,
-  .blog-articles {
+  .blog-articles,
+  .daily-brief,
+  .blog-archive-head {
     padding-left: 24px;
     padding-right: 24px;
   }
@@ -528,6 +824,42 @@ body {
   .blog-article {
     display: block;
     padding: 72px 0;
+  }
+
+  .daily-brief {
+    padding-bottom: 80px;
+    padding-top: 72px;
+  }
+
+  .daily-brief-head {
+    gap: 36px;
+  }
+
+  .daily-brief-meta {
+    border-left: 0;
+    border-top: 1px solid var(--line-strong);
+    grid-template-columns: repeat(3, auto);
+    min-width: 0;
+    padding: 18px 0 0;
+    width: 100%;
+  }
+
+  .daily-topic-strip,
+  .daily-card-grid {
+    display: block;
+  }
+
+  .daily-card {
+    display: block;
+  }
+
+  .daily-card-visual {
+    height: 170px;
+  }
+
+  .blog-archive-head {
+    padding-bottom: 70px;
+    padding-top: 70px;
   }
 
   .blog-article-code {

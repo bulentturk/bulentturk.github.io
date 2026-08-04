@@ -153,10 +153,10 @@ const copy = {
       read: "Notu oku",
       items: [
         {
-          type: "CAN Haberleşmesi",
-          title: "CAN hattında mesaj analizine nereden başlanır?",
-          text: "Bit hızı, terminasyon, çevrim zamanı ve alive counter üzerinden ilk teşhis sırası.",
-          href: "/blog/#can-analizi",
+          type: "Her Sabah / 08.00",
+          title: "Günlük Mühendislik Özeti",
+          text: "Elektrik ve iş makineleri, yapay zekâ, teknoloji, bilim ve sağlık gündeminden 10 seçilmiş gelişme.",
+          href: "/blog/#daily-briefing",
         },
         {
           type: "Telemetri",
@@ -359,10 +359,10 @@ const copy = {
       read: "Read note",
       items: [
         {
-          type: "CAN Communication",
-          title: "Where should CAN message analysis begin?",
-          text: "A first-pass diagnostic order using bitrate, termination, cycle time, and alive counters.",
-          href: "/blog/#can-analizi",
+          type: "Every Morning / 08:00",
+          title: "Daily Engineering Brief",
+          text: "Ten selected developments across electrical and heavy equipment, AI, technology, science, and health.",
+          href: "/blog/#daily-briefing",
         },
         {
           type: "Telemetry",

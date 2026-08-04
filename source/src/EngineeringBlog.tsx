@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dailyBriefing from "./content/daily-briefing.json";
 
 type Language = "tr" | "en";
 
@@ -96,19 +97,35 @@ export default function EngineeringBlog() {
     ? {
         back: "Araçlara dön",
         overline: "ALGO TEAM / MÜHENDİSLİK BLOGU",
-        title: "Kısa teknik notlar.",
-        intro: "CAN, J1939, telemetri ve saha doğrulaması üzerine doğrudan uygulanabilir çalışma notları.",
+        title: "Günlük özet ve saha notları.",
+        intro: "Her sabah güncellenen mühendislik seçkisi; CAN, J1939, telemetri ve saha doğrulaması üzerine kalıcı çalışma notlarıyla birlikte.",
+        daily: "Günlük mühendislik özeti",
+        issue: "Sayı",
+        selected: "10 seçilmiş gelişme",
+        why: "Neden önemli?",
+        source: "Kaynağı aç",
+        archive: "Kalıcı teknik notlar",
+        archiveIntro: "Sahada tekrar kullanılabilecek kısa kontrol sıraları ve doğrulama notları.",
         checklist: "Kontrol sırası",
         fieldNote: "Saha notu",
       }
     : {
         back: "Back to tools",
         overline: "ALGO TEAM / ENGINEERING BLOG",
-        title: "Short technical notes.",
-        intro: "Directly usable working notes on CAN, J1939, telemetry, and field validation.",
+        title: "Daily brief and field notes.",
+        intro: "A daily engineering selection, together with reusable working notes on CAN, J1939, telemetry, and field validation.",
+        daily: "Daily engineering brief",
+        issue: "Issue",
+        selected: "10 selected developments",
+        why: "Why it matters",
+        source: "Open source",
+        archive: "Evergreen technical notes",
+        archiveIntro: "Short check sequences and validation notes designed for repeated use in the field.",
         checklist: "Check sequence",
         fieldNote: "Field note",
       };
+
+  const getText = (tr: string, en: string) => language === "tr" ? tr : en;
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -133,6 +150,78 @@ export default function EngineeringBlog() {
         <p className="overline">{labels.overline}</p>
         <h1>{labels.title}</h1>
         <p>{labels.intro}</p>
+      </section>
+
+      <section className="daily-brief" id="daily-briefing">
+        <div className="daily-brief-head">
+          <div>
+            <p className="section-kicker">{labels.daily}</p>
+            <h2>{getText(dailyBriefing.titleTr, dailyBriefing.titleEn)}</h2>
+            <p>{getText(dailyBriefing.dekTr, dailyBriefing.dekEn)}</p>
+          </div>
+          <div className="daily-brief-meta">
+            <span>{labels.issue} {dailyBriefing.issue}</span>
+            <span>{getText(dailyBriefing.readingTimeTr, dailyBriefing.readingTimeEn)}</span>
+            <span>{labels.selected}</span>
+          </div>
+        </div>
+
+        <div className="daily-topic-strip" aria-label={labels.daily}>
+          {dailyBriefing.topics.map((topic) => (
+            <div className={`daily-topic daily-topic--${topic.key}`} key={topic.key}>
+              <span>{topic.count.toString().padStart(2, "0")}</span>
+              <strong>{getText(topic.labelTr, topic.labelEn)}</strong>
+            </div>
+          ))}
+        </div>
+
+        <div className="daily-card-grid">
+          {dailyBriefing.items.map((item, index) => {
+            const topic = dailyBriefing.topics.find((entry) => entry.key === item.category);
+            const symbol = item.category === "machines" ? "EM" : item.category === "ai" ? "AI" : "SC";
+
+            return (
+              <article className={`daily-card daily-card--${item.category}`} id={`daily-${item.id}`} key={item.id}>
+                <div className="daily-card-topline">
+                  <span>{(index + 1).toString().padStart(2, "0")}</span>
+                  <span>{topic ? getText(topic.labelTr, topic.labelEn) : item.category}</span>
+                </div>
+                <div className={`daily-card-visual daily-card-visual--${item.category}`} aria-hidden="true">
+                  <span>{symbol}</span>
+                  <i />
+                  <i />
+                </div>
+                <div className="daily-card-copy">
+                  <div className="daily-card-evidence">
+                    <span>{getText(item.evidenceTr, item.evidenceEn)}</span>
+                    <time dateTime={item.publishedDate}>{item.publishedDate}</time>
+                  </div>
+                  <h3>{getText(item.titleTr, item.titleEn)}</h3>
+                  <p>{getText(item.summaryTr, item.summaryEn)}</p>
+                  <aside>
+                    <strong>{labels.why}</strong>
+                    <p>{getText(item.whyTr, item.whyEn)}</p>
+                  </aside>
+                  <a href={item.sourceUrl} target="_blank" rel="noreferrer">
+                    <span>{item.sourceName}</span>
+                    <strong>{labels.source} ↗</strong>
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <aside className="daily-health-note">
+          <strong>{language === "tr" ? "Sağlık notu" : "Health note"}</strong>
+          <p>{getText(dailyBriefing.healthNoteTr, dailyBriefing.healthNoteEn)}</p>
+        </aside>
+      </section>
+
+      <section className="blog-archive-head">
+        <p className="section-kicker">{labels.archive}</p>
+        <h2>{labels.archive}</h2>
+        <p>{labels.archiveIntro}</p>
       </section>
 
       <section className="blog-articles">
