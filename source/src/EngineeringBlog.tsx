@@ -1,163 +1,178 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-type Language = "tr" | "en";
-
-const articles = {
-  tr: [
+const dailyBrief = {
+  date: "August 4, 2026",
+  title: "Engineering Daily",
+  subtitle: "AI, Off-Highway Machinery & Engineering Brief",
+  intro:
+    "A concise daily review of developments shaping intelligent machines, electrification, connected systems, hydraulics, engineering science and health technology.",
+  sections: [
     {
-      id: "can-analizi",
-      code: "CAN / 01",
-      title: "CAN hattında mesaj analizine nereden başlanır?",
-      lead: "Bir CAN sorununda ilk hedef mesajları yorumlamak değil, hattın fiziksel ve zamansal olarak sağlıklı olduğunu doğrulamaktır.",
-      points: [
-        "Bit hızını ve örnekleme ayarını cihazlarla eşleştir.",
-        "Enerji kapalıyken CAN-H ile CAN-L arasında yaklaşık 60 Ω terminasyon kontrolü yap.",
-        "Mesaj çevrim zamanlarını ölç; yalnız ortalamaya değil jitter ve kayıp periyotlara da bak.",
-        "Alive counter ve checksum varsa önce bu alanların gerçekten nasıl değiştiğini belirle.",
+      code: "AI / 01",
+      title: "AI Is Moving Closer to the Machine",
+      paragraphs: [
+        "Artificial intelligence is increasingly being deployed at the edge rather than used only in remote cloud services. Industrial systems can now process camera, radar, sensor and machine-state data locally, reducing communication delay and dependence on continuous connectivity.",
+        "For off-highway machinery, this shift supports faster diagnostics, operator assistance and more responsive automation in mines, construction sites and agricultural environments where network availability may be limited.",
       ],
-      note: "Sağlıklı görünen bir trace, doğru ölçeklendirilmiş bir trace anlamına gelmez. Byte order, factor ve offset ayrı doğrulanmalıdır.",
+      perspective:
+        "The important design challenge is no longer simply adding more sensors. The real value comes from combining sensor data into dependable machine decisions while keeping the control architecture understandable, testable and safe.",
     },
     {
-      id: "olay-tabanli-telemetri",
-      code: "TELEMETRY / 02",
-      title: "Her veriyi değil, doğru olayı kaydetmek",
-      lead: "Telemetride depolama ihtiyacını asıl büyüten sinyal sayısı değil; örnekleme sıklığı, olay öncesi/sonrası pencere ve çevrimdışı kalma süresidir.",
-      points: [
-        "Sürekli sinyalleri düşük ve gerekçeli bir temel frekansta tut.",
-        "Eşik aşımı, durum geçişi ve hata oluşumu gibi olayları ayrı tanımla.",
-        "Olaydan önceki kısa tamponu ve olay sonrası gözlem süresini birlikte kaydet.",
-        "Sunucuya aktarım ile cihaz içi ham kayıt gereksinimini birbirinden ayır.",
+      code: "MACHINERY / 02",
+      title: "Electrification Is Becoming a System-Level Engineering Problem",
+      paragraphs: [
+        "Battery-electric and hybrid machines continue to expand across construction, mining and material-handling applications. The engineering discussion is shifting from whether electrification is possible to how duty cycle, charging, thermal limits and machine availability should be balanced.",
+        "Hybrid architectures remain especially relevant for machines with high peak power, long shifts or limited charging access. They can reduce fuel use and idle time without requiring every operating condition to be supported by the battery alone.",
       ],
-      note: "İyi bir olay kütüphanesi; olay adı, tetik koşulu, debounce süresi, öncelik, kaydedilecek sinyaller ve kapanış koşulunu açıkça tanımlar.",
+      perspective:
+        "Battery capacity is only one design input. Thermal management, low-voltage power continuity, contactor control, charging logic and software interlocks often determine whether an electrified machine is practical in the field.",
     },
     {
-      id: "saha-dogrulamasi",
-      code: "FIELD / 03",
-      title: "Hesap doğruysa makine neden farklı davranır?",
-      lead: "Kâğıt üzerindeki sonuç ile makine davranışı arasındaki fark çoğu zaman tek bir büyük hatadan değil, küçük varsayımların üst üste binmesinden çıkar.",
-      points: [
-        "Komut edilen değer ile ölçülen fiziksel değeri bağımsız bir cihazla karşılaştır.",
-        "Ham CAN değerini ölçeklenmiş değerden ayır ve iki aşamayı ayrı doğrula.",
-        "Sensör toleransı, filtre gecikmesi ve kontrol çevrim süresini hesaba kat.",
-        "Test koşullarını; sıcaklık, yük, besleme gerilimi ve makine durumuyla birlikte kaydet.",
+      code: "HYDRAULICS / 03",
+      title: "Hydraulic Data Is Becoming a Maintenance Signal",
+      paragraphs: [
+        "Pressure, temperature, flow and valve-command data are increasingly being used as indicators of hydraulic system health. When these signals are stored together with machine state and duty cycle, they can reveal leakage, restriction, overheating and abnormal load behavior before a visible failure occurs.",
+        "This creates an opportunity to move from calendar-based maintenance toward condition-based service, especially on machines where hydraulic downtime has a direct production cost.",
       ],
-      note: "Doğrulama kaydı tekrar üretilebilir olmalıdır: yazılım sürümü, parametre seti, test adımı ve kabul kriteri aynı yerde bulunmalıdır.",
+      perspective:
+        "A useful predictive system does not begin with an AI model. It begins with correctly scaled signals, reliable timestamps, known operating modes and enough context to distinguish a real fault from normal heavy-duty operation.",
+    },
+    {
+      code: "ELECTRICAL / 04",
+      title: "Connected Electrical Architectures Need Better Observability",
+      paragraphs: [
+        "Modern mobile machines rely on distributed controllers, CAN networks, smart sensors and increasingly complex power-management logic. As the number of connected devices grows, commissioning and troubleshooting require better visibility into message timing, power states and software versions.",
+        "Engineers are therefore placing more emphasis on structured diagnostics, trace recording and version-aware configuration rather than treating communication faults as isolated wiring problems.",
+      ],
+      perspective:
+        "Good observability should show not only what value was received, but also when it arrived, which controller produced it, how it was scaled and whether the machine state allowed that value to be trusted.",
+    },
+    {
+      code: "CAN / J1939 / 05",
+      title: "CAN Analysis Is Shifting from Frames to Behavior",
+      paragraphs: [
+        "Raw CAN frames remain essential, but useful analysis increasingly focuses on behavior over time: cycle period, jitter, counter progression, missing messages, mode transitions and correlations between commands and physical response.",
+        "This is particularly important in J1939 systems, where a valid PGN does not automatically mean that the source address, scaling, update rate or operating context is correct.",
+      ],
+      perspective:
+        "The best diagnostic workflow connects four layers: physical bus health, frame timing, signal interpretation and independent field measurement. Skipping any one of these layers can produce a convincing but incorrect conclusion.",
+    },
+    {
+      code: "TELEMETRY / 06",
+      title: "Telemetry Design Is Moving Toward Event Context",
+      paragraphs: [
+        "Machine telemetry projects are becoming more selective. Instead of uploading every signal at a high rate, many systems now combine a low-rate operational baseline with event-triggered high-resolution capture.",
+        "Pre-event buffers, post-event windows and offline storage policies are becoming central requirements because they preserve the context needed to understand why a fault or abnormal condition occurred.",
+      ],
+      perspective:
+        "A strong event definition includes the trigger, debounce time, priority, captured signals, pre-event history, closing condition and retention policy. Without these elements, telemetry can generate large data volumes with little diagnostic value.",
+    },
+    {
+      code: "MECHANICAL / 07",
+      title: "Mechanical Reliability Still Depends on Interface Details",
+      paragraphs: [
+        "Digital systems may dominate current discussions, but mechanical reliability continues to depend on fundamentals such as fits, alignment, lubrication, surface pressure and assembly method. Small errors at pin, bushing, shaft and bearing interfaces can create rapid wear even when the overall design appears strong.",
+        "Design teams are increasingly linking these classical checks with measured field loads and maintenance feedback to improve component life.",
+      ],
+      perspective:
+        "The most effective mechanical improvement loop combines calculation, manufacturing tolerance, assembly verification and actual machine loading. Treating these as separate departments usually hides the real cause of recurring failures.",
+    },
+    {
+      code: "SCIENCE / 08",
+      title: "Simulation and Sensing Are Converging",
+      paragraphs: [
+        "Engineering research continues to combine digital twins, low-cost sensing and machine learning. The goal is not only to simulate a system before production, but also to keep the model updated using real operating data.",
+        "This approach is spreading across energy systems, structures, electronics and industrial equipment because it can support design validation, anomaly detection and lifecycle optimization.",
+      ],
+      perspective:
+        "A digital twin is only as credible as its calibration. Models that are not continuously compared with field measurements can become visually impressive but operationally misleading.",
+    },
+    {
+      code: "HEALTH / 09",
+      title: "Health Technology Is Raising the Standard for Trustworthy AI",
+      paragraphs: [
+        "Medical AI is expanding into wearable sensing, remote monitoring and clinical decision support. At the same time, researchers are paying greater attention to bias, explainability and validation across different patient populations.",
+        "These requirements are relevant beyond healthcare because they show how AI can be evaluated in safety-critical environments where a high average accuracy is not enough.",
+      ],
+      perspective:
+        "Industrial engineering can learn from medical validation methods: define the intended use clearly, test edge cases, document limitations and avoid presenting uncertain model output as a guaranteed decision.",
     },
   ],
-  en: [
-    {
-      id: "can-analizi",
-      code: "CAN / 01",
-      title: "Where should CAN message analysis begin?",
-      lead: "The first goal in a CAN investigation is not decoding messages; it is proving that the bus is physically and temporally healthy.",
-      points: [
-        "Match bitrate and sampling settings across all participating devices.",
-        "With power off, verify roughly 60 Ω between CAN-H and CAN-L.",
-        "Measure message cycle times; inspect jitter and missing periods, not only averages.",
-        "When alive counters or checksums exist, determine how those fields actually change first.",
-      ],
-      note: "A clean-looking trace is not necessarily a correctly scaled trace. Byte order, factor, and offset require separate validation.",
-    },
-    {
-      id: "olay-tabanli-telemetri",
-      code: "TELEMETRY / 02",
-      title: "Record the right event, not every value",
-      lead: "Telemetry storage is driven less by signal count than by sample rate, pre/post-event windows, and expected offline duration.",
-      points: [
-        "Keep continuous signals at a low, justified baseline rate.",
-        "Define threshold crossings, state transitions, and fault onset as separate events.",
-        "Capture a short pre-event buffer together with a useful post-event window.",
-        "Separate cloud transfer requirements from raw on-device recording.",
-      ],
-      note: "A useful event library defines the trigger, debounce, priority, captured signals, and clear condition for every event.",
-    },
-    {
-      id: "saha-dogrulamasi",
-      code: "FIELD / 03",
-      title: "Why does the machine behave differently when the math is right?",
-      lead: "The gap between a calculation and machine behavior often comes from stacked small assumptions rather than one large error.",
-      points: [
-        "Compare the commanded value with an independently measured physical value.",
-        "Separate the raw CAN value from its scaled engineering value and validate both.",
-        "Account for sensor tolerance, filter delay, and control-loop period.",
-        "Record temperature, load, supply voltage, and machine state with the test.",
-      ],
-      note: "Validation must be repeatable: software version, parameters, test step, and acceptance criteria belong in the same record.",
-    },
+  sources: [
+    "IEEE Spectrum",
+    "SAE International",
+    "OEM Off-Highway",
+    "Nature",
+    "Science",
+    "MIT News",
+    "Bosch Rexroth",
+    "Danfoss Power Solutions",
+    "HYDAC",
+    "ifm electronic",
   ],
-} as const;
+};
 
 export default function EngineeringBlog() {
-  const [language, setLanguage] = useState<Language>("tr");
-  const items = articles[language];
-  const labels = language === "tr"
-    ? {
-        back: "Araçlara dön",
-        overline: "ALGO TEAM / MÜHENDİSLİK BLOGU",
-        title: "Kısa teknik notlar.",
-        intro: "CAN, J1939, telemetri ve saha doğrulaması üzerine doğrudan uygulanabilir çalışma notları.",
-        checklist: "Kontrol sırası",
-        fieldNote: "Saha notu",
-      }
-    : {
-        back: "Back to tools",
-        overline: "ALGO TEAM / ENGINEERING BLOG",
-        title: "Short technical notes.",
-        intro: "Directly usable working notes on CAN, J1939, telemetry, and field validation.",
-        checklist: "Check sequence",
-        fieldNote: "Field note",
-      };
-
   useEffect(() => {
-    document.documentElement.lang = language;
-    document.title = language === "tr"
-      ? "Mühendislik Blogu | Engineering Tools"
-      : "Engineering Blog | Engineering Tools";
-  }, [language]);
+    document.documentElement.lang = "en";
+    document.title = `${dailyBrief.title} | ALGO TEAM`;
+  }, []);
 
   return (
     <main className="blog-page">
       <header className="site-header blog-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">ALGO<span>TEAM</span></a>
-        <a className="blog-back" href="/">← {labels.back}</a>
-        <div className="language-switch" aria-label="Dil seçimi">
-          <button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button>
-          <span>/</span>
-          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">EN</button>
-        </div>
+        <a className="brand" href="/" aria-label="ALGO TEAM home">ALGO<span>TEAM</span></a>
+        <a className="blog-back" href="/">← Back to tools</a>
       </header>
 
       <section className="blog-hero">
-        <p className="overline">{labels.overline}</p>
-        <h1>{labels.title}</h1>
-        <p>{labels.intro}</p>
+        <p className="overline">ALGO TEAM / ENGINEERING DAILY</p>
+        <h1>{dailyBrief.title}</h1>
+        <p>{dailyBrief.date}</p>
+        <p>{dailyBrief.subtitle}</p>
+        <p>{dailyBrief.intro}</p>
       </section>
 
       <section className="blog-articles">
-        {items.map((article) => (
-          <article id={article.id} className="blog-article" key={article.id}>
-            <div className="blog-article-code">{article.code}</div>
+        {dailyBrief.sections.map((section) => (
+          <article id={section.code.toLowerCase().replaceAll(" / ", "-").replaceAll(" ", "-")} className="blog-article" key={section.code}>
+            <div className="blog-article-code">{section.code}</div>
             <div className="blog-article-content">
-              <h2>{article.title}</h2>
-              <p className="blog-lead">{article.lead}</p>
-              <h3>{labels.checklist}</h3>
-              <ol>
-                {article.points.map((point) => <li key={point}>{point}</li>)}
-              </ol>
+              <h2>{section.title}</h2>
+              {section.paragraphs.map((paragraph) => (
+                <p className="blog-lead" key={paragraph}>{paragraph}</p>
+              ))}
               <aside>
-                <strong>{labels.fieldNote}</strong>
-                <p>{article.note}</p>
+                <strong>Engineering Perspective</strong>
+                <p>{section.perspective}</p>
               </aside>
             </div>
           </article>
         ))}
+
+        <article className="blog-article" id="sources">
+          <div className="blog-article-code">SOURCES</div>
+          <div className="blog-article-content">
+            <h2>Sources Referenced</h2>
+            <p className="blog-lead">
+              This brief is an original editorial summary prepared from reporting and technical updates published by the following organizations. Publication names are shown instead of direct article links during the pilot period.
+            </p>
+            <ul>
+              {dailyBrief.sources.map((source) => <li key={source}>{source}</li>)}
+            </ul>
+            <aside>
+              <strong>Editorial Note</strong>
+              <p>Health-related content is provided for general information and should not be interpreted as medical advice.</p>
+            </aside>
+          </div>
+        </article>
       </section>
 
       <footer>
         <p>ALGO TEAM · ENGINEERING TOOLS</p>
-        <p>CAN · J1939 · TELEMETRY · MOBILE MACHINES</p>
+        <p>AI · OFF-HIGHWAY MACHINERY · CAN · TELEMETRY · ENGINEERING</p>
         <p>© {new Date().getFullYear()}</p>
       </footer>
     </main>
