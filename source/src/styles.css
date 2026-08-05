@@ -696,6 +696,23 @@ body {
   line-height: 1.7;
 }
 
+.blog-detail {
+  border-top: 1px solid var(--line);
+  margin-top: 34px;
+  padding-top: 22px;
+}
+
+.blog-detail p {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.blog-detail p + p {
+  margin-top: 16px;
+}
+
 .blog-article-content h3 {
   font-family: var(--font-geist-mono), monospace;
   font-size: 11px;
@@ -3040,6 +3057,32 @@ footer p {
   font-size: 18px;
   line-height: 1.75;
   margin: 0;
+}
+
+.news-story-detail {
+  border-top: 1px solid var(--line);
+  margin-top: 30px;
+  padding-top: 26px;
+}
+
+.news-story-detail h3 {
+  color: var(--signal);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  margin: 0 0 15px;
+  text-transform: uppercase;
+}
+
+.news-story-detail p {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.news-story-detail p + p {
+  margin-top: 15px;
 }
 
 .news-story-content aside {
