@@ -7,11 +7,17 @@ type Language = "tr" | "en";
 const copy = {
   tr: {
     nav: {
-      tools: "Araçlar",
+      home: "Ana Sayfa",
+      engineering: "Mühendislik",
+      tools: "Mevcut Araçlar",
+      simulators: "Simülatörler",
       roadmap: "Yol Haritası",
-      blog: "Mühendislik Blogu",
+      content: "İçerikler",
+      blog: "Teknik Yazılar",
+      news: "Haberler",
       principles: "Platform",
       contact: "İletişim",
+      menu: "Site Menüsü",
     },
     hero: {
       title: "Mühendislik Araçları",
@@ -26,8 +32,13 @@ const copy = {
         "Dosyalar ve CAN verileri tarayıcıda işlenir. Mevcut araçlar doğrudan kullanılabilir; hesap açma veya kurulum gerekmez.",
       open: "Aracı aç",
       guide: "PDF kılavuzu",
+      availableTitle: "Mevcut mühendislik araçları",
+      availableIntro: "CAN, J1939 ve veri analizi için doğrudan kullanabileceğiniz araçlar.",
+      simulatorTitle: "Simülatörler",
+      simulatorIntro: "Sistem davranışını tarayıcıda kurup gözlemleyebileceğiniz etkileşimli çalışma alanları.",
       items: [
         {
+          kind: "tool",
           no: "01",
           code: "DBC",
           discipline: "CAN / J1939",
@@ -38,6 +49,7 @@ const copy = {
           guide: "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf",
         },
         {
+          kind: "tool",
           no: "02",
           code: "LIVE CAN",
           discipline: "CAN / J1939",
@@ -47,6 +59,7 @@ const copy = {
           href: "/can-viewer/",
         },
         {
+          kind: "tool",
           no: "03",
           code: "LOG ANALYSIS",
           discipline: "Veri Analizi",
@@ -56,6 +69,7 @@ const copy = {
           href: "/can-log-analyzer/",
         },
         {
+          kind: "tool",
           no: "04",
           code: "J1939",
           discipline: "CAN / J1939",
@@ -65,6 +79,7 @@ const copy = {
           href: "/j1939-dtc-decoder/",
         },
         {
+          kind: "simulator",
           no: "05",
           code: "HYDRAULICS",
           discipline: "Hidrolik",
@@ -153,23 +168,35 @@ const copy = {
       read: "Notu oku",
       items: [
         {
-          type: "Her Sabah / 08.00",
-          title: "Günlük Mühendislik Özeti",
-          text: "Elektrik ve iş makineleri, yapay zekâ, teknoloji, bilim ve sağlık gündeminden 10 seçilmiş gelişme.",
-          href: "/blog/#daily-briefing",
+          type: "Teknik Makale / CAN",
+          title: "CAN hattında mesaj analizine nereden başlanır?",
+          text: "Fiziksel katman, çevrim zamanı, jitter, byte order ve ölçek doğrulaması için pratik başlangıç sırası.",
+          href: "/blog/#can-analizi",
         },
         {
-          type: "Telemetri",
+          type: "Mühendislik Notu / Telemetri",
           title: "Her veriyi değil, doğru olayı kaydetmek",
           text: "Sürekli, koşula bağlı ve olay tabanlı sinyalleri ayırmak için pratik çerçeve.",
           href: "/blog/#olay-tabanli-telemetri",
         },
         {
-          type: "Saha Doğrulaması",
+          type: "Araştırma Notu / Saha Doğrulaması",
           title: "Hesap doğruysa makine neden farklı davranır?",
           text: "Ölçeklendirme, örnekleme, tolerans ve çalışma koşullarını birlikte kontrol etme.",
           href: "/blog/#saha-dogrulamasi",
         },
+      ],
+    },
+    news: {
+      kicker: "04 / Haberler",
+      title: "Seçilmiş gelişmeler, kalıcı bir arşivde.",
+      intro: "Her sabah eklenen haberler eskileri silmeden büyür. Her başlık, kaynak özeti ve mühendislik açısından neden önemli olduğuyla birlikte yayımlanır.",
+      open: "Tüm haberleri aç",
+      categories: [
+        { code: "01", slug: "health", title: "Sağlık", text: "Klinik araştırmalar, biyomedikal teknoloji ve halk sağlığı." },
+        { code: "02", slug: "science-tech", title: "Bilim ve Teknoloji", text: "Yapay zekâ, uzay, enerji, robotik ve yeni araştırmalar." },
+        { code: "03", slug: "mobile-machines", title: "Mobil İş Makineleri", text: "İş, inşaat, tarım ve maden makineleri; güç aktarma ve elektrifikasyon." },
+        { code: "04", slug: "mining", title: "Madencilik Teknolojileri", text: "Maden otomasyonu, filo yönetimi, emniyet ve üretim teknolojileri." },
       ],
     },
     platform: {
@@ -213,11 +240,17 @@ const copy = {
   },
   en: {
     nav: {
-      tools: "Tools",
+      home: "Home",
+      engineering: "Engineering",
+      tools: "Available Tools",
+      simulators: "Simulators",
       roadmap: "Roadmap",
-      blog: "Engineering Blog",
+      content: "Content",
+      blog: "Technical Articles",
+      news: "News",
       principles: "Platform",
       contact: "Contact",
+      menu: "Site Menu",
     },
     hero: {
       title: "Engineering Tools",
@@ -232,8 +265,13 @@ const copy = {
         "Files and CAN data are processed in the browser. Current tools are ready to use with no account or installation.",
       open: "Open tool",
       guide: "PDF guide",
+      availableTitle: "Available engineering tools",
+      availableIntro: "Tools you can use directly for CAN, J1939, and data analysis.",
+      simulatorTitle: "Simulators",
+      simulatorIntro: "Interactive workspaces for building and observing system behaviour in the browser.",
       items: [
         {
+          kind: "tool",
           no: "01",
           code: "DBC",
           discipline: "CAN / J1939",
@@ -244,6 +282,7 @@ const copy = {
           guide: "/docs/dbc-editor-user-guide-en.pdf",
         },
         {
+          kind: "tool",
           no: "02",
           code: "LIVE CAN",
           discipline: "CAN / J1939",
@@ -253,6 +292,7 @@ const copy = {
           href: "/can-viewer/",
         },
         {
+          kind: "tool",
           no: "03",
           code: "LOG ANALYSIS",
           discipline: "Data Analysis",
@@ -262,6 +302,7 @@ const copy = {
           href: "/can-log-analyzer/",
         },
         {
+          kind: "tool",
           no: "04",
           code: "J1939",
           discipline: "CAN / J1939",
@@ -271,6 +312,7 @@ const copy = {
           href: "/j1939-dtc-decoder/",
         },
         {
+          kind: "simulator",
           no: "05",
           code: "HYDRAULICS",
           discipline: "Hydraulics",
@@ -359,23 +401,35 @@ const copy = {
       read: "Read note",
       items: [
         {
-          type: "Every Morning / 08:00",
-          title: "Daily Engineering Brief",
-          text: "Ten selected developments across electrical and heavy equipment, AI, technology, science, and health.",
-          href: "/blog/#daily-briefing",
+          type: "Technical Article / CAN",
+          title: "Where should CAN message analysis begin?",
+          text: "A practical starting sequence for the physical layer, cycle time, jitter, byte order, and scaling.",
+          href: "/blog/#can-analizi",
         },
         {
-          type: "Telemetry",
+          type: "Engineering Note / Telemetry",
           title: "Record the right event, not every value",
           text: "A practical way to separate continuous, conditional, and event-based signals.",
           href: "/blog/#olay-tabanli-telemetri",
         },
         {
-          type: "Field Validation",
+          type: "Research Note / Field Validation",
           title: "Why does the machine behave differently when the math is right?",
           text: "Checking scaling, sampling, tolerances, and operating conditions together.",
           href: "/blog/#saha-dogrulamasi",
         },
+      ],
+    },
+    news: {
+      kicker: "04 / News",
+      title: "Selected developments in a permanent archive.",
+      intro: "New stories are added every morning without deleting earlier coverage. Each item includes a source-backed summary and why it matters to engineers.",
+      open: "Open all news",
+      categories: [
+        { code: "01", slug: "health", title: "Health", text: "Clinical research, biomedical technology, and public health." },
+        { code: "02", slug: "science-tech", title: "Science & Technology", text: "AI, space, energy, robotics, and emerging research." },
+        { code: "03", slug: "mobile-machines", title: "Mobile Machinery", text: "Construction, agricultural, mining, and other off-highway equipment." },
+        { code: "04", slug: "mining", title: "Mining Technology", text: "Mine automation, fleet management, safety, and production technologies." },
       ],
     },
     platform: {
@@ -458,12 +512,35 @@ export default function Home() {
           ALGO<span>TEAM</span>
         </a>
         <nav className="desktop-nav" aria-label="Ana menü">
-          <a href="#tools">{t.nav.tools}</a>
-          <a href="#roadmap">{t.nav.roadmap}</a>
-          <a href="#blog">{t.nav.blog}</a>
+          <details className="nav-dropdown">
+            <summary>{t.nav.engineering}</summary>
+            <div>
+              <a href="#available-tools"><span>01</span>{t.nav.tools}</a>
+              <a href="#simulators"><span>02</span>{t.nav.simulators}</a>
+              <a href="#roadmap"><span>03</span>{t.nav.roadmap}</a>
+            </div>
+          </details>
+          <details className="nav-dropdown">
+            <summary>{t.nav.content}</summary>
+            <div>
+              <a href="/blog/"><span>01</span>{t.nav.blog}</a>
+              <a href="/news/"><span>02</span>{t.nav.news}</a>
+            </div>
+          </details>
           <a href="#platform">{t.nav.principles}</a>
           <a href="#contact">{t.nav.contact}</a>
         </nav>
+        <details className="mobile-site-menu">
+          <summary>{t.nav.menu}</summary>
+          <div>
+            <a href="#available-tools">{t.nav.tools}</a>
+            <a href="#simulators">{t.nav.simulators}</a>
+            <a href="#roadmap">{t.nav.roadmap}</a>
+            <a href="/blog/">{t.nav.blog}</a>
+            <a href="/news/">{t.nav.news}</a>
+            <a href="#contact">{t.nav.contact}</a>
+          </div>
+        </details>
         <div className="language-switch" aria-label="Dil seçimi">
           <button
             className={language === "tr" ? "active" : ""}
@@ -509,7 +586,11 @@ export default function Home() {
             <p className="tools-availability-note">{t.tools.intro}</p>
           </div>
           <div className="tools-choice-list">
-            {t.tools.items.map((item) => (
+            <div className="tool-group-heading" id="available-tools">
+              <span>01</span>
+              <div><h3>{t.tools.availableTitle}</h3><p>{t.tools.availableIntro}</p></div>
+            </div>
+            {t.tools.items.filter((item) => item.kind === "tool").map((item) => (
               <article key={item.no}>
                 <span>{item.no} / {item.discipline} / {item.code}</span>
                 <h3>{item.title}</h3>
@@ -527,6 +608,21 @@ export default function Home() {
                       {t.tools.guide}<span aria-hidden="true">PDF ↓</span>
                     </a>
                   ) : null}
+                </div>
+              </article>
+            ))}
+            <div className="tool-group-heading" id="simulators">
+              <span>02</span>
+              <div><h3>{t.tools.simulatorTitle}</h3><p>{t.tools.simulatorIntro}</p></div>
+            </div>
+            {t.tools.items.filter((item) => item.kind === "simulator").map((item) => (
+              <article key={item.no}>
+                <span>{item.no} / {item.discipline} / {item.code}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+                <ul>{item.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+                <div className="tools-actions">
+                  <a className="button button--primary" href={item.href}>{t.tools.open}<Arrow /></a>
                 </div>
               </article>
             ))}
@@ -578,6 +674,25 @@ export default function Home() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="section news-home-section" id="news">
+        <div className="section-head">
+          <p className="section-kicker">{t.news.kicker}</p>
+          <h2>{t.news.title}</h2>
+          <p>{t.news.intro}</p>
+        </div>
+        <div className="news-category-grid">
+          {t.news.categories.map((category) => (
+            <a href={`/news/#${category.slug}`} key={category.code}>
+              <span>{category.code}</span>
+              <h3>{category.title}</h3>
+              <p>{category.text}</p>
+              <Arrow />
+            </a>
+          ))}
+        </div>
+        <a className="text-link news-home-link" href="/news/">{t.news.open}<Arrow /></a>
       </section>
 
       <section className="section approach-section platform-section" id="platform">

@@ -21,6 +21,7 @@ export default defineConfig({
         "j1939-dtc-decoder": resolve(__dirname, "j1939-dtc-decoder/index.html"),
         "hydraulic-simulator": resolve(__dirname, "hydraulic-simulator/index.html"),
         blog: resolve(__dirname, "blog/index.html"),
+        news: resolve(__dirname, "news/index.html"),
       },
     },
   },
