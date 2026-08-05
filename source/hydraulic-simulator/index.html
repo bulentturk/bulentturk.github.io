@@ -1,33 +1,1892 @@
 <!doctype html>
 <html lang="tr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Hidrolik devre elemanlarını sürükleyip bağlayın; basınç, debi ve silindir hareketini tarayıcıda simüle ederek devreyi doğrulayın."
-    />
-    <meta name="theme-color" content="#f3f1ea" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="tr_TR" />
-    <meta property="og:site_name" content="ALGO TEAM Engineering Tools" />
-    <meta property="og:title" content="Hydraulic Circuit Simulator | ALGO TEAM" />
-    <meta
-      property="og:description"
-      content="Build, validate, and run hydraulic circuits directly in the browser."
-    />
-    <meta property="og:url" content="https://algo-team.com/hydraulic-simulator/" />
-    <meta property="og:image" content="https://algo-team.com/assets/og-cover.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="ALGO TEAM Engineering Tools" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href="https://algo-team.com/hydraulic-simulator/" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>Hydraulic Circuit Simulator | ALGO TEAM</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f1ea">
+<meta name="description" content="Hidrolik devre elemanlarını sürükleyip bağlayın; basınç, debi ve silindir hareketini tarayıcıda simüle ederek devreyi doğrulayın.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="ALGO TEAM Engineering Tools">
+<meta property="og:title" content="Hydraulic Circuit Simulator | ALGO TEAM">
+<meta property="og:description" content="Hidrolik devre elemanlarını sürükleyip bağlayın; basınç, debi ve hareketi tarayıcıda simüle edin.">
+<meta property="og:url" content="https://algo-team.com/hydraulic-simulator/">
+<meta property="og:image" content="https://algo-team.com/assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://algo-team.com/hydraulic-simulator/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>Hydraulic Circuit Simulator | ALGO TEAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ALGO TEAM paleti */
+  --bg:#F3F1EA; --surface:#FFFFFF; --surface-2:#EDEBE2; --surface-3:#E4E1D6;
+  --line:#DCD8CB; --line-2:#C7C2B2;
+  --ink:#102232; --ink-2:#5B6871; --muted:#7B878C;
+  --dark:#102232; --dark-2:#183446;
+  --accent:#087F8C; --live:#E0563F; --ok:#3F7A55;
+  --paper:#FCFBF7; --paper-line:#E6E3D8;
+  --pressure:#C0451B; --return:#2A6497; --pilot:#B98C15; --drain:#3F7A55; --suction:#7B8A62;
+  --sans:"Barlow Semi Condensed",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15px}
+body.locked{overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ── site anteti ─────────────────────────────────────── */
+.wrap{max-width:1680px;margin:0 auto;padding:0 22px}
+.wrap.row{display:flex;align-items:center;gap:24px}
+.site{position:sticky;top:0;z-index:60;height:56px;display:flex;align-items:center;
+  background:var(--surface);border-bottom:1px solid var(--line)}
+.site .wrap.row{width:100%;height:100%}
+.brand{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:400;letter-spacing:.06em;white-space:nowrap}
+.brand b{font-weight:600}
+.brand .mark{width:20px;height:20px;border:2px solid var(--accent);border-radius:3px;position:relative}
+.brand .mark::after{content:"";position:absolute;inset:3px 8px 3px 3px;background:var(--accent)}
+.site nav{display:flex;gap:20px;font-size:14px;color:var(--ink-2)}
+.site nav a:hover{color:var(--accent)}
+.sp{flex:1}
+.site .badge{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-radius:3px;padding:3px 8px}
+
+/* ── sayfa başlığı ───────────────────────────────────── */
+.lede{padding:30px 0 22px;border-bottom:1px solid var(--line);background:var(--bg)}
+.eyebrow{display:flex;align-items:baseline;gap:9px;margin:0 0 7px;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.eyebrow i{font-family:var(--mono);font-style:normal;color:var(--accent)}
+.lede h1{font-size:30px;font-weight:600;margin:0 0 8px;letter-spacing:-.015em;line-height:1.15}
+.lede .sub{margin:0;max-width:660px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+
+/* ── uygulama ızgarası ───────────────────────────────── */
+main.wrap{padding-top:20px;padding-bottom:8px}
+.app{display:grid;grid-template-columns:232px 1fr 280px;grid-template-rows:46px 1fr;
+  height:clamp(520px,76vh,880px);background:var(--surface);
+  border:1px solid var(--line-2);border-radius:5px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(31,33,36,.05)}
+.app.full{position:fixed;inset:0;z-index:200;height:auto;border:none;border-radius:0;max-width:none}
+.site-foot{margin-top:26px;border-top:1px solid var(--line);background:var(--surface);
+  padding:18px 0 22px;font-size:13px;color:var(--muted)}
+.site-foot b{color:var(--ink-2);font-weight:500}
+.prose{padding-top:26px;padding-bottom:6px;font-size:14.5px;line-height:1.68;color:var(--ink-2)}
+.prose h2{font-size:16px;color:var(--ink);margin:0 0 9px;font-weight:600}
+.prose ul{margin:8px 0;padding-left:19px}
+.prose li{margin:4px 0}
+
+.bar{grid-column:1/-1;display:flex;align-items:center;gap:6px;padding:0 14px;
+  background:var(--surface);border-bottom:1px solid var(--line)}
+.bar .sp{flex:1}
+.btn{background:var(--surface);border:1px solid var(--line-2);border-radius:3px;padding:5px 11px;
+  cursor:pointer;line-height:1.15;white-space:nowrap;color:var(--ink)}
+.btn:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn[disabled]{opacity:.4;cursor:default}
+.btn.warn:hover{background:#F6E4DD;border-color:var(--accent);color:var(--accent)}
+.btn.go{background:var(--dark);border-color:var(--dark);color:#fff;font-weight:500}
+.btn.go:hover{background:var(--dark-2);border-color:var(--dark-2)}
+.btn.stop{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500}
+.btn.stop:hover{background:#A93B16;border-color:#A93B16}
+select.btn{padding-right:4px}
+
+/* ── bölüm başlıkları (01 / 02 / 03 / 04) ────────────── */
+.ord{display:flex;align-items:baseline;gap:8px;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);font-weight:500}
+.ord i{font-family:var(--mono);font-style:normal;color:var(--accent);font-size:11px}
+
+/* ── palet ───────────────────────────────────────────── */
+.palette{background:var(--surface);border-right:1px solid var(--line);overflow-y:auto;padding-bottom:24px}
+.search{position:sticky;top:0;background:var(--surface);padding:10px 10px 9px;border-bottom:1px solid var(--line);z-index:5}
+.search .ord{margin-bottom:8px}
+.search input{width:100%;background:var(--bg);border:1px solid var(--line-2);border-radius:3px;padding:6px 8px}
+.grp{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:14px 12px 5px}
+.items{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:0 9px}
+.item{background:var(--paper);border:1px solid var(--line);border-radius:3px;height:58px;
+  display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;position:relative}
+.item:hover{border-color:var(--accent);background:#fff}
+.item svg{max-width:84%;max-height:80%;overflow:visible}
+.item .tip{position:absolute;left:50%;bottom:-4px;transform:translate(-50%,100%);background:var(--dark);
+  color:#fff;font-size:12px;padding:3px 7px;border-radius:3px;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity .12s;z-index:30}
+.item:hover .tip{opacity:1}
+
+/* ── sahne ───────────────────────────────────────────── */
+.stage{position:relative;overflow:hidden;background:var(--paper)}
+.scroller{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain}
+.scroller.grab{cursor:grab}
+.scroller.grabbing{cursor:grabbing}
+#canvas{display:block;touch-action:pan-x pan-y}
+.node,.porthit,.acthit,.wirehit{touch-action:none}
+.zoombar{position:absolute;left:14px;bottom:14px;display:flex;align-items:center;gap:4px;z-index:11;
+  background:var(--surface);border:1px solid var(--line-2);border-radius:4px;padding:3px;
+  box-shadow:0 2px 8px rgba(31,33,36,.08)}
+.zoombar button{background:transparent;border:none;border-radius:3px;padding:3px 9px;cursor:pointer;
+  font-family:var(--mono);font-size:13px}
+.zoombar button:hover{background:var(--surface-2)}
+.zoombar .zv{font-family:var(--mono);font-size:12px;color:var(--muted);min-width:42px;text-align:center}
+.stagetag{position:absolute;left:14px;top:11px;pointer-events:none;z-index:3}
+.hint{position:absolute;left:14px;top:34px;z-index:3;font-size:13px;color:var(--muted);pointer-events:none;font-family:var(--mono)}
+
+.sym{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sym .f{fill:var(--ink);stroke:none}
+.sym .thick{stroke-width:2.6}
+.sym .thin{stroke-width:1.1}
+.sym .dash{stroke-dasharray:4 3}
+.sym text{font-family:var(--sans);font-size:15px;fill:var(--ink);stroke:none;text-anchor:middle}
+.sym .hot{stroke:var(--accent);stroke-width:2.2}
+.sym .hot.f{fill:var(--accent)}
+.node .hit{fill:transparent;stroke:none}
+.node.sel .sym{stroke:var(--accent)}
+.node.sel .sym .f{fill:var(--accent)}
+.node.sel .sym text{fill:var(--accent)}
+.node .frame{fill:none;stroke:var(--accent);stroke-width:1;stroke-dasharray:3 3;opacity:0}
+.node.sel .frame{opacity:1}
+.rdg{font-family:var(--mono);font-size:11px;font-weight:600;fill:var(--accent);stroke:none;text-anchor:middle}
+.tag{font-family:var(--mono);font-size:10.5px;fill:#7E7A6E;stroke:none;text-anchor:middle;pointer-events:none}
+.jdot{fill:var(--ink);stroke:none;pointer-events:none}
+.acthit{fill:transparent;cursor:pointer}
+.acthit:hover{fill:rgba(192,69,27,.12)}
+.port{fill:var(--paper);stroke:var(--ink);stroke-width:1.2;opacity:0}
+.node.sel .port,.wiring .port,.node:hover .port{opacity:1}
+.port.live{fill:var(--accent);stroke:var(--accent)}
+.porthit{fill:transparent;cursor:crosshair}
+.wire{fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.wire.k-pressure{stroke:var(--pressure)}
+.wire.k-return{stroke:var(--return)}
+.wire.k-suction{stroke:var(--suction)}
+.wire.k-pilot{stroke:var(--pilot);stroke-dasharray:9 5}
+.wire.k-drain{stroke:var(--drain);stroke-dasharray:3 3}
+.wire.sel{stroke-width:3.6}
+.flowdash{fill:none;stroke-width:1.9;stroke-linecap:butt;stroke-dasharray:7 11;pointer-events:none}
+.wirehit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
+.wiring .wirehit{cursor:cell}
+.wirehit.near{stroke:rgba(192,69,27,.2)}
+#ghostwire{stroke:var(--accent);stroke-width:1.6;stroke-dasharray:5 4;fill:none;pointer-events:none}
+
+/* ── sağ panel ───────────────────────────────────────── */
+.inspector{background:var(--surface);border-left:1px solid var(--line);overflow-y:auto;padding:0 0 26px}
+.inspector .pad{padding:0 14px}
+.inspector .top{position:sticky;top:0;background:var(--surface);padding:11px 14px 9px;border-bottom:1px solid var(--line);z-index:4}
+.inspector h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:14px 0 7px;font-weight:500}
+.inspector h3{font-size:17px;font-weight:600;margin:0 0 2px;line-height:1.25}
+.meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;
+  border-bottom:1px solid var(--line);font-size:14px}
+.row .v{font-family:var(--mono);color:var(--ink)}
+.row input[type=number],.row select{width:92px;background:var(--bg);border:1px solid var(--line-2);
+  border-radius:3px;padding:3px 6px;font-family:var(--mono);font-size:13px;text-align:right}
+.row select{text-align:left;width:116px;font-family:var(--sans)}
+.row input[type=range]{width:98px;accent-color:var(--accent)}
+.empty{color:var(--ink-2);font-size:14px;line-height:1.55}
+.seg{display:flex;gap:5px;margin:6px 0 10px}
+.seg button{flex:1;background:var(--surface);border:1px solid var(--line-2);border-radius:3px;
+  padding:7px 0;cursor:pointer;font-family:var(--mono);font-size:13px}
+.seg button:hover{background:var(--surface-2)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.kinds{display:grid;gap:5px;margin-top:8px}
+.kind{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line-2);
+  border-radius:3px;padding:6px 9px;cursor:pointer;text-align:left}
+.kind:hover{background:var(--surface-2)}
+.kind[aria-pressed="true"]{border-color:var(--ink);background:var(--surface-2)}
+.kind i{width:22px;border-top-width:3px;border-top-style:solid;display:inline-block}
+kbd{font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--line-2);
+  border-bottom-width:2px;border-radius:3px;padding:1px 5px}
+.legend{font-size:13px;line-height:1.95;color:var(--ink-2)}
+.legend div{display:flex;align-items:center;gap:9px}
+.live{color:var(--accent)}
+
+/* ── dashboard ───────────────────────────────────────── */
+.dash{position:absolute;right:16px;bottom:16px;width:340px;max-height:calc(100% - 32px);overflow-y:auto;
+  background:var(--surface);border:1px solid var(--line-2);border-radius:4px;
+  box-shadow:0 10px 30px rgba(31,33,36,.10);z-index:12}
+.dash header #dashTog{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.dash header{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.dash header .ord{flex:1}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--line-2)}
+.running .dot{background:var(--ok);box-shadow:0 0 0 3px rgba(63,122,85,.18)}
+.dash .body{padding:0 14px 14px}
+.dash.min .body{display:none}
+.hero{background:var(--dark);color:#fff;margin:14px 0 0;padding:15px 16px 14px;border-radius:3px}
+.hero .lbl{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#8D96A2}
+.hero .num{font-family:var(--mono);font-size:40px;font-weight:600;line-height:1.02;letter-spacing:-.02em}
+.hero .num small{font-size:14px;font-weight:400;color:#8D96A2;margin-left:5px}
+.cells{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-top:none;margin-top:0}
+.cell{background:var(--surface);padding:10px 12px}
+.cell .lbl{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.cell .num{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--ink)}
+.cell .num small{font-size:11px;font-weight:400;color:var(--muted);margin-left:3px}
+.sect{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding:14px 0 6px}
+.dev{border:1px solid var(--line);border-radius:3px;padding:9px 10px;margin-bottom:6px}
+.dev b{font-size:13px;font-weight:600;display:block;margin-bottom:5px}
+.dev .g{display:flex;gap:11px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.dev .g em{font-style:normal;color:var(--ink);font-weight:500}
+.bar-h{height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-top:7px}
+.bar-h i{display:block;height:100%;background:var(--accent)}
+.ctlrow{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.ctlrow span{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctlrow button{background:var(--surface);border:1px solid var(--line-2);border-radius:3px;
+  padding:3px 10px;cursor:pointer;font-family:var(--mono);font-size:12px}
+.ctlrow button:hover{background:var(--surface-2)}
+.ctlrow button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.ctlrow input[type=range]{accent-color:var(--accent)}
+
+@media (max-width:1080px){
+  .wrap{padding:0 14px}
+  .lede{padding:22px 0 18px}
+  .lede h1{font-size:24px}
+  .site nav{display:none}
+  .bar{overflow-x:auto}
+  .app{grid-template-columns:1fr;grid-template-rows:46px 90px 1fr auto;
+    height:clamp(460px,72vh,760px)}
+  .palette{border-right:none;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;
+    display:flex;align-items:center;padding:0 8px}
+  .grp,.search{display:none}
+  .items{display:flex;grid-template-columns:none;padding:0}
+  .item{width:66px;flex:0 0 auto}
+  .inspector{border-left:none;border-top:1px solid var(--line);max-height:30vh}
+  .dash{width:auto;left:16px;right:16px;max-height:44%}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap row">
+    <a class="brand" href="/"><span class="mark"></span>ALGO&nbsp;<b>TEAM</b></a>
+    <nav>
+      <a href="/">Ana sayfa</a>
+      <a href="/#available-tools">Mühendislik araçları</a>
+      <a href="/#simulators" aria-current="page">Simülatörler</a>
+      <a href="/blog/">Teknik yazılar</a>
+      <a href="/news/">Haberler</a>
+    </nav>
+    <span class="sp"></span>
+    <span class="badge">Engineering Tools</span>
+  </div>
+</header>
+
+<section class="lede">
+  <div class="wrap">
+    <p class="eyebrow"><i>00</i> Akışkan gücü</p>
+    <h1>Hidrolik Devre Simülatörü</h1>
+    <p class="sub">Hidrolik devre elemanlarını sürükleyip bağlayın; basınç, debi ve silindir
+       hareketini tarayıcıda simüle ederek devreyi doğrulayın.</p>
+  </div>
+</section>
+
+<main class="wrap">
+<div class="app" id="app">
+  <div class="bar">
+    <button class="btn go" id="btnRun">▶ Çalıştır</button>
+    <button class="btn" id="btnReset">↺ Sıfırla</button>
+    <select class="btn" id="speed" title="Zaman ölçeği">
+      <option value="0.25">0.25×</option><option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option><option value="2">2×</option>
+    </select>
+    <select class="btn" id="examples"><option value="">Örnek devre…</option></select>
+    <button class="btn" id="btnRotate" disabled>Döndür</button>
+    <button class="btn warn" id="btnDelete" disabled>Sil</button>
+    <div class="sp"></div>
+    <button class="btn" id="btnSave">Kaydet</button>
+    <button class="btn" id="btnLoad">Aç</button>
+    <button class="btn" id="btnSvg">SVG</button>
+    <button class="btn warn" id="btnClear">Temizle</button>
+    <button class="btn" id="btnFull">⤢ Tam ekran</button>
+    <input type="file" id="fileIn" accept="application/json" hidden>
+  </div>
+
+  <nav class="palette" aria-label="Eleman paleti">
+    <div class="search">
+      <div class="ord"><i>01</i> Elemanlar</div>
+      <input id="q" type="search" placeholder="Eleman ara…" aria-label="Eleman ara">
+    </div>
+    <div id="palList"></div>
+  </nav>
+
+  <div class="stage">
+    <div class="scroller grab" id="scroller">
+      <svg id="canvas" viewBox="0 0 1500 1050" width="1500" height="1050" aria-label="Devre çizim alanı">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+          <pattern id="grid" width="12" height="12" patternUnits="userSpaceOnUse">
+            <path d="M12 0H0V12" fill="none" stroke="var(--paper-line)" stroke-width=".6"/>
+          </pattern>
+          <pattern id="grid5" width="60" height="60" patternUnits="userSpaceOnUse">
+            <rect width="60" height="60" fill="url(#grid)"/>
+            <path d="M60 0H0V60" fill="none" stroke="var(--paper-line)" stroke-width="1.3"/>
+          </pattern>
+        </defs>
+        <rect id="bg" width="1500" height="1050" fill="url(#grid5)"/>
+        <g id="wires"></g>
+        <g id="flows"></g>
+        <g id="nodes"></g>
+        <g id="tags"></g>
+        <path id="ghostwire"></path>
+      </svg>
+    </div>
+
+    <div class="stagetag ord"><i>02</i> Devre</div>
+    <div class="hint" id="hint"></div>
+
+    <div class="zoombar">
+      <button id="zOut" title="Uzaklaştır">−</button>
+      <span class="zv" id="zVal">100%</span>
+      <button id="zIn" title="Yakınlaştır">+</button>
+      <button id="zFit" title="Devreyi sığdır">Sığdır</button>
+    </div>
+
+    <section class="dash" id="dash">
+      <header id="dashHead">
+        <span class="dot"></span>
+        <div class="ord"><i>04</i> Simülasyon</div>
+        <span id="dashTog">–</span>
+      </header>
+      <div class="body" id="dashBody"></div>
+    </section>
+  </div>
+
+  <aside class="inspector">
+    <div class="top"><div class="ord"><i>03</i> Ayarlar</div></div>
+    <div class="pad" id="inspector"></div>
+  </aside>
+</div>
+</main>
+
+<section class="prose wrap">
+  <h2>Nasıl kullanılır</h2>
+  <ul>
+    <li>Soldaki paletten eleman sürükleyip tuvale bırakın. <b>R</b> döndürür, <b>Del</b> siler.</li>
+    <li>Bir porta, ardından ikinci porta tıklayarak hat çekin. Hattı çekerken var olan bir hattın
+        üzerine geldiğinizde o hat vurgulanır; tıklarsanız orada T bağlantısı oluşur.</li>
+    <li>Yön valfinin sol ya da sağ kumanda ucuna tıklayarak makarayı kaydırın.</li>
+    <li><b>Çalıştır</b> ile simülasyonu başlatın. Basınç, debi, kuvvet ve tork değerleri sağ alttaki
+        panelde canlı görünür; ayarlar sistem çalışırken de değiştirilebilir.</li>
+    <li>Tuvali kaydırmak için boş alanı sürükleyin, <b>Ctrl + tekerlek</b> yakınlaştırır,
+        <b>Boşluk</b> simülasyonu başlatıp durdurur.</li>
+  </ul>
+</section>
+
+<footer class="site-foot">
+  <div class="wrap row">
+    <span>Semboller <b>ISO 1219-1</b>'e göre çizilmiştir · tarayıcıda çalışan fizik motoru</span>
+    <span class="sp"></span>
+    <span>ALGO TEAM Engineering Tools</span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const NS = "http://www.w3.org/2000/svg";
+const GRID = 12, snap = v => Math.round(v/GRID)*GRID;
+const RHO = 870;                       // kg/m³
+const BETA = 1.1e8;                    // etkin bulk modülü (Pa) — sayısal kararlılık için düşürülmüş
+const VNODE = 1.3e-4;                  // düğüm hacmi (m³)
+const DT = 1e-4;                       // iç adım (s)
+
+/* ═══════════════════════════════════════════════════════════════
+   1 · KUMANDA SEMBOLLERİ
+   ISO 1219: kumanda sembolü valf ucunun ALT yarısına oturur.
+   Zarf y=23..57 → alt yarı 40..57, merkez y=48.
+   ═══════════════════════════════════════════════════════════════ */
+const AY = 48, AH = 17, AT = AY - AH/2;      // 39.5
+const ACT = {
+  none:{n:"—",d:()=>""},
+  spring:{n:"Yay",d:(bx,s)=>
+    `<polyline class="thin" points="${bx},${AY} ${bx+s*4},${AY-7} ${bx+s*8},${AY+7} ${bx+s*12},${AY-7} ${bx+s*16},${AY+7} ${bx+s*20},${AY-7} ${bx+s*24},${AY}"/>`},
+  solenoid:{n:"Solenoid",d:(bx,s,on)=>{
+    const x = s>0 ? bx : bx-22, c = on?' hot':'';
+    return `<rect class="e${c}" x="${x}" y="${AT}" width="22" height="${AH}"/>`
+         + `<path class="e${c}" d="M${x+2} ${AT+AH-2}L${x+20} ${AT+2}"/>`;}},
+  solenoid2:{n:"Çift bobin",d:(bx,s,on)=>{
+    const x = s>0 ? bx : bx-22, c = on?' hot':'';
+    return `<rect class="e${c}" x="${x}" y="${AT}" width="22" height="${AH}"/>`
+         + `<path class="e${c}" d="M${x+2} ${AT+AH-2}L${x+20} ${AT+2}M${x+2} ${AT+2}L${x+20} ${AT+AH-2}"/>`;}},
+  pilot:{n:"Hidrolik pilot",d:(bx,s,on)=>{
+    const x = s>0 ? bx : bx-22, c = on?' hot':'';
+    const t = s>0 ? `${x+4},${AT+3} ${x+4},${AT+AH-3} ${x+15},${AY}`
+                  : `${x+18},${AT+3} ${x+18},${AT+AH-3} ${x+7},${AY}`;
+    return `<rect class="e${c}" x="${x}" y="${AT}" width="22" height="${AH}"/><polygon class="f${c}" points="${t}"/>`;}},
+  solPilot:{n:"Solenoid + pilot",d:(bx,s,on)=>{
+    const x1 = s>0 ? bx : bx-22, x2 = s>0 ? bx+22 : bx-44, c = on?' hot':'';
+    const t = s>0 ? `${x1+4},${AT+3} ${x1+4},${AT+AH-3} ${x1+15},${AY}`
+                  : `${x1+18},${AT+3} ${x1+18},${AT+AH-3} ${x1+7},${AY}`;
+    return `<rect class="e${c}" x="${x1}" y="${AT}" width="22" height="${AH}"/><polygon class="f${c}" points="${t}"/>`
+         + `<rect class="e${c}" x="${x2}" y="${AT}" width="22" height="${AH}"/>`
+         + `<path class="e${c}" d="M${x2+2} ${AT+AH-2}L${x2+20} ${AT+2}"/>`;}},
+  lever:{n:"Manuel kol",d:(bx,s,on)=>{const c=on?' hot':'';
+    return `<path class="e${c}" d="M${bx} ${AY}L${bx+s*18} ${AY-14}"/><path class="e${c}" d="M${bx+s*11} ${AY-20}L${bx+s*25} ${AY-8}"/>`;}},
+  button:{n:"Buton",d:(bx,s,on)=>{const x = s>0?bx+14:bx-20, c=on?' hot':'';
+    return `<path class="e${c}" d="M${bx} ${AY}H${bx+s*14}"/><rect class="e${c}" x="${x}" y="${AY-9}" width="6" height="18"/>`;}},
+  pedal:{n:"Pedal",d:(bx,s,on)=>{const c=on?' hot':'';
+    return `<path class="e${c}" d="M${bx} ${AY}L${bx+s*12} ${AY-4}"/><path class="e${c}" d="M${bx+s*6} ${AY+4}L${bx+s*24} ${AY-10}"/>`;}},
+  roller:{n:"Makara",d:(bx,s,on)=>{const c=on?' hot':'';
+    return `<path class="e${c}" d="M${bx} ${AY}H${bx+s*13}"/><circle class="e${c}" cx="${bx+s*18}" cy="${AY}" r="5"/>`;}},
+  detent:{n:"Kilitlemeli",d:(bx,s,on)=>{const c=on?' hot':'';
+    return `<path class="e${c}" d="M${bx} ${AY}H${bx+s*20}"/><path class="e${c}" d="M${bx+s*9} ${AY-8}V${AY+8}M${bx+s*16} ${AY-8}V${AY+8}"/>`;}}
+};
+const ACT_KEYS = Object.keys(ACT);
+
+/* ═══════════════════════════════════════════════════════════════
+   2 · YÖN VALFİ GÖVDESİ
+   ═══════════════════════════════════════════════════════════════ */
+const PAD = 48, SQ = 34, TOP = 23, BOT = 57;
+const CELL = {
+  flow:  s=>`<path d="M${s+17} ${BOT-4}V${TOP+4}" marker-end="url(#ah)"/>`,
+  shut2: s=>`<path d="M${s+11} 33H${s+23}M${s+17} 33V${TOP}M${s+11} 47H${s+23}M${s+17} 47V${BOT}"/>`,
+  shut4: s=>`<path d="M${s+3} 33H${s+15}M${s+9} 33V${TOP}M${s+19} 33H${s+31}M${s+25} 33V${TOP}`
+           +`M${s+3} 47H${s+15}M${s+9} 47V${BOT}M${s+19} 47H${s+31}M${s+25} 47V${BOT}"/>`,
+  cross: s=>`<path d="M${s+5} ${BOT-4}L${s+29} ${TOP+4}" marker-end="url(#ah)"/>`
+           +`<path d="M${s+29} ${BOT-4}L${s+5} ${TOP+4}" marker-end="url(#ah)"/>`,
+  para:  s=>`<path d="M${s+9} ${BOT-4}V${TOP+4}" marker-end="url(#ah)"/>`
+           +`<path d="M${s+25} ${TOP+4}V${BOT-4}" marker-end="url(#ah)"/>`,
+  tandem:s=>`<path d="M${s+3} 33H${s+15}M${s+9} 33V${TOP}M${s+19} 33H${s+31}M${s+25} 33V${TOP}"/>`
+           +`<path d="M${s+9} ${BOT}V45H${s+25}V${BOT}"/>`,
+  open4: s=>`<path d="M${s+9} ${TOP}V40H${s+25}V${TOP}M${s+9} ${BOT}V40M${s+25} ${BOT}V40"/>`
+           +`<circle class="f" cx="${s+17}" cy="40" r="2.4"/>`,
+  float: s=>`<path d="M${s+9} ${TOP}V40H${s+25}V${TOP}M${s+25} ${BOT}V40"/>`
+           +`<path d="M${s+3} 47H${s+15}M${s+9} 47V${BOT}"/>`
+           +`<circle class="f" cx="${s+21}" cy="40" r="2.4"/>`,
+  p2a:   s=>`<path d="M${s+9} ${BOT-4}L${s+17} ${TOP+4}" marker-end="url(#ah)"/>`
+           +`<path d="M${s+19} 47H${s+31}M${s+25} 47V${BOT}"/>`,
+  a2t:   s=>`<path d="M${s+3} 47H${s+15}M${s+9} 47V${BOT}"/>`
+           +`<path d="M${s+17} ${TOP+4}L${s+25} ${BOT-4}" marker-end="url(#ah)"/>`
+};
+
+function valveMarkup(c, def){
+  const n = def.cells.length, home = def.home;
+  const pos = (c && c.pos != null) ? c.pos : home;
+  const shift = (home - pos) * SQ;                       // makara kayması = animasyon
+  let s = "";
+  def.cells.forEach((cl,i)=>{ const sx = PAD + i*SQ; s += `<rect x="${sx}" y="${TOP}" width="${SQ}" height="${SQ}"/>` + CELL[cl](sx); });
+  if (def.prop){ const w = n*SQ; s += `<path d="M${PAD} ${TOP-4}H${PAD+w}M${PAD} ${BOT+4}H${PAD+w}"/>`; }
+  const acts = (c && c.act) || def.act || ["none","none"];
+  s += (ACT[acts[0]]||ACT.none).d(PAD, -1, pos < home);
+  s += (ACT[acts[1]]||ACT.none).d(PAD + n*SQ, 1, pos > home);
+  return `<g transform="translate(${shift} 0)">${s}</g>` + def.leads;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3 · ELEMAN KATALOĞU
+   p : [portId, x, y, yön]      pd : [anahtar, etiket, birim, varsayılan]
+   d : statik string ya da (comp)=>string    sim: motor modeli anahtarı
+   ═══════════════════════════════════════════════════════════════ */
+const VW2 = PAD*2 + 2*SQ, VW3 = PAD*2 + 3*SQ;
+const LEAD2 = `<path d="M99 ${TOP}V0M99 ${BOT}V80"/>`;
+const LEAD3 = `<path d="M99 ${TOP}V0M91 ${BOT}V80M107 ${BOT}V80"/>`;
+const LEAD4 = `<path d="M91 ${TOP}V0M107 ${TOP}V0M91 ${BOT}V80M107 ${BOT}V80"/>`;
+const PA = 91, PB = 107, PC = 99;      // port x'leri (orta hücre 82..116)
+
+/* ISO 1219 çek valf: bilye konik (V) yatağın İÇİNE oturur; yatak kolları
+   bilyeyi kucaklar. Serbest akış tepe noktasından bilyeye doğrudur.
+   d=+1 → serbest akış soldan sağa, d=-1 → sağdan sola. */
+const CHECK = (x,y,d)=>{
+  const s = (d===-1) ? -1 : 1;
+  const ax = s>0 ? x    : x+16;      // yatak tepesi
+  const tx = s>0 ? x+13 : x+3;       // kol uçları
+  const bx = s>0 ? x+9  : x+7;       // bilye merkezi
+  return `<path d="M${tx} ${y-13}L${ax} ${y}L${tx} ${y+13}"/><circle cx="${bx}" cy="${y}" r="6.5"/>`;
+};
+
+const CATALOG = {
+/* ── GÜÇ KAYNAĞI ─────────────────────────────────────────── */
+pump:{n:"Pompa, sabit deplasmanlı",g:"Güç kaynağı",w:60,h:90,sim:"pump",
+  d:'<circle cx="30" cy="45" r="26"/><path d="M30 19V0M30 71V90"/><polygon class="f" points="30,21 19,41 41,41"/>',
+  p:[["P",30,0,"u"],["S",30,90,"d"]],
+  pd:[["Vg","Deplasman","cm³/dev",32],["n","Devir","d/dak",1450],["ev","Volumetrik verim","",0.95],["em","Mekanik verim","",0.90]]},
+pumpLS:{n:"Load-sensing pompa",g:"Güç kaynağı",w:92,h:96,sim:"pumpls",
+  d:'<circle cx="30" cy="48" r="26"/><path d="M30 22V0M30 74V96"/><polygon class="f" points="30,24 19,44 41,44"/>'
+   +'<path d="M4 88L56 8" marker-end="url(#ah)"/>'
+   +'<rect x="56" y="30" width="26" height="22"/><path d="M69 48V34" marker-end="url(#ah)"/>'
+   +'<polyline class="thin" points="82,41 85,34 88,48 91,34 92,41"/>'
+   +'<path class="dash" d="M69 52V96"/><path class="dash" d="M44 66H69"/>',
+  p:[["P",30,0,"u"],["S",30,96,"d"],["LS",69,96,"d"]],
+  pd:[["Vg","Maks. deplasman","cm³/dev",45,10,120],["n","Devir","d/dak",1450],
+      ["dpLS","LS marjı","bar",18,5,45],["pc","Basınç kesme","bar",250,50,350],
+      ["ev","Volumetrik verim","",0.95],["em","Mekanik verim","",0.90]]},
+pumpVar:{n:"Pompa, değişken deplasmanlı",g:"Güç kaynağı",w:60,h:90,sim:"pump",
+  d:'<circle cx="30" cy="45" r="26"/><path d="M30 19V0M30 71V90"/><polygon class="f" points="30,21 19,41 41,41"/><path d="M4 84L56 6" marker-end="url(#ah)"/>',
+  p:[["P",30,0,"u"],["S",30,90,"d"]],
+  pd:[["Vg","Deplasman","cm³/dev",45,0,120],["n","Devir","d/dak",1450,0,3000],["ev","Volumetrik verim","",0.95],["em","Mekanik verim","",0.90],["pc","Basınç kesme","bar",250,20,400]]},
+pumpBi:{n:"Pompa, çift yönlü",g:"Güç kaynağı",w:60,h:90,sim:"pump",
+  d:'<circle cx="30" cy="45" r="26"/><path d="M30 19V0M30 71V90"/><polygon class="f" points="30,21 19,41 41,41"/><polygon class="f" points="30,69 19,49 41,49"/><path d="M4 84L56 6" marker-end="url(#ah)"/>',
+  p:[["P",30,0,"u"],["S",30,90,"d"]],
+  pd:[["Vg","Deplasman","cm³/dev",45,0,120],["n","Devir","d/dak",1450,0,3000],["ev","Volumetrik verim","",0.95],["em","Mekanik verim","",0.90]]},
+motorElec:{n:"Elektrik motoru",g:"Güç kaynağı",w:60,h:60,
+  d:'<circle cx="30" cy="30" r="26"/><text x="30" y="36">M</text>',p:[],
+  pd:[["P","Güç","kW",7.5],["n","Devir","d/dak",1450]]},
+tank:{n:"Tank",g:"Güç kaynağı",w:60,h:50,sim:"tank",
+  d:'<path d="M6 12V44H54V12"/><path d="M30 0V28"/>',p:[["T",30,0,"u"]],
+  pd:[["V","Hacim","L",100],["pb","Karşı basınç","bar",0.5]]},
+accumGas:{n:"Akümülatör, gazlı",g:"Güç kaynağı",w:40,h:80,sim:"accum",
+  d:'<rect x="4" y="4" width="32" height="56" rx="16"/><path d="M4 22H36M20 60V80"/>',
+  p:[["A",20,80,"d"]],pd:[["V","Gaz hacmi","L",2.5],["p0","Ön dolum","bar",90]]},
+
+/* ── AKTÜATÖR (animasyonlu) ──────────────────────────────── */
+cylDouble:{n:"Çift etkili silindir",g:"Aktüatör",w:132,h:76,sim:"cyl",
+  d:c=>{const f=c.s?c.s.f:0,px=16+f*46;
+    return `<rect x="10" y="18" width="62" height="40"/><path class="thick" d="M${px} 18V58M${px} 38H${px+58}"/>`
+    +`<path d="M18 58V76M64 58V76"/>`;},
+  p:[["A",18,76,"d"],["B",64,76,"d"]],
+  pd:[["D","Piston çapı","mm",63],["d","Mil çapı","mm",36],["s","Strok","mm",400],["F","Yük kuvveti","N",20000],["m","Hareketli kütle","kg",300]]},
+cylSingle:{n:"Tek etkili silindir",g:"Aktüatör",w:132,h:76,sim:"cyl",
+  d:c=>{const f=c.s?c.s.f:0,px=16+f*46;
+    return `<rect x="10" y="18" width="62" height="40"/><path class="thick" d="M${px} 18V58M${px} 38H${px+58}"/>`
+    +`<polyline class="thin" points="${px+2},38 ${px+6},29 ${px+10},47 ${px+14},29 ${px+18},47 ${px+22},29 ${px+26},38"/>`
+    +`<path d="M18 58V76"/>`;},
+  p:[["A",18,76,"d"]],
+  pd:[["D","Piston çapı","mm",50],["s","Strok","mm",250],["F","Yük kuvveti","N",8000],["k","Yay kuvveti","N",1500],["m","Hareketli kütle","kg",120]]},
+cylCushion:{n:"Yastıklamalı silindir",g:"Aktüatör",w:132,h:76,sim:"cyl",
+  d:c=>{const f=c.s?c.s.f:0,px=16+f*46;
+    return `<rect x="10" y="18" width="62" height="40"/><path class="thick" d="M${px} 18V58M${px} 38H${px+58}"/>`
+    +`<path d="M14 24H26V32H14M68 24H56V32H68"/><path d="M18 58V76M64 58V76"/>`;},
+  p:[["A",18,76,"d"],["B",64,76,"d"]],
+  pd:[["D","Piston çapı","mm",80],["d","Mil çapı","mm",45],["s","Strok","mm",500],["F","Yük kuvveti","N",30000],["m","Hareketli kütle","kg",800]]},
+motorHydBi:{n:"Hidrolik motor, çift yön",g:"Aktüatör",w:60,h:90,sim:"motor",
+  d:c=>{const a=c.s?c.s.a:0;
+    return `<circle cx="30" cy="45" r="26"/><path d="M30 19V0M30 71V90"/>`
+    +`<polygon class="f" points="19,23 41,23 30,43"/><polygon class="f" points="19,67 41,67 30,47"/>`
+    +`<g transform="rotate(${a} 30 45)"><path class="thin" d="M30 45L30 27"/></g>`;},
+  p:[["A",30,0,"u"],["B",30,90,"d"]],
+  pd:[["Vg","Deplasman","cm³/dev",80],["ev","Volumetrik verim","",0.94],["em","Mekanik verim","",0.92],["M","Yük torku","Nm",120],["J","Atalet","kg·m²",0.08]]},
+motorHyd:{n:"Hidrolik motor, tek yön",g:"Aktüatör",w:60,h:90,sim:"motor",
+  d:c=>{const a=c.s?c.s.a:0;
+    return `<circle cx="30" cy="45" r="26"/><path d="M30 19V0M30 71V90"/><polygon class="f" points="19,23 41,23 30,43"/>`
+    +`<g transform="rotate(${a} 30 45)"><path class="thin" d="M30 45L30 27"/></g>`;},
+  p:[["A",30,0,"u"],["B",30,90,"d"]],
+  pd:[["Vg","Deplasman","cm³/dev",80],["ev","Volumetrik verim","",0.94],["em","Mekanik verim","",0.92],["M","Yük torku","Nm",120],["J","Atalet","kg·m²",0.08],["oneway","Tek yön (1/0)","",1]]},
+motorHydVar:{n:"Hidrolik motor, değişken deplasmanlı",g:"Aktüatör",w:60,h:90,sim:"motor",
+  d:c=>{const a=c.s?c.s.a:0;
+    return `<circle cx="30" cy="45" r="26"/><path d="M30 19V0M30 71V90"/>`
+    +`<polygon class="f" points="19,23 41,23 30,43"/><polygon class="f" points="19,67 41,67 30,47"/>`
+    +`<path d="M4 84L56 6" marker-end="url(#ah)"/>`
+    +`<g transform="rotate(${a} 30 45)"><path class="thin" d="M30 45L30 27"/></g>`;},
+  p:[["A",30,0,"u"],["B",30,90,"d"]],
+  pd:[["Vg","Deplasman","cm³/dev",80,10,200],["ev","Volumetrik verim","",0.94],["em","Mekanik verim","",0.92],
+      ["M","Yük torku","Nm",120,0,800],["J","Atalet","kg·m²",0.08]]},
+rotActuator:{n:"Salınım aktüatörü",g:"Aktüatör",w:76,h:76,sim:"motor",
+  d:'<rect x="8" y="18" width="60" height="40"/><path class="thick" d="M38 18V58"/><path d="M16 58V76M60 58V76"/><path d="M30 10A16 16 0 0 1 46 10" marker-end="url(#ah)"/>',
+  p:[["A",16,76,"d"],["B",60,76,"d"]],
+  pd:[["Vg","Deplasman","cm³/dev",300],["ev","Volumetrik verim","",0.92],["em","Mekanik verim","",0.9],["M","Yük torku","Nm",200],["J","Atalet","kg·m²",0.3]]},
+
+/* ── YÖN KONTROL ─────────────────────────────────────────── */
+valve22nc:{n:"2/2 yön valfi, normalde kapalı",g:"Yön kontrol",w:VW2,h:80,sim:"dcv",
+  cells:["flow","shut2"],home:1,leads:LEAD2,act:["solenoid","spring"],
+  states:[[["P","A"]],[]],
+  p:[["A",PC,0,"u"],["P",PC,80,"d"]],pd:[["Qn","Nominal debi","L/dak",40],["dp","Nominal ΔP","bar",2]]},
+valve22no:{n:"2/2 yön valfi, normalde açık",g:"Yön kontrol",w:VW2,h:80,sim:"dcv",
+  cells:["shut2","flow"],home:1,leads:LEAD2,act:["solenoid","spring"],
+  states:[[],[["P","A"]]],
+  p:[["A",PC,0,"u"],["P",PC,80,"d"]],pd:[["Qn","Nominal debi","L/dak",40],["dp","Nominal ΔP","bar",2]]},
+valve32:{n:"3/2 yön valfi",g:"Yön kontrol",w:VW2,h:80,sim:"dcv",
+  cells:["p2a","a2t"],home:1,leads:LEAD3,act:["solenoid","spring"],
+  states:[[["P","A"]],[["A","T"]]],
+  p:[["A",PC,0,"u"],["P",PA,80,"d"],["T",PB,80,"d"]],pd:[["Qn","Nominal debi","L/dak",40],["dp","Nominal ΔP","bar",2.5]]},
+valve42:{n:"4/2 yön valfi",g:"Yön kontrol",w:VW2,h:80,sim:"dcv",
+  cells:["cross","para"],home:1,leads:LEAD4,act:["solenoid","spring"],
+  states:[[["P","B"],["A","T"]],[["P","A"],["B","T"]]],
+  p:[["A",PA,0,"u"],["B",PB,0,"u"],["P",PA,80,"d"],["T",PB,80,"d"]],pd:[["Qn","Nominal debi","L/dak",60],["dp","Nominal ΔP","bar",3]]},
+valve43c:{n:"4/3 yön valfi, kapalı merkez",g:"Yön kontrol",w:VW3,h:80,sim:"dcv",
+  cells:["cross","shut4","para"],home:1,leads:LEAD4,act:["solenoid","solenoid"],
+  states:[[["P","B"],["A","T"]],[],[["P","A"],["B","T"]]],
+  p:[["A",PA,0,"u"],["B",PB,0,"u"],["P",PA,80,"d"],["T",PB,80,"d"]],pd:[["Qn","Nominal debi","L/dak",60],["dp","Nominal ΔP","bar",3.5]]},
+valve43t:{n:"4/3 yön valfi, tandem merkez",g:"Yön kontrol",w:VW3,h:80,sim:"dcv",
+  cells:["cross","tandem","para"],home:1,leads:LEAD4,act:["solenoid","solenoid"],
+  states:[[["P","B"],["A","T"]],[["P","T"]],[["P","A"],["B","T"]]],
+  p:[["A",PA,0,"u"],["B",PB,0,"u"],["P",PA,80,"d"],["T",PB,80,"d"]],pd:[["Qn","Nominal debi","L/dak",60],["dp","Nominal ΔP","bar",3.5]]},
+valve43o:{n:"4/3 yön valfi, açık merkez",g:"Yön kontrol",w:VW3,h:80,sim:"dcv",
+  cells:["cross","open4","para"],home:1,leads:LEAD4,act:["solenoid","solenoid"],
+  states:[[["P","B"],["A","T"]],[["P","A"],["P","B"],["P","T"],["A","T"],["B","T"]],[["P","A"],["B","T"]]],
+  p:[["A",PA,0,"u"],["B",PB,0,"u"],["P",PA,80,"d"],["T",PB,80,"d"]],pd:[["Qn","Nominal debi","L/dak",60],["dp","Nominal ΔP","bar",3]]},
+valve43f:{n:"4/3 yön valfi, serbest merkez",g:"Yön kontrol",w:VW3,h:80,sim:"dcv",
+  cells:["cross","float","para"],home:1,leads:LEAD4,act:["solenoid","solenoid"],
+  states:[[["P","B"],["A","T"]],[["A","T"],["B","T"]],[["P","A"],["B","T"]]],
+  p:[["A",PA,0,"u"],["B",PB,0,"u"],["P",PA,80,"d"],["T",PB,80,"d"]],pd:[["Qn","Nominal debi","L/dak",60],["dp","Nominal ΔP","bar",3.5]]},
+valveProp:{n:"Oransal yön valfi",g:"Yön kontrol",w:VW3,h:80,sim:"prop",prop:true,
+  cells:["cross","shut4","para"],home:1,leads:LEAD4,act:["solenoid","solenoid"],
+  states:[[["P","B"],["A","T"]],[],[["P","A"],["B","T"]]],
+  p:[["A",PA,0,"u"],["B",PB,0,"u"],["P",PA,80,"d"],["T",PB,80,"d"]],
+  pd:[["Qn","Nominal debi","L/dak",40],["dp","Nominal ΔP","bar",35],["u","Kumanda","%",0,-100,100]]},
+lsValve:{n:"Load-sensing oransal yön valfi",g:"Yön kontrol",w:VW3+34,h:80,sim:"lsv",prop:true,
+  cells:["cross","shut4","para"],home:1,act:["solenoid","solenoid"],
+  leads:LEAD4+`<path class="dash" d="M${PAD+3*SQ} 47H${VW3+26}V80"/>`,
+  states:[[["P","B"],["A","T"]],[],[["P","A"],["B","T"]]],
+  p:[["A",PA,0,"u"],["B",PB,0,"u"],["LS",VW3+26,80,"d"],["P",PA,80,"d"],["T",PB,80,"d"]],
+  pd:[["Qn","Nominal debi","L/dak",40],["dp","Nominal ΔP","bar",8],["u","Kumanda","%",0,-100,100]]},
+check:{n:"Çek valf",g:"Yön kontrol",w:84,h:40,sim:"check",
+  d:'<path d="M0 20H24"/>'+CHECK(24,20,1)+'<path d="M40 20H84"/>',
+  p:[["A",0,20,"l"],["B",84,20,"r"]],pd:[["dp","Açma basıncı","bar",0.5]]},
+checkSpring:{n:"Yaylı çek valf",g:"Yön kontrol",w:112,h:40,sim:"check",
+  d:'<path d="M0 20H20"/>'+CHECK(20,20,1)+'<polyline class="thin" points="36,20 42,12 48,28 54,12 60,28 66,20"/><path d="M66 20H112"/>',
+  p:[["A",0,20,"l"],["B",108,20,"r"]],pd:[["dp","Açma basıncı","bar",3]]},
+pilotCheck:{n:"Pilot kumandalı çek valf",g:"Yön kontrol",w:104,h:66,sim:"pcheck",
+  d:'<rect class="dash" x="8" y="2" width="88" height="44"/><path d="M0 24H28"/>'+CHECK(28,24,1)+'<path d="M44 24H104"/><path class="dash" d="M32 46V66"/>',
+  p:[["A",0,24,"l"],["B",104,24,"r"],["X",30,66,"d"]],pd:[["dp","Açma basıncı","bar",0.5],["r","Pilot oranı","",4]]},
+shuttle:{n:"Mekik valf",g:"Yön kontrol",w:88,h:48,sim:"shuttle",
+  d:'<rect x="16" y="14" width="56" height="20" rx="10"/><circle cx="44" cy="24" r="7"/><path d="M0 24H16M72 24H88M44 14V0"/>',
+  p:[["A",0,24,"l"],["B",88,24,"r"],["OUT",44,0,"u"]],pd:[]},
+
+/* ── BASINÇ KONTROL ──────────────────────────────────────── */
+relief:{n:"Emniyet valfi",g:"Basınç kontrol",w:96,h:80,sim:"relief",
+  d:'<rect x="20" y="23" width="34" height="34"/><path d="M29 53V27" marker-end="url(#ah)"/><path d="M29 23V0M29 57V80"/><polyline class="thin" points="54,40 58,31 62,49 66,31 70,49 74,31 78,40"/><path class="dash" d="M29 72H6V40H20"/>',
+  p:[["T",29,0,"u"],["P",29,80,"d"]],pd:[["ps","Ayar basıncı","bar",160],["Qn","Nominal debi","L/dak",80]]},
+reliefPilot:{n:"Pilot kumandalı emniyet valfi",g:"Basınç kontrol",w:104,h:96,sim:"relief",
+  d:'<rect class="dash" x="10" y="8" width="84" height="80"/><rect x="20" y="31" width="34" height="34"/><path d="M29 61V35" marker-end="url(#ah)"/><path d="M29 31V0M29 65V96"/><polyline class="thin" points="54,48 58,39 62,57 66,39 70,57 74,39 78,48"/><path class="dash" d="M104 48H94"/>',
+  p:[["T",29,0,"u"],["P",29,96,"d"],["X",104,48,"r"]],pd:[["ps","Ayar basıncı","bar",210],["Qn","Nominal debi","L/dak",200]]},
+reducing:{n:"Basınç düşürücü valf",g:"Basınç kontrol",w:96,h:80,sim:"reducing",
+  d:'<rect x="20" y="23" width="34" height="34"/><path d="M29 53V27" marker-end="url(#ah)"/><path d="M29 23V0M29 57V80"/><polyline class="thin" points="54,40 58,31 62,49 66,31 70,49 74,31 78,40"/><path class="dash" d="M29 8H6V40H20"/>',
+  p:[["A",29,0,"u"],["P",29,80,"d"]],pd:[["ps","Çıkış basıncı","bar",60],["Qn","Nominal debi","L/dak",40]]},
+sequence:{n:"Sıra valfi",g:"Basınç kontrol",w:96,h:80,sim:"sequence",
+  d:'<rect x="20" y="23" width="34" height="34"/><path d="M29 53V27" marker-end="url(#ah)"/><path d="M29 23V0M29 57V80M45 57V80"/><polyline class="thin" points="54,40 58,31 62,49 66,31 70,49 74,31 78,40"/><path class="dash" d="M29 72H6V40H20"/>',
+  p:[["A",29,0,"u"],["P",29,80,"d"],["Y",45,80,"d"]],pd:[["ps","Açma basıncı","bar",90],["Qn","Nominal debi","L/dak",60]]},
+counterbalance:{n:"Denge valfi",g:"Basınç kontrol",w:96,h:80,sim:"cbal",
+  d:'<rect x="20" y="23" width="34" height="34"/><path d="M29 53V27" marker-end="url(#ah)"/><path d="M45 27V53" marker-end="url(#ah)"/><path d="M29 23V0M29 57V80"/><polyline class="thin" points="54,40 58,31 62,49 66,31 70,49 74,31 78,40"/><path class="dash" d="M29 72H6V40H20"/>',
+  p:[["A",29,0,"u"],["P",29,80,"d"]],pd:[["ps","Ayar basıncı","bar",120],["r","Pilot oranı","",3],["Qn","Nominal debi","L/dak",60]]},
+unloading:{n:"Boşaltma valfi",g:"Basınç kontrol",w:96,h:80,sim:"unload",
+  d:'<rect x="20" y="23" width="34" height="34"/><path d="M29 53V27" marker-end="url(#ah)"/><path d="M29 23V0M29 57V80"/><polyline class="thin" points="54,40 58,31 62,49 66,31 70,49 74,31 78,40"/><path class="dash" d="M84 64H6V40H20"/><path d="M84 64V80"/>',
+  p:[["T",29,0,"u"],["P",29,80,"d"],["X",84,80,"d"]],pd:[["ps","Boşaltma basıncı","bar",150],["Qn","Nominal debi","L/dak",100]]},
+lsComp:{n:"LS kompanzatörü (bypass)",g:"Basınç kontrol",w:112,h:80,sim:"lscomp",
+  d:'<rect x="26" y="23" width="34" height="34"/><path d="M35 53V27" marker-end="url(#ah)"/>'
+   +'<path d="M35 23V0M35 57V80"/><polyline class="thin" points="60,40 64,31 68,49 72,31 76,49 80,31 84,40"/>'
+   +'<path class="dash" d="M35 72H10V40H26"/><path class="dash" d="M84 40H100V80"/>',
+  p:[["T",35,0,"u"],["P",35,80,"d"],["LS",100,80,"d"]],
+  pd:[["dpLS","Marj","bar",18,5,45],["Qn","Nominal debi","L/dak",80]]},
+pressSwitch:{n:"Basınç şalteri",g:"Basınç kontrol",w:76,h:80,sim:"pswitch",
+  d:c=>{const on=c.s&&c.s.on;
+    return `<rect x="14" y="34" width="30" height="30"/><path d="M29 60V40" marker-end="url(#ah)"/>`
+    +`<polyline class="thin" points="44,49 48,41 52,57 56,41 60,57 64,49"/><path d="M29 64V80"/>`
+    +`<path class="${on?'hot':''}" d="M29 34V18"/><path class="${on?'hot':''}" d="M${on?22:20} 18L${on?44:42} ${on?12:8}"/>`;},
+  p:[["P",29,80,"d"]],pd:[["ps","Anahtarlama","bar",100],["h","Histerezis","bar",8]]},
+
+/* ── AKIŞ KONTROL ────────────────────────────────────────── */
+throttle:{n:"Kısma valfi, ayarlanabilir",g:"Akış kontrol",w:80,h:48,sim:"orifice",
+  d:'<path d="M0 24H80"/><path d="M32 8Q42 24 32 40M48 8Q38 24 48 40"/><path d="M12 42L68 6" marker-end="url(#ah)"/>',
+  p:[["A",0,24,"l"],["B",80,24,"r"]],pd:[["A0","Geçiş kesiti","mm²",3],["Cd","Akış katsayısı","",0.62]]},
+orifice:{n:"Sabit kısma (orifis)",g:"Akış kontrol",w:80,h:48,sim:"orifice",
+  d:'<path d="M0 24H80"/><path d="M32 8Q42 24 32 40M48 8Q38 24 48 40"/>',
+  p:[["A",0,24,"l"],["B",80,24,"r"]],pd:[["A0","Geçiş kesiti","mm²",3],["Cd","Akış katsayısı","",0.62]]},
+throttleCheck:{n:"Tek yönlü kısma valfi",g:"Akış kontrol",w:104,h:80,sim:"throtchk",
+  d:'<rect class="dash" x="8" y="10" width="88" height="60"/><path d="M0 38H16M88 38H104"/>'
+   +'<path d="M16 38V22H88V38"/><path d="M46 12Q54 22 46 32M62 12Q54 22 62 32"/>'
+   +'<path d="M16 38V54H44M60 54H88V38"/>'+CHECK(44,54,-1)+'',
+  p:[["A",0,38,"l"],["B",104,38,"r"]],pd:[["A0","Geçiş kesiti","mm²",2.2],["Cd","Akış katsayısı","",0.62],["rev","Serbest yön B→A (1/0)","",1]]},
+flowComp2:{n:"Kompanzeli akış kontrol",g:"Akış kontrol",w:100,h:76,sim:"flowctl",
+  d:'<rect class="dash" x="8" y="10" width="84" height="56"/><path d="M0 38H100"/><path d="M42 22Q50 38 42 54M58 22Q50 38 58 54"/><path d="M22 58L78 18" marker-end="url(#ah)"/><path class="thin" d="M14 22L28 36"/>',
+  p:[["A",0,38,"l"],["B",100,38,"r"]],pd:[["Q","Ayar debisi","L/dak",20]]},
+divSpool:{n:"Akış bölücü, makaralı (oran ayarlı)",g:"Akış kontrol",w:120,h:72,sim:"divider",
+  d:'<rect class="dash" x="10" y="8" width="100" height="56"/><path d="M0 36H24M96 22H120M96 50H120"/>'
+   +'<path d="M32 36L88 22" marker-end="url(#ah)"/><path d="M32 36L88 50" marker-end="url(#ah)"/>'
+   +'<path d="M20 60L100 14" marker-end="url(#ah)"/>',
+  p:[["P",0,36,"l"],["A",120,22,"r"],["B",120,50,"r"]],pd:[["ratio","Bölme oranı A:B","",1],["Qn","Nominal debi","L/dak",60]]},
+divRotary:{n:"Akış bölücü, dişli tip (sabit oran)",g:"Akış kontrol",w:120,h:72,sim:"divider",
+  d:'<path d="M0 36H22M98 22H120M98 50H120"/><circle cx="44" cy="30" r="16"/><circle cx="76" cy="42" r="16"/>'
+   +'<polygon class="f" points="36,20 52,20 44,34"/><polygon class="f" points="68,32 84,32 76,46"/>',
+  p:[["P",0,36,"l"],["A",120,22,"r"],["B",120,50,"r"]],pd:[["ratio","Bölme oranı A:B","",1],["Qn","Nominal debi","L/dak",60]]},
+divPriority:{n:"Akış bölücü, öncelikli (PF/EF)",g:"Akış kontrol",w:120,h:80,sim:"priority",
+  d:'<rect class="dash" x="10" y="8" width="100" height="64"/><path d="M0 40H24M96 22H120M96 58H120"/>'
+   +'<rect x="30" y="24" width="30" height="32"/><path d="M39 52V28" marker-end="url(#ah)"/>'
+   +'<polyline class="thin" points="60,40 64,32 68,48 72,32 76,48 80,40"/>'
+   +'<path d="M60 30H92V22"/><path d="M60 58H92"/>',
+  p:[["P",0,40,"l"],["PF",120,22,"r"],["EF",120,58,"r"]],pd:[["Qp","Öncelikli debi","L/dak",12],["Qn","Nominal debi","L/dak",60]]},
+
+/* ── YARDIMCI ────────────────────────────────────────────── */
+filter:{n:"Filtre",g:"Yardımcı",w:72,h:48,sim:"resist",
+  d:'<polygon points="36,8 60,24 36,40 12,24"/><path class="dash" d="M36 8V40"/><path d="M0 24H12M60 24H72"/>',
+  p:[["A",0,24,"l"],["B",72,24,"r"]],pd:[["dp","ΔP","bar",0.5],["Qn","Nominal debi","L/dak",60]]},
+cooler:{n:"Soğutucu",g:"Yardımcı",w:72,h:48,sim:"cooler",
+  d:'<polygon points="36,8 60,24 36,40 12,24"/><path d="M30 15V31" marker-end="url(#ah)"/><path d="M42 15V31" marker-end="url(#ah)"/><path d="M0 24H12M60 24H72"/>',
+  p:[["A",0,24,"l"],["B",72,24,"r"]],pd:[["Pth","Soğutma gücü","kW",4],["dp","ΔP","bar",0.4],["Qn","Nominal debi","L/dak",60]]},
+gauge:{n:"Manometre",g:"Yardımcı",w:48,h:62,sim:"gauge",
+  d:c=>{const p=c.s?c.s.p:0,m=(c.params&&c.params.pmax)||250;
+    const a=-135+270*Math.max(0,Math.min(1,p/m));
+    return `<circle cx="24" cy="22" r="18"/><g transform="rotate(${a} 24 22)"><path class="thin" d="M24 22V8"/></g>`
+    +`<circle class="f" cx="24" cy="22" r="2"/><path d="M24 40V62"/>`;},
+  p:[["A",24,62,"d"]],pd:[["pmax","Skala sonu","bar",250]]},
+flowMeter:{n:"Debimetre",g:"Yardımcı",w:72,h:48,sim:"resist",
+  d:'<circle cx="36" cy="24" r="18"/><path d="M0 24H18M54 24H72"/><path d="M28 16L36 24L44 16"/>',
+  p:[["A",0,24,"l"],["B",72,24,"r"]],pd:[["dp","ΔP","bar",0.3],["Qn","Nominal debi","L/dak",60]]},
+
+/* ── BAĞLANTI ────────────────────────────────────────────── */
+junction:{n:"Bağlantı noktası (T)",g:"Bağlantı",w:12,h:12,single:true,bus:true,
+  d:'<circle class="f" cx="6" cy="6" r="4"/>',
+  p:[["N",6,6,"u"],["E",6,6,"r"],["S",6,6,"d"],["W",6,6,"l"]],pd:[]},
+manifoldP:{n:"Basınç manifoldu",g:"Bağlantı",w:216,h:40,bus:true,
+  d:'<rect x="0" y="8" width="216" height="14" rx="3"/><path d="M36 22V40M72 22V40M108 22V40M144 22V40M180 22V40"/>'
+   +'<circle class="f" cx="36" cy="22" r="2.5"/><circle class="f" cx="72" cy="22" r="2.5"/><circle class="f" cx="108" cy="22" r="2.5"/><circle class="f" cx="144" cy="22" r="2.5"/><circle class="f" cx="180" cy="22" r="2.5"/>',
+  p:[["IN",0,15,"l"],["A1",36,40,"d"],["A2",72,40,"d"],["A3",108,40,"d"],["A4",144,40,"d"],["A5",180,40,"d"],["OUT",216,15,"r"]],pd:[]},
+manifoldT:{n:"Tank manifoldu",g:"Bağlantı",w:216,h:40,bus:true,
+  d:'<rect class="dash" x="0" y="8" width="216" height="14" rx="3"/><path d="M36 22V40M72 22V40M108 22V40M144 22V40M180 22V40"/>'
+   +'<circle class="f" cx="36" cy="22" r="2.5"/><circle class="f" cx="72" cy="22" r="2.5"/><circle class="f" cx="108" cy="22" r="2.5"/><circle class="f" cx="144" cy="22" r="2.5"/><circle class="f" cx="180" cy="22" r="2.5"/>',
+  p:[["IN",0,15,"l"],["A1",36,40,"d"],["A2",72,40,"d"],["A3",108,40,"d"],["A4",144,40,"d"],["A5",180,40,"d"],["OUT",216,15,"r"]],pd:[]}
+};
+
+/* ── KARTUŞ VALFLER ────────────────────────────────────────────
+   Vidalı kartuş valfler, fonksiyon sembolü kesikli kartuş zarfına
+   alınarak türetilir. Semboller ISO 1219-1'e göre çizilmiştir. */
+function cartridge(key, base, name, over){
+  const b = CATALOG[base], pad = 11;
+  CATALOG[key] = Object.assign({}, b, {
+    n:name, g:"Kartuş valf", pad:pad, w:b.w+2*pad, h:b.h+2*pad,
+    p:b.p.map(q=>[q[0], q[1]+pad, q[2]+pad, q[3]]),
+    pd:(b.pd||[]).map(q=>q.slice())
+  }, over||{});
+}
+cartridge("cartRelief","relief","Kartuş emniyet valfi, direkt etkili");
+cartridge("cartReliefPO","reliefPilot","Kartuş emniyet valfi, pilot kumandalı");
+cartridge("cartSeq","sequence","Kartuş sıra valfi");
+cartridge("cartCbal","counterbalance","Kartuş denge valfi, 3:1");
+cartridge("cartReducing","reducing","Kartuş basınç düşürücü/tahliyeli");
+cartridge("cart22nc","valve22nc","Kartuş 2/2 solenoid, normalde kapalı");
+cartridge("cart22no","valve22no","Kartuş 2/2 solenoid, normalde açık");
+cartridge("cartPCheck","pilotCheck","Kartuş pilot kumandalı çek valf");
+cartridge("cartCheck","checkSpring","Kartuş yaylı çek valf");
+cartridge("cartNeedle","throttle","Kartuş iğne valf");
+cartridge("cartFlow","flowComp2","Kartuş kompanzeli akış kontrol");
+cartridge("cartPriority","divPriority","Kartuş öncelikli akış bölücü");
+
+const KINDS = {
+  pressure:{label:"Çalışma hattı",color:"var(--pressure)"},
+  return:{label:"Dönüş hattı",color:"var(--return)"},
+  suction:{label:"Emiş hattı",color:"var(--suction)"},
+  pilot:{label:"Pilot hattı",color:"var(--pilot)"},
+  drain:{label:"Drenaj hattı",color:"var(--drain)"}
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   4 · DURUM
+   ═══════════════════════════════════════════════════════════════ */
+const state = { comps:[], wires:[], sel:null, seq:1 };
+const sim = { on:false, t:0, speed:1, heat:0, T:45, sysP:0, pumpQ:0, pumpP:0, pumpM:0, loss:0, reliefQ:0 };
+let pending = null, drag = null, nearWire = null, NET = null, dirty = true;
+
+const canvas = document.getElementById("canvas");
+const gNodes = document.getElementById("nodes");
+const gWires = document.getElementById("wires");
+const gFlows = document.getElementById("flows");
+const gTags  = document.getElementById("tags");
+const scroller = document.getElementById("scroller");
+const bgRect   = document.getElementById("bg");
+const ghost  = document.getElementById("ghostwire");
+const hint   = document.getElementById("hint");
+
+const uid = p => p + (state.seq++);
+const byId = id => state.comps.find(c => c.id === id);
+const isSel = (k,id) => state.sel && state.sel.kind === k && state.sel.id === id;
+const isJ = c => !!CATALOG[c.type].single;
+const bar = pa => pa/1e5;
+
+function toCanvas(e){
+  const r = canvas.getBoundingClientRect();
+  return { x:(e.clientX-r.left)/zoom, y:(e.clientY-r.top)/zoom };
+}
+
+/* ── görünüm: yakınlaştırma, kaydırma, otomatik büyüme ───────── */
+let zoom = 1, VIEW = { w:1500, h:1050 };
+function applyView(){
+  canvas.setAttribute("viewBox", `0 0 ${VIEW.w} ${VIEW.h}`);
+  canvas.setAttribute("width",  VIEW.w); canvas.setAttribute("height", VIEW.h);
+  canvas.style.width  = (VIEW.w*zoom)+"px";
+  canvas.style.height = (VIEW.h*zoom)+"px";
+  bgRect.setAttribute("width", VIEW.w); bgRect.setAttribute("height", VIEW.h);
+  const zv = document.getElementById("zVal");
+  if (zv) zv.textContent = Math.round(zoom*100)+"%";
+}
+function bounds(){
+  if (!state.comps.length) return null;
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  state.comps.forEach(c=>{ const d=CATALOG[c.type];
+    x0=Math.min(x0,c.x-40); y0=Math.min(y0,c.y-40);
+    x1=Math.max(x1,c.x+d.w+40); y1=Math.max(y1,c.y+d.h+40); });
+  return {x0,y0,x1,y1};
+}
+function growView(){                       // devre büyüyünce tuval de büyüsün
+  const b = bounds(); if (!b) return;
+  const w = Math.max(1500, Math.ceil((b.x1+160)/60)*60);
+  const h = Math.max(1050, Math.ceil((b.y1+160)/60)*60);
+  if (w !== VIEW.w || h !== VIEW.h){ VIEW = {w,h}; applyView(); }
+}
+function setZoom(z, keepCenter){
+  const st = scroller.getBoundingClientRect();
+  const cx = (scroller.scrollLeft + st.width/2)/zoom;
+  const cy = (scroller.scrollTop + st.height/2)/zoom;
+  zoom = Math.max(0.3, Math.min(2.4, z));
+  applyView();
+  if (keepCenter !== false){
+    scroller.scrollLeft = cx*zoom - st.width/2;
+    scroller.scrollTop  = cy*zoom - st.height/2;
+  }
+}
+function fitView(){
+  const b = bounds(); if (!b){ setZoom(1); return; }
+  const st = scroller.getBoundingClientRect();
+  const z = Math.min((st.width-24)/(b.x1-b.x0), (st.height-24)/(b.y1-b.y0));
+  zoom = Math.max(0.3, Math.min(1.6, z));
+  applyView();
+  scroller.scrollLeft = b.x0*zoom - 12;
+  scroller.scrollTop  = b.y0*zoom - 12;
+}
+
+/* ── geometri ───────────────────────────────────────────── */
+function portWorld(comp, pid){
+  if (!comp) return null;
+  const def = CATALOG[comp.type], port = def.p.find(p => p[0] === pid);
+  if (!port) return null;
+  const cx = def.w/2, cy = def.h/2, a = comp.rot*Math.PI/180;
+  const cos = Math.cos(a), sin = Math.sin(a), dx = port[1]-cx, dy = port[2]-cy;
+  const b = { u:[0,-1], d:[0,1], l:[-1,0], r:[1,0] }[port[3]];
+  return { x:comp.x+cx+dx*cos-dy*sin, y:comp.y+cy+dx*sin+dy*cos,
+           nx:Math.round(b[0]*cos-b[1]*sin), ny:Math.round(b[0]*sin+b[1]*cos),
+           stub:isJ(comp)?0:20 };
+}
+function routePoints(a,b){
+  const sa = a.stub===undefined?20:a.stub, sb = b.stub===undefined?20:b.stub;
+  const p1 = {x:a.x+a.nx*sa, y:a.y+a.ny*sa}, p2 = {x:b.x+b.nx*sb, y:b.y+b.ny*sb};
+  const va = a.ny!==0, vb = b.ny!==0;
+  const ta = va ? Math.sign(b.y-a.y)===a.ny : Math.sign(b.x-a.x)===a.nx;
+  const tb = vb ? Math.sign(a.y-b.y)===b.ny : Math.sign(a.x-b.x)===b.nx;
+  let mid = [];
+  if (ta && tb){
+    if (va && vb){ const my=(p1.y+p2.y)/2; mid=[{x:p1.x,y:my},{x:p2.x,y:my}]; }
+    else if (!va && !vb){ const mx=(p1.x+p2.x)/2; mid=[{x:mx,y:p1.y},{x:mx,y:p2.y}]; }
+    else if (va) mid=[{x:p1.x,y:p2.y}]; else mid=[{x:p2.x,y:p1.y}];
+  } else if (va){
+    const l = a.x<=b.x ? Math.min(p1.x,p2.x)-40 : Math.max(p1.x,p2.x)+40;
+    mid=[{x:l,y:p1.y},{x:l,y:p2.y}];
+  } else {
+    const l = a.y<=b.y ? Math.min(p1.y,p2.y)-40 : Math.max(p1.y,p2.y)+40;
+    mid=[{x:p1.x,y:l},{x:p2.x,y:l}];
+  }
+  const pts=[a,p1,...mid,p2,b];
+  return pts.filter((p,i)=>i===0||Math.abs(p.x-pts[i-1].x)>.5||Math.abs(p.y-pts[i-1].y)>.5);
+}
+const pathOf = pts => "M"+pts.map(p=>p.x.toFixed(1)+" "+p.y.toFixed(1)).join("L");
+
+/* Birbirini kesen ama bağlı olmayan hatlar: yatay kol, dikey kolun
+   üzerinden küçük bir yarım daire ile atlar. */
+const HOPR = 5;
+function pathHops(pts, verts){
+  let d = `M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for (let i=1;i<pts.length;i++){
+    const a = pts[i-1], b = pts[i];
+    if (Math.abs(a.y-b.y) < 0.5 && Math.abs(a.x-b.x) > 2*HOPR+4){
+      const xmin = Math.min(a.x,b.x), xmax = Math.max(a.x,b.x), dir = b.x>a.x?1:-1;
+      const cuts = [];
+      for (const v of verts){
+        if (v.x <= xmin+HOPR+2 || v.x >= xmax-HOPR-2) continue;
+        if (a.y <= v.y1+4 || a.y >= v.y2-4) continue;
+        cuts.push(v.x);
+      }
+      cuts.sort((p,q)=>dir>0?p-q:q-p);
+      let last = null;
+      for (const cx of cuts){
+        if (last !== null && Math.abs(cx-last) < 2*HOPR+2) continue;
+        last = cx;
+        d += `L${(cx-dir*HOPR).toFixed(1)} ${a.y.toFixed(1)}`
+           + `A${HOPR} ${HOPR} 0 0 ${dir>0?1:0} ${(cx+dir*HOPR).toFixed(1)} ${a.y.toFixed(1)}`;
+      }
+    }
+    d += `L${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+  }
+  return d;
+}
+function wirePoints(w){
+  const a = portWorld(byId(w.from.cid), w.from.pid), b = portWorld(byId(w.to.cid), w.to.pid);
+  return (a&&b) ? routePoints(a,b) : null;
+}
+function nearestOn(pts,p){
+  let best=null;
+  for(let i=1;i<pts.length;i++){
+    const a=pts[i-1],b=pts[i],dx=b.x-a.x,dy=b.y-a.y,l2=dx*dx+dy*dy;
+    let t=l2?((p.x-a.x)*dx+(p.y-a.y)*dy)/l2:0; t=Math.max(0,Math.min(1,t));
+    const q={x:a.x+dx*t,y:a.y+dy*t},d=Math.hypot(p.x-q.x,p.y-q.y);
+    if(!best||d<best.d) best={d,q};
+  }
+  return best;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5 · FİZİK MOTORU
+   Yöntem: yalancı-sıkıştırılabilirlik. Her düğümün bir hacmi var,
+   dp/dt = (β/V)·ΣQ.  Dirençli kollar her adımda kararlılık için
+   sınırlanır; aktüatörler kuvvet/tork dengesinden integre edilir.
+   ═══════════════════════════════════════════════════════════════ */
+function buildNet(){
+  const par = {}, key = (c,p)=>c+":"+p;
+  const find = a => par[a]===a ? a : (par[a]=find(par[a]));
+  const uni = (a,b) => { if(par[a]&&par[b]) par[find(a)] = find(b); };
+  state.comps.forEach(c => CATALOG[c.type].p.forEach(p => par[key(c.id,p[0])] = key(c.id,p[0])));
+  state.comps.forEach(c => { if (CATALOG[c.type].bus){
+    const ks = CATALOG[c.type].p.map(p=>key(c.id,p[0])); ks.forEach(k=>uni(k,ks[0])); }});
+  state.wires.forEach(w => uni(key(w.from.cid,w.from.pid), key(w.to.cid,w.to.pid)));
+
+  const nodes = {}, pn = {};
+  for (const k in par){
+    const r = find(k);
+    if (!nodes[r]) nodes[r] = { id:r, p:0, V:VNODE, fixed:false, sum:0, thru:0 };
+    pn[k] = nodes[r];
+  }
+  state.comps.forEach(c => {
+    if (c.type === "tank"){ const n = pn[key(c.id,"T")]; if(n){ n.fixed = true; n.p = (c.params.pb||0.5)*1e5; } }
+    if (CATALOG[c.type].bus){ const n = pn[key(c.id,CATALOG[c.type].p[0][0])]; if(n) n.V = VNODE*2.5; }
+  });
+  NET = { nodes:Object.values(nodes), pn, key };
+  return NET;
+}
+
+function resetSim(){
+  buildNet();
+  NET.nodes.forEach(n => { if(!n.fixed) n.p = 0; });
+  state.comps.forEach(c => {
+    c.s = c.s || {};
+    Object.assign(c.s, { x:0, v:0, f:0, w:0, a:0, Q:0, p:0, force:0, on:false, rpm:0, M:0, kW:0 });
+  });
+  sim.t = 0; sim.heat = 0; sim.T = 45;
+  dirty = true;
+}
+
+const ORI = (Cd,A0mm2,dp) => Math.sign(dp)*Cd*(A0mm2*1e-6)*Math.sqrt(2*Math.abs(dp)/RHO);
+
+function step(dt){
+  const N = NET; if (!N) return;
+  N.nodes.forEach(n => { n.sum = 0; n.thru = 0; });
+  let loss = 0, reliefQ = 0;
+
+  const nd = (c,pid) => N.pn[N.key(c.id,pid)];
+  const src = (n,Q) => { if(n && !n.fixed) n.sum += Q; if(n) n.thru += Math.abs(Q); };
+  function R(na,nb,Q){                             // dirençli kol (kararlılık sınırlı)
+    if (!na || !nb || na===nb) return 0;
+    const dp = na.p - nb.p;
+    const ca = na.fixed ? 1e9 : na.V/BETA, cb = nb.fixed ? 1e9 : nb.V/BETA;
+    const c  = 1/(1/ca + 1/cb);
+    const qm = Math.abs(dp)*c*0.35/dt + 1e-12;
+    Q = Math.max(-qm, Math.min(qm, Q));
+    src(na,-Q); src(nb,Q);
+    loss += Math.abs(dp*Q);
+    return Q;
+  }
+  const X = { nd, src, R, dt };
+
+  state.comps.forEach(c => {
+    const def = CATALOG[c.type], P = c.params || {}, S = c.s, m = def.sim;
+    if (!m) return;
+
+    if (m === "pump"){
+      const np = nd(c,"P"), ns = nd(c,"S"); if(!np) return;
+      const dp = Math.max(0, np.p - (ns?ns.p:0));
+      let Qth = P.Vg*P.n/60e6;
+      if (P.pc) Qth *= Math.max(0, Math.min(1, (P.pc*1e5 - dp)/(0.1*P.pc*1e5) ));
+      const Q = Math.max(0, Qth - Qth*(1-P.ev)*(dp/2e7));
+      src(ns,-Q); src(np,Q);
+      S.Q = Q; S.p = dp;
+      const Ph = dp*Q; S.kW = Ph/1000;
+      const Pm = Ph/Math.max(.25, P.ev*P.em);
+      S.M = Pm/(2*Math.PI*Math.max(1,P.n)/60);
+      S.shaft = Pm/1000;
+      loss += Pm - Ph;
+    }
+    else if (m === "pumpls"){
+      const np = nd(c,"P"), ns = nd(c,"S"), nls = nd(c,"LS"); if(!np) return;
+      const dp  = Math.max(0, np.p - (ns?ns.p:0));
+      const pls = nls ? nls.p : 0;
+      const gLS = Math.max(0, Math.min(1, (pls + P.dpLS*1e5 - dp)/4e5));   // LS regülatörü
+      const gPC = Math.max(0, Math.min(1, (P.pc*1e5 - dp)/1e6));           // basınç kesme
+      const k = Math.min(gLS, gPC);
+      const Q = P.Vg*P.n/60e6 * k * P.ev;
+      src(ns,-Q); src(np,Q);
+      S.Q = Q; S.p = dp; S.disp = k;
+      const Ph = dp*Q; S.kW = Ph/1000;
+      const Pm = Ph/Math.max(.25, P.ev*P.em);
+      S.M = Pm/(2*Math.PI*Math.max(1,P.n)/60); S.shaft = Pm/1000;
+      loss += Pm - Ph;
+    }
+    else if (m === "lscomp"){
+      const np = nd(c,"P"), nt = nd(c,"T"), nls = nd(c,"LS"); if(!np||!nt) return;
+      const over = np.p - (nls?nls.p:0) - P.dpLS*1e5;
+      S.Q = over > 0 ? R(np,nt, (P.Qn/60000)/3e5*over) : 0;
+    }
+    else if (m === "relief"){
+      const na = nd(c,"P"), nb = nd(c,"T"); if(!na||!nb) return;
+      const over = na.p - nb.p - P.ps*1e5;
+      if (over > 0){ const G = (P.Qn/60000)/(0.12*P.ps*1e5); const q = R(na,nb,G*over); reliefQ += Math.abs(q); S.Q = q; }
+      else S.Q = 0;
+      S.p = na.p;
+    }
+    else if (m === "unload"){
+      const na = nd(c,"P"), nb = nd(c,"T"), nx = nd(c,"X"); if(!na||!nb) return;
+      if (nx && nx.p > P.ps*1e5){ const G=(P.Qn/60000)/(5e5); S.Q = R(na,nb,G*(na.p-nb.p)); } else S.Q=0;
+    }
+    else if (m === "sequence"){
+      const na = nd(c,"P"), nb = nd(c,"A"); if(!na||!nb) return;
+      const open = Math.max(0, Math.min(1, (na.p - P.ps*1e5)/(0.1*P.ps*1e5)));
+      S.Q = open > 0 ? R(na,nb, open*(P.Qn/60000)/3e5*(na.p-nb.p)) : 0;
+    }
+    else if (m === "reducing"){
+      const na = nd(c,"P"), nb = nd(c,"A"); if(!na||!nb) return;
+      const g = Math.max(0, Math.min(1, (P.ps*1e5 - nb.p)/(0.08*P.ps*1e5)));
+      S.Q = R(na,nb, g*(P.Qn/60000)/(3e5)*(na.p-nb.p));
+      S.p = nb.p;
+    }
+    else if (m === "cbal"){
+      const na = nd(c,"A"), nb = nd(c,"P"); if(!na||!nb) return;
+      if (nb.p - na.p > 0) R(nb,na, 3e-8*(nb.p-na.p));           // serbest yön (çek)
+      const eff = na.p + (P.r||3)*nb.p;
+      if (eff > P.ps*1e5){ const G=(P.Qn/60000)/(0.1*P.ps*1e5); S.Q = R(na,nb,G*(eff-P.ps*1e5)*Math.min(1,Math.max(0,(na.p-nb.p)/1e5))); }
+    }
+    else if (m === "check"){
+      const na = nd(c,"A"), nb = nd(c,"B"); if(!na||!nb) return;
+      const dp = na.p - nb.p - (P.dp||0)*1e5;
+      S.Q = dp > 0 ? R(na,nb, 3e-8*dp) : 0;
+    }
+    else if (m === "pcheck"){
+      const na = nd(c,"A"), nb = nd(c,"B"), nx = nd(c,"X"); if(!na||!nb) return;
+      const dp = na.p - nb.p - (P.dp||0)*1e5;
+      if (dp > 0) S.Q = R(na,nb, 3e-8*dp);
+      else if (nx && nx.p*(P.r||4) > nb.p) S.Q = R(nb,na, 3e-8*(nb.p-na.p));
+      else S.Q = 0;
+    }
+    else if (m === "shuttle"){
+      const na = nd(c,"A"), nb = nd(c,"B"), no = nd(c,"OUT"); if(!no) return;
+      const hi = (na&&nb) ? (na.p>=nb.p?na:nb) : (na||nb); if(!hi) return;
+      S.Q = R(hi,no, 3e-8*(hi.p-no.p));
+    }
+    else if (m === "orifice"){
+      const na = nd(c,"A"), nb = nd(c,"B"); if(!na||!nb) return;
+      S.Q = R(na,nb, ORI(P.Cd||0.62, P.A0, na.p-nb.p));
+    }
+    else if (m === "throtchk"){
+      const na = nd(c,"A"), nb = nd(c,"B"); if(!na||!nb) return;
+      const dp = na.p - nb.p, free = P.rev ? (dp<0) : (dp>0);
+      S.Q = free ? R(na,nb, 3e-8*dp) : R(na,nb, ORI(P.Cd||0.62, P.A0, dp));
+    }
+    else if (m === "flowctl"){
+      const na = nd(c,"A"), nb = nd(c,"B"); if(!na||!nb) return;
+      const dp = na.p - nb.p, lim = P.Q/60000;
+      let q = 3e-8*dp; q = Math.max(-lim, Math.min(lim, q));
+      S.Q = R(na,nb,q);
+    }
+    else if (m === "divider" || m === "priority"){
+      const np = nd(c,"P"), n1 = nd(c, m==="divider"?"A":"PF"), n2 = nd(c, m==="divider"?"B":"EF");
+      if (!np) return;
+      const Qn = (P.Qn||60)/60000;
+      if (m === "divider"){
+        const r = Math.max(0.05, P.ratio||1), fa = r/(1+r), fb = 1/(1+r);
+        if (n1) S.QA = R(np,n1, Qn*fa*Math.sign(np.p-n1.p)*Math.sqrt(Math.abs(np.p-n1.p)/3e5));
+        if (n2) S.QB = R(np,n2, Qn*fb*Math.sign(np.p-n2.p)*Math.sqrt(Math.abs(np.p-n2.p)/3e5));
+      } else {
+        const Qp = (P.Qp||12)/60000;
+        let qa = 0;
+        if (n1){ let q = 3e-8*(np.p-n1.p); q = Math.max(-Qp, Math.min(Qp,q)); qa = R(np,n1,q); }
+        if (n2) S.QB = R(np,n2, Qn*Math.sign(np.p-n2.p)*Math.sqrt(Math.abs(np.p-n2.p)/3e5));
+        S.QA = qa;
+      }
+    }
+    else if (m === "resist" || m === "cooler"){
+      const na = nd(c,"A"), nb = nd(c,"B"); if(!na||!nb) return;
+      const G = (P.Qn/60000)/((P.dp||0.5)*1e5);
+      S.Q = R(na,nb, G*(na.p-nb.p));
+      if (m === "cooler") sim.heat -= (P.Pth||0)*1000*dt*0.001;
+    }
+    else if (m === "lsv"){
+      const Qn = P.Qn/60000, dpn = (P.dp||8)*1e5, u = P.u||0;
+      const conns = u < -2 ? def.states[0] : u > 2 ? def.states[2] : [];
+      const sc = Math.min(1, Math.abs(u)/100);
+      c.pos = u < -2 ? 0 : u > 2 ? 2 : 1;
+      let tot = 0;
+      conns.forEach(pr=>{
+        const na = nd(c,pr[0]), nb = nd(c,pr[1]); if(!na||!nb) return;
+        const dp = na.p - nb.p;
+        tot += Math.abs(R(na,nb, Math.sign(dp)*Qn*sc*Math.sqrt(Math.abs(dp)/dpn)));
+      });
+      S.Q = tot/2;
+      const nls = nd(c,"LS");                      // yük basıncını LS hattına ver
+      if (nls){
+        const wk = u < -2 ? nd(c,"B") : u > 2 ? nd(c,"A") : null;
+        if (wk) R(wk, nls, 2e-11*(wk.p - nls.p));
+        else { const nt = nd(c,"T"); if (nt) R(nls, nt, 2e-11*(nls.p - nt.p)); }
+      }
+    }
+    else if (m === "dcv" || m === "prop"){
+      const Qn = P.Qn/60000, dpn = (P.dp||3)*1e5;
+      let conns, scale = 1;
+      if (m === "prop"){
+        const u = P.u||0;
+        conns = u < -2 ? def.states[0] : u > 2 ? def.states[2] : [];
+        scale = Math.min(1, Math.abs(u)/100);
+        c.pos = u < -2 ? 0 : u > 2 ? 2 : 1;
+      } else conns = def.states[(c.pos != null ? c.pos : def.home)] || [];
+      let tot = 0;
+      conns.forEach(pr => {
+        const na = nd(c,pr[0]), nb = nd(c,pr[1]); if(!na||!nb) return;
+        const dp = na.p - nb.p;
+        const q = R(na,nb, Math.sign(dp)*Qn*scale*Math.sqrt(Math.abs(dp)/dpn));
+        tot += Math.abs(q);
+      });
+      S.Q = tot/2;
+    }
+    else if (m === "cyl"){
+      const na = nd(c,"A"), nb = nd(c,"B");
+      const AA = Math.PI*P.D*P.D/4e6;
+      const AB = nb ? Math.PI*(P.D*P.D - (P.d||0)*(P.d||0))/4e6 : 0;
+      const stroke = P.s/1000, pa = na?na.p:0, pb = nb?nb.p:0;
+      let F = pa*AA - pb*AB - (P.F||0) - 8000*S.v;
+      if (!nb) F -= (P.k||0)*(0.2 + S.x/Math.max(1e-6,stroke));
+      S.v += F/Math.max(20,P.m||300)*dt;
+      if (S.x <= 0 && S.v < 0) S.v = 0;
+      if (S.x >= stroke && S.v > 0) S.v = 0;
+      S.x = Math.max(0, Math.min(stroke, S.x + S.v*dt));
+      src(na, -AA*S.v); if (nb) src(nb, AB*S.v);
+      S.f = stroke>0 ? S.x/stroke : 0;
+      S.force = pa*AA - pb*AB;
+      S.Q = Math.abs(AA*S.v);
+    }
+    else if (m === "motor"){
+      const na = nd(c,"A"), nb = nd(c,"B"); if(!na||!nb) return;
+      const Vg = P.Vg/1e6, dp = na.p - nb.p;
+      const T = Vg*dp/(2*Math.PI)*(P.em||0.92);
+      const load = (P.M||0)*Math.tanh(S.w/2) + 0.4*S.w;
+      S.w += (T - load)/Math.max(0.005,P.J||0.08)*dt;
+      if (P.oneway && S.w < 0) S.w = 0;
+      const Q = Vg*S.w/(2*Math.PI)/Math.max(.5,P.ev||0.94);
+      src(na,-Q); src(nb,Q);
+      S.a = (S.a + S.w*dt*57.2958) % 360;
+      S.rpm = S.w*60/(2*Math.PI); S.M = T; S.Q = Math.abs(Q);
+      S.kW = T*S.w/1000;
+    }
+    else if (m === "accum"){
+      const na = nd(c,"A"); if(!na) return;
+      const p0 = P.p0*1e5;
+      if (na.p > p0){ na.V = VNODE + (P.V/1000)*Math.pow(p0/Math.max(p0,na.p), 1/1.4)*0.7; S.p = na.p; }
+      else { na.V = VNODE; S.p = na.p; }
+    }
+    else if (m === "gauge"){ const na = nd(c,"A"); S.p = na ? bar(na.p) : 0; }
+    else if (m === "pswitch"){
+      const na = nd(c,"P"); if(!na) return;
+      const p = bar(na.p);
+      S.on = S.on ? p > P.ps - (P.h||8) : p >= P.ps;
+      S.p = p;
+    }
+  });
+
+  N.nodes.forEach(n => {
+    if (n.fixed) return;
+    n.p += (BETA/n.V) * n.sum * dt;
+    if (n.p < 0) n.p = 0;
+    if (n.p > 7e7) n.p = 7e7;
+  });
+
+  sim.loss = loss;
+  sim.reliefQ = reliefQ;
+  sim.heat += loss*dt;
+  sim.t += dt;
+}
+
+function simFrame(){
+  if (!sim.on) return;
+  const steps = Math.round(0.0167*sim.speed/DT);
+  for (let i=0;i<steps;i++) step(DT);
+
+  const pumps = state.comps.filter(c => ["pump","pumpls"].includes(CATALOG[c.type].sim));
+  sim.pumpQ = pumps.reduce((a,c)=>a+(c.s.Q||0),0)*60000;
+  sim.pumpP = pumps.reduce((a,c)=>a+(c.s.shaft||0),0);
+  sim.pumpM = pumps.reduce((a,c)=>a+(c.s.M||0),0);
+  sim.sysP  = pumps.length ? bar(Math.max(...pumps.map(c=>c.s.p||0))) : bar(Math.max(0,...NET.nodes.map(n=>n.p)));
+
+  const tanks = state.comps.filter(c=>c.type==="tank");
+  const Voil = tanks.reduce((a,c)=>a+(c.params.V||100),0) || 100;
+  const cool = state.comps.filter(c=>CATALOG[c.type].sim==="cooler").reduce((a,c)=>a+(c.params.Pth||0)*1000,0);
+  const mOil = Voil*0.87;
+  sim.T += ((sim.loss - cool - 12*(sim.T-25))/(mOil*1900))*0.0167*sim.speed;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6 · ÇİZİM
+   ═══════════════════════════════════════════════════════════════ */
+function symbolMarkup(type, c){
+  const def = CATALOG[type];
+  let inner = def.cells ? valveMarkup(c, def)
+            : (typeof def.d === "function" ? def.d(c||{params:{},s:null}) : def.d);
+  if (def.pad) inner = `<rect class="dash" x="2" y="2" width="${def.w-4}" height="${def.h-4}" rx="7"/>`
+                     + `<g transform="translate(${def.pad} ${def.pad})">${inner}</g>`;
+  return '<g class="sym">' + inner + "</g>";
+}
+
+/* Sembolün üstünde görünecek kısa değer etiketi */
+function compLabel(c){
+  const def = CATALOG[c.type], P = c.params || {}, m = def.sim;
+  if (m==="relief"||m==="sequence"||m==="unload"||m==="reducing"||m==="pswitch") return P.ps+" bar";
+  if (m==="cbal")     return P.ps+" bar · "+P.r+":1";
+  if (m==="pump")     return P.Vg+" cm³ · "+P.n+" d/dak";
+  if (m==="pumpls")   return P.Vg+" cm³ · Δp"+P.dpLS;
+  if (m==="lscomp")   return "Δp "+P.dpLS+" bar";
+  if (m==="cyl")      return "Ø"+P.D+(P.d?"/"+P.d:"")+" × "+P.s;
+  if (m==="motor")    return P.Vg+" cm³ · "+P.M+" Nm";
+  if (m==="orifice"||m==="throtchk") return P.A0+" mm²";
+  if (m==="flowctl")  return P.Q+" L/dak";
+  if (m==="divider")  return "oran "+P.ratio+":1";
+  if (m==="priority") return P.Qp+" L/dak öncelikli";
+  if (m==="dcv")      return P.Qn+" L/dak";
+  if (m==="prop"||m==="lsv") return P.Qn+" L/dak · u="+(P.u|0)+"%";
+  if (m==="check")    return P.dp+" bar";
+  if (m==="pcheck")   return "pilot "+P.r+":1";
+  if (m==="accum")    return P.V+" L / "+P.p0+" bar";
+  if (m==="tank")     return P.V+" L";
+  if (m==="cooler")   return P.Pth+" kW";
+  if (c.type==="motorElec") return P.P+" kW · "+P.n+" d/dak";
+  return "";
+}
+function el(tag, at){ const n = document.createElementNS(NS,tag); for(const k in at) n.setAttribute(k,at[k]); return n; }
+
+/* basınç → renk (mavi → sarı → kırmızı) */
+function pcolor(b){
+  const t = Math.max(0, Math.min(1, b/220));
+  if (b < 1.5) return "#8C9298";
+  const r = Math.round(60 + 165*Math.min(1,t*1.6));
+  const g = Math.round(120 + 60*t - 150*Math.max(0,t-0.5)*2);
+  const bl = Math.round(170 - 150*t);
+  return `rgb(${r},${Math.max(40,g)},${Math.max(20,bl)})`;
+}
+
+function render(){
+  gNodes.textContent = ""; gWires.textContent = ""; gFlows.textContent = ""; gTags.textContent = "";
+  const showP = sim.on && NET;
+
+  /* 1. aşama: tüm hatların köşe noktaları + dikey kolların listesi */
+  const geo = [];
+  state.wires.forEach(w => { const pts = wirePoints(w); if (pts) geo.push({w, pts}); });
+  geo.forEach(g => {
+    g.verts = [];
+    for (let i=1;i<g.pts.length;i++){
+      const a=g.pts[i-1], b=g.pts[i];
+      if (Math.abs(a.x-b.x) < 0.5 && Math.abs(a.y-b.y) > 8)
+        g.verts.push({x:a.x, y1:Math.min(a.y,b.y), y2:Math.max(a.y,b.y)});
+    }
+  });
+
+  /* 2. aşama: çizim — kendi dikey kolları hariç, diğerlerinin üzerinden atla */
+  geo.forEach((g,gi) => {
+    const w = g.w;
+    const others = [];
+    geo.forEach((o,oi)=>{ if (oi!==gi) others.push(...o.verts); });
+    const d = pathHops(g.pts, others);
+    const hit = el("path",{class:"wirehit"+(nearWire===w.id?" near":""), d:pathOf(g.pts)});
+    hit.addEventListener("pointerdown", e=>{ e.stopPropagation(); onWire(w, toCanvas(e)); });
+    const line = el("path",{class:"wire k-"+w.kind+(isSel("wire",w.id)?" sel":""), d});
+    if (showP){
+      const n = NET.pn[NET.key(w.from.cid,w.from.pid)];
+      if (n){ line.style.stroke = pcolor(bar(n.p)); w._n = n; }
+    }
+    gWires.append(hit, line);
+    if (showP && w._n && w._n.thru > 1e-6){
+      const f = el("path",{class:"flowdash", d, stroke:"rgba(255,255,255,.75)"});
+      f.style.strokeDashoffset = (-(sim.t*w._n.thru*9000) % 18).toFixed(1);
+      gFlows.append(f);
+    }
+  });
+
+  state.comps.forEach(c => {
+    const def = CATALOG[c.type];
+    const g = el("g",{class:"node"+(isSel("comp",c.id)?" sel":""),
+      transform:`translate(${c.x} ${c.y}) rotate(${c.rot} ${def.w/2} ${def.h/2})`});
+    g.innerHTML = symbolMarkup(c.type, c);
+    g.prepend(el("rect",{class:"hit",x:-6,y:-6,width:def.w+12,height:def.h+12}));
+    g.append(el("rect",{class:"frame",x:-7,y:-7,width:def.w+14,height:def.h+14}));
+
+    if (def.cells){                                   // valfe tıklayarak konum değiştirme
+      const nb = def.cells.length, bw = nb*SQ, pd = def.pad||0;
+      [[pd, PAD, 0], [pd+PAD+bw, PAD, nb-1]].forEach(z=>{
+        const r = el("rect",{class:"acthit", x:z[0], y:pd+TOP-8, width:z[1], height:BOT-TOP+16});
+        r.addEventListener("pointerdown", e=>{
+          e.stopPropagation();
+          const cur = c.pos!=null?c.pos:def.home;
+          c.pos = (cur===z[2]) ? def.home : z[2];
+          if (def.sim==="prop"||def.sim==="lsv") c.params.u = c.pos===0?-100:c.pos===2?100:0;
+          state.sel = {kind:"comp", id:c.id};
+          render(); drawDash();
+        });
+        g.append(r);
+      });
+    }
+    (def.single ? def.p.slice(0,1) : def.p).forEach(p => {
+      const live = pending && pending.cid === c.id;
+      g.append(el("circle",{class:"port"+(live?" live":""),cx:p[1],cy:p[2],r:4}));
+      const h = el("circle",{class:"porthit",cx:p[1],cy:p[2],r:11});
+      h.addEventListener("pointerdown", e=>{ e.stopPropagation(); onPort(c.id, def.single?freePort(c.id):p[0]); });
+      g.append(h);
+    });
+    g.addEventListener("pointerdown", e=>startMove(e,c));
+    gNodes.append(g);
+  });
+
+  /* değer etiketleri — dönmeyen katmanda, sembolün üstünde */
+  state.comps.forEach(c => {
+    const def = CATALOG[c.type]; if (isJ(c)) return;
+    const cx = c.x+def.w/2, cy = c.y+def.h/2;
+    const hh = (c.rot%180===0) ? def.h/2 : def.w/2;
+    let t = compLabel(c), cls = "tag";
+    if (def.sim === "gauge"){ t = (showP && c.s) ? c.s.p.toFixed(0)+" bar" : c.params.pmax+" bar";
+                              if (showP) cls = "rdg"; }
+    if (!t) return;
+    const n = el("text",{class:cls, x:cx.toFixed(0), y:(cy-hh-6).toFixed(0)});
+    n.textContent = t; gTags.append(n);
+  });
+
+  /* bağlantı noktaları — bir portta iki ya da daha çok hat varsa dolu daire */
+  const cnt = {};
+  state.wires.forEach(w=>{
+    const a=w.from.cid+"\u0000"+w.from.pid, b=w.to.cid+"\u0000"+w.to.pid;
+    cnt[a]=(cnt[a]||0)+1; cnt[b]=(cnt[b]||0)+1;
+  });
+  for (const k in cnt){
+    if (cnt[k] < 2) continue;
+    const ix = k.indexOf("\u0000"), c = byId(k.slice(0,ix));
+    if (!c || isJ(c)) continue;
+    const wp = portWorld(c, k.slice(ix+1));
+    if (wp) gTags.append(el("circle",{class:"jdot", cx:wp.x, cy:wp.y, r:3.6}));
+  }
+
+  growView();
+  document.body.classList.toggle("wiring", !!pending);
+  hint.textContent = pending ? "İkinci portu seçin — veya bir hattın üzerine tıklayıp T bağlantısı yapın · Esc" : "";
+  drawInspector();
+}
+
+function freePort(cid){
+  const used = new Set();
+  state.wires.forEach(w=>{ if(w.from.cid===cid) used.add(w.from.pid); if(w.to.cid===cid) used.add(w.to.pid); });
+  const all = CATALOG[byId(cid).type].p.map(p=>p[0]);
+  return all.find(p=>!used.has(p)) || all[0];
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7 · ETKİLEŞİM
+   ═══════════════════════════════════════════════════════════════ */
+function select(s){ state.sel = s; pending = null; nearWire = null; ghost.removeAttribute("d"); render(); }
+function startMove(e,c){
+  if (e.button!==0 || pending) return;
+  e.stopPropagation(); select({kind:"comp",id:c.id});
+  const s = toCanvas(e); drag = {comp:c, dx:s.x-c.x, dy:s.y-c.y};
+  canvas.setPointerCapture(e.pointerId);
+}
+canvas.addEventListener("pointermove", e=>{
+  const p = toCanvas(e);
+  if (drag){ drag.comp.x = snap(p.x-drag.dx); drag.comp.y = snap(p.y-drag.dy); render(); }
+  else if (pending){
+    const a = portWorld(byId(pending.cid), pending.pid);
+    ghost.setAttribute("d", pathOf(routePoints(a,{x:p.x,y:p.y,nx:0,ny:0,stub:0})));
+    let f = null;
+    for (const w of state.wires){
+      if (w.from.cid===pending.cid || w.to.cid===pending.cid) continue;
+      const pts = wirePoints(w); if(!pts) continue;
+      const n = nearestOn(pts,p); if (n && n.d < 16){ f = w.id; break; }
+    }
+    if (f !== nearWire){ nearWire = f; render(); }
+  }
+});
+canvas.addEventListener("pointerup", ()=>{ drag=null; });
+
+let pan = null;
+canvas.addEventListener("pointerdown", e=>{
+  if (e.target.id !== "bg" || pending) { if (e.target.id==="bg") select(null); return; }
+  pan = { x:e.clientX, y:e.clientY, l:scroller.scrollLeft, t:scroller.scrollTop, moved:false };
+  scroller.classList.add("grabbing");
+  canvas.setPointerCapture(e.pointerId);
+});
+window.addEventListener("pointermove", e=>{
+  if (!pan) return;
+  const dx = e.clientX-pan.x, dy = e.clientY-pan.y;
+  if (Math.abs(dx)+Math.abs(dy) > 3) pan.moved = true;
+  scroller.scrollLeft = pan.l - dx;
+  scroller.scrollTop  = pan.t - dy;
+});
+window.addEventListener("pointerup", ()=>{
+  if (pan){ if (!pan.moved) select(null); scroller.classList.remove("grabbing"); pan = null; }
+});
+
+scroller.addEventListener("wheel", e=>{
+  if (!(e.ctrlKey || e.metaKey)) return;      // düz tekerlek sayfayı/tuvali kaydırsın
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  const px = (e.clientX-r.left)/zoom, py = (e.clientY-r.top)/zoom;
+  const before = { l:scroller.scrollLeft, t:scroller.scrollTop };
+  const st = scroller.getBoundingClientRect();
+  zoom = Math.max(0.3, Math.min(2.4, zoom*(e.deltaY<0 ? 1.12 : 1/1.12)));
+  applyView();
+  scroller.scrollLeft = px*zoom - (e.clientX-st.left);
+  scroller.scrollTop  = py*zoom - (e.clientY-st.top);
+}, {passive:false});
+
+document.getElementById("zIn").onclick  = ()=>setZoom(zoom*1.2);
+document.getElementById("zOut").onclick = ()=>setZoom(zoom/1.2);
+document.getElementById("zFit").onclick = fitView;
+
+const appEl = document.getElementById("app"), btnFull = document.getElementById("btnFull");
+btnFull.onclick = ()=>{
+  const on = appEl.classList.toggle("full");
+  document.body.classList.toggle("locked", on);
+  btnFull.textContent = on ? "⤡ Küçült" : "⤢ Tam ekran";
+  requestAnimationFrame(()=>{ if(!sim.on) fitView(); });
+};
+
+function onPort(cid,pid){
+  if (!pending){ pending = {cid,pid}; state.sel = null; render(); return; }
+  if (pending.cid===cid && pending.pid===pid){ select(null); return; }
+  connect(pending,{cid,pid},"pressure");
+  pending=null; nearWire=null; ghost.removeAttribute("d"); dirty=true; render();
+}
+function connect(from,to,kind){
+  const dup = state.wires.some(w =>
+    (w.from.cid===from.cid&&w.from.pid===from.pid&&w.to.cid===to.cid&&w.to.pid===to.pid) ||
+    (w.to.cid===from.cid&&w.to.pid===from.pid&&w.from.cid===to.cid&&w.from.pid===to.pid));
+  if (!dup){ state.wires.push({id:uid("w"),from,to,kind:kind||"pressure"}); dirty=true; }
+}
+function onWire(w,p){
+  if (!pending){ select({kind:"wire",id:w.id}); return; }
+  const n = nearestOn(wirePoints(w), p);
+  const j = addComp("junction", snap(n.q.x)-6, snap(n.q.y)-6, true);
+  const k = w.kind, from = w.from, to = w.to;
+  state.wires = state.wires.filter(x=>x.id!==w.id);
+  connect(from,{cid:j.id,pid:"W"},k);
+  connect({cid:j.id,pid:"E"},to,k);
+  connect(pending,{cid:j.id,pid:"N"},k);
+  pending=null; nearWire=null; state.sel=null; ghost.removeAttribute("d"); dirty=true; render();
+}
+function addComp(type,x,y,quiet){
+  const def = CATALOG[type], c = {id:uid("c"),type,x,y,rot:0,s:{}};
+  if (def.act) c.act = def.act.slice();
+  if (def.cells) c.pos = def.home;
+  if (def.pd && def.pd.length){ c.params = {}; def.pd.forEach(p=>c.params[p[0]]=p[3]); }
+  state.comps.push(c); dirty = true;
+  if (!quiet){ state.sel = {kind:"comp",id:c.id}; render(); }
+  return c;
+}
+function rotateSel(){ if(state.sel&&state.sel.kind==="comp"){ const c=byId(state.sel.id); c.rot=(c.rot+90)%360; render(); } }
+function deleteSel(){
+  if (!state.sel) return;
+  if (state.sel.kind==="comp"){
+    const id = state.sel.id;
+    state.comps = state.comps.filter(c=>c.id!==id);
+    state.wires = state.wires.filter(w=>w.from.cid!==id&&w.to.cid!==id);
+  } else state.wires = state.wires.filter(w=>w.id!==state.sel.id);
+  state.sel=null; dirty=true; render();
+}
+document.addEventListener("keydown", e=>{
+  if (e.target.tagName==="INPUT"||e.target.tagName==="SELECT") return;
+  if (e.key==="Escape"){
+    if (appEl.classList.contains("full")) btnFull.click();
+    select(null);
+  }
+  if (e.key==="r"||e.key==="R") rotateSel();
+  if (e.key===" "){ e.preventDefault(); toggleRun(); }
+  if (e.key==="Delete"||e.key==="Backspace"){ e.preventDefault(); deleteSel(); }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   8 · PALET
+   ═══════════════════════════════════════════════════════════════ */
+function buildPalette(filter){
+  const list = document.getElementById("palList"); list.textContent = "";
+  const q = (filter||"").trim().toLocaleLowerCase("tr"), groups = {};
+  for (const k in CATALOG){ const d = CATALOG[k];
+    if (q && !d.n.toLocaleLowerCase("tr").includes(q)) continue;
+    (groups[d.g] = groups[d.g]||[]).push(k); }
+  for (const gn in groups){
+    const h = document.createElement("div"); h.className="grp"; h.textContent=gn;
+    const box = document.createElement("div"); box.className="items";
+    groups[gn].forEach(k=>{
+      const d = CATALOG[k], b = document.createElement("div");
+      b.className="item"; b.setAttribute("role","button"); b.tabIndex=0; b.setAttribute("aria-label",d.n);
+      b.innerHTML = `<svg viewBox="-8 -8 ${d.w+16} ${d.h+16}">${symbolMarkup(k,{act:d.act,params:{},s:null})}</svg><span class="tip">${d.n}</span>`;
+      b.addEventListener("pointerdown", e=>spawnDrag(e,k));
+      b.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); addComp(k,300,300); }});
+      box.append(b);
+    });
+    list.append(h,box);
+  }
+}
+document.getElementById("q").addEventListener("input", e=>buildPalette(e.target.value));
+function spawnDrag(e,k){
+  e.preventDefault();
+  const d = CATALOG[k]; let made = null;
+  const mv = ev=>{ const p = toCanvas(ev); if(p.x<0||p.y<0) return;
+    if(!made) made = addComp(k, snap(p.x-d.w/2), snap(p.y-d.h/2));
+    else { made.x = snap(p.x-d.w/2); made.y = snap(p.y-d.h/2); render(); } };
+  const up = ()=>{ window.removeEventListener("pointermove",mv); window.removeEventListener("pointerup",up); };
+  window.addEventListener("pointermove",mv); window.addEventListener("pointerup",up);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9 · SAĞ PANEL — ayarlar (çalışırken de değiştirilebilir)
+   ═══════════════════════════════════════════════════════════════ */
+function liveRows(c, def){
+  if (!sim.on || !c || !c.s) return [];
+  const S = c.s, r = [];
+  if (def.sim==="cyl")     r.push(["Konum",(S.x*1000).toFixed(0),"mm"],["Hız",(S.v*1000).toFixed(1),"mm/s"],["Kuvvet",(S.force/1000).toFixed(1),"kN"]);
+  if (def.sim==="motor")   r.push(["Devir",S.rpm.toFixed(0),"d/dak"],["Tork",S.M.toFixed(0),"Nm"],["Güç",S.kW.toFixed(2),"kW"]);
+  if (def.sim==="pumpls")  r.push(["Debi",(S.Q*60000).toFixed(1),"L/dak"],["Basınç",bar(S.p).toFixed(1),"bar"],["Deplasman",((S.disp||0)*100).toFixed(0),"%"],["Mil gücü",(S.shaft||0).toFixed(2),"kW"]);
+  if (def.sim==="pump")    r.push(["Debi",(S.Q*60000).toFixed(1),"L/dak"],["Basınç",bar(S.p).toFixed(1),"bar"],["Mil gücü",(S.shaft||0).toFixed(2),"kW"],["Tork",S.M.toFixed(1),"Nm"]);
+  if (def.sim==="relief")  r.push(["Tahliye debisi",(S.Q*60000).toFixed(1),"L/dak"]);
+  if (def.sim==="gauge")   r.push(["Basınç",S.p.toFixed(1),"bar"]);
+  if (def.sim==="pswitch") r.push(["Kontak",S.on?"kapalı":"açık",""]);
+  return r;
+}
+
+/* Panel her karede yeniden kurulmaz — yazarken odak kaybolmasın diye
+   yalnızca ölçüm değerleri tazelenir. */
+let inspKey = null;
+function drawInspector(){
+  const box = document.getElementById("inspector");
+  let key = "none";
+  if (state.sel && state.sel.kind==="comp"){
+    const c = byId(state.sel.id);
+    if (c) key = ["c",c.id,c.pos,(c.act||[]).join(""),sim.on?1:0].join("|");
+  } else if (state.sel && state.sel.kind==="wire"){
+    const w = state.wires.find(x=>x.id===state.sel.id);
+    if (w) key = ["w",w.id,w.kind,sim.on?1:0].join("|");
+  } else key = ["none",state.comps.length,state.wires.length,sim.on?1:0].join("|");
+
+  if (key === inspKey){
+    if (state.sel && state.sel.kind==="comp"){
+      const c = byId(state.sel.id);
+      if (c){
+        const rows = liveRows(c, CATALOG[c.type]);
+        box.querySelectorAll("[data-live]").forEach(n=>{
+          const x = rows[+n.dataset.live]; if (x) n.innerHTML = `${x[1]} <small>${x[2]}</small>`;
+        });
+      }
+    } else if (state.sel && state.sel.kind==="wire"){
+      const w = state.wires.find(x=>x.id===state.sel.id), n = box.querySelector("[data-live]");
+      if (w && w._n && n) n.textContent = bar(w._n.p).toFixed(1)+" bar";
+    }
+    return;
+  }
+  inspKey = key;
+  buildInspector(box);
+}
+
+function buildInspector(box){
+  document.getElementById("btnRotate").disabled = !(state.sel && state.sel.kind==="comp");
+  document.getElementById("btnDelete").disabled = !state.sel;
+  let h = "";
+
+  if (state.sel && state.sel.kind==="comp"){
+    const c = byId(state.sel.id); if(!c){ box.innerHTML=""; return; }
+    const def = CATALOG[c.type];
+    h = `<h2>Eleman ayarları</h2><h3>${def.n}</h3><div class="meta">${c.type} · ${c.id} · ${c.rot}°</div>`;
+
+    if (def.cells && def.sim === "dcv"){
+      h += `<h2>Konum</h2><div class="seg">` +
+        def.cells.map((_,i)=>`<button data-pos="${i}" aria-pressed="${(c.pos!=null?c.pos:def.home)===i}">${
+          def.cells.length===2 ? (i===0?"a":"b") : (i===0?"a":i===1?"0":"b")}</button>`).join("") + `</div>`;
+    }
+    if (def.cells){
+      h += `<h2>Kumanda</h2>` + ["Sol","Sağ"].map((s,i)=>
+        `<div class="row"><span>${s}</span><select data-act="${i}">` +
+        ACT_KEYS.map(k=>`<option value="${k}"${c.act[i]===k?" selected":""}>${ACT[k].n}</option>`).join("") +
+        `</select></div>`).join("");
+    }
+    if (def.pd && def.pd.length){
+      h += `<h2 style="margin-top:13px">Parametreler</h2>` + def.pd.map(p=>{
+        const lbl = `<span>${p[1]}${p[2]?` <small style="color:var(--muted)">${p[2]}</small>`:""}</span>`;
+        if (p.length >= 6)   // [anahtar, etiket, birim, varsayılan, min, maks] → kaydırıcı
+          return `<div class="row">${lbl}<input type="range" min="${p[4]}" max="${p[5]}" step="${(p[5]-p[4])/100}"`
+               + ` data-par="${p[0]}" value="${c.params[p[0]]}"><span class="v" data-show="${p[0]}">${c.params[p[0]]}</span></div>`;
+        return `<div class="row">${lbl}<input type="number" step="any" data-par="${p[0]}" value="${c.params[p[0]]}"></div>`;
+      }).join("");
+    }
+    const rows = liveRows(c, def);
+    if (rows.length) h += `<h2 style="margin-top:13px">Ölçüm</h2>` +
+      rows.map((x,i)=>`<div class="row"><span>${x[0]}</span><span class="v live" data-live="${i}">${x[1]} <small>${x[2]}</small></span></div>`).join("");
+    h += `<div class="row"><span>Portlar</span><span class="v">${def.p.map(p=>p[0]).join(" ")}</span></div>`;
+
+  } else if (state.sel && state.sel.kind==="wire"){
+    const w = state.wires.find(x=>x.id===state.sel.id); if(!w){ box.innerHTML=""; return; }
+    h = `<h2>Hat</h2><h3>Bağlantı</h3><div class="meta">${w.from.cid}:${w.from.pid} → ${w.to.cid}:${w.to.pid}</div><div class="kinds">` +
+      Object.keys(KINDS).map(k=>`<button class="kind" data-kind="${k}" aria-pressed="${w.kind===k}"><i style="border-top-color:${KINDS[k].color}"></i>${KINDS[k].label}</button>`).join("") + `</div>`;
+    if (sim.on) h += `<div class="row" style="margin-top:10px"><span>Düğüm basıncı</span><span class="v live" data-live="0">${w._n?bar(w._n.p).toFixed(1):"0.0"} bar</span></div>`;
+
+  } else {
+    h = `<h2>Devre</h2>
+      <div class="row"><span>Eleman</span><span class="v">${state.comps.filter(c=>!isJ(c)).length}</span></div>
+      <div class="row"><span>Hat</span><span class="v">${state.wires.length}</span></div>
+      <div class="row"><span>Bağlantı noktası</span><span class="v">${state.comps.filter(isJ).length}</span></div>
+      <p class="empty" style="margin-top:12px">Bir porta, sonra ikinci porta tıklayarak hat çekin. Hattı çekerken
+      var olan bir hattın üzerine yaklaşınca o hat vurgulanır; tıklarsanız oraya bağlantı noktası konur ve T bağlantısı oluşur.</p>
+      <div class="row"><span>Çalıştır / durdur</span><span class="v"><kbd>Boşluk</kbd></span></div>
+      <div class="row"><span>Döndür</span><span class="v"><kbd>R</kbd></span></div>
+      <div class="row"><span>Sil</span><span class="v"><kbd>Del</kbd></span></div>
+      `;
+  }
+  box.innerHTML = h;
+
+  box.querySelectorAll("[data-pos]").forEach(b=>b.onclick=()=>{ byId(state.sel.id).pos = +b.dataset.pos; render(); });
+  box.querySelectorAll(".kind").forEach(b=>b.onclick=()=>{ state.wires.find(x=>x.id===state.sel.id).kind=b.dataset.kind; render(); });
+  box.querySelectorAll("[data-act]").forEach(s=>s.onchange=()=>{ byId(state.sel.id).act[+s.dataset.act]=s.value; render(); });
+  box.querySelectorAll("[data-par]").forEach(inp=>{
+    const ev = inp.type==="range" ? "input" : "change";
+    inp.addEventListener(ev, ()=>{
+      const c = byId(state.sel.id), k = inp.dataset.par;
+      const v = Math.round(parseFloat(inp.value)*100)/100;
+      c.params[k] = v;
+      const sh = box.querySelector(`[data-show="${k}"]`); if (sh) sh.textContent = v;
+      render();
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10 · DASHBOARD
+   ═══════════════════════════════════════════════════════════════ */
+const dash = document.getElementById("dash"), dashBody = document.getElementById("dashBody");
+document.getElementById("dashHead").onclick = ()=>{
+  dash.classList.toggle("min");
+  document.getElementById("dashTog").textContent = dash.classList.contains("min") ? "+" : "–";
+};
+function cell(l,v,u){ return `<div class="cell"><div class="lbl">${l}</div><div class="num">${v}<small>${u}</small></div></div>`; }
+
+function drawDash(){
+  dash.classList.toggle("running", sim.on);
+  const cyls   = state.comps.filter(c=>CATALOG[c.type].sim==="cyl");
+  const motors = state.comps.filter(c=>CATALOG[c.type].sim==="motor");
+  const valves = state.comps.filter(c=>CATALOG[c.type].sim==="dcv");
+  const props  = state.comps.filter(c=>["prop","lsv"].includes(CATALOG[c.type].sim));
+
+  let h = `<div class="hero"><div class="lbl">Sistem basıncı</div>
+    <div class="num">${sim.on?sim.sysP.toFixed(1):"—"}<small>bar</small></div></div>
+    <div class="cells">`
+    + cell("Pompa debisi", sim.on?sim.pumpQ.toFixed(1):"—", "L/dak")
+    + cell("Mil gücü",     sim.on?sim.pumpP.toFixed(2):"—", "kW")
+    + cell("Pompa torku",  sim.on?sim.pumpM.toFixed(1):"—", "Nm")
+    + cell("Tahliye debisi", sim.on?(sim.reliefQ*60000).toFixed(1):"—", "L/dak")
+    + cell("Kayıp güç",    sim.on?(sim.loss/1000).toFixed(2):"—", "kW")
+    + cell("Yağ sıcaklığı",sim.on?sim.T.toFixed(1):"—", "°C")
+    + `</div>`;
+
+  if (cyls.length || motors.length){
+    h += `<div class="sect">Aktüatörler</div>`;
+    cyls.forEach(c=>{
+      const S=c.s||{}, P=c.params;
+      h += `<div class="dev"><b>${CATALOG[c.type].n} · ${c.id}</b><div class="g">
+        <span>x <em>${((S.x||0)*1000).toFixed(0)}</em> mm</span>
+        <span>v <em>${((S.v||0)*1000).toFixed(1)}</em> mm/s</span>
+        <span>F <em>${((S.force||0)/1000).toFixed(1)}</em> kN</span></div>
+        <div class="bar-h"><i style="width:${((S.f||0)*100).toFixed(0)}%"></i></div></div>`;
+    });
+    motors.forEach(c=>{
+      const S=c.s||{};
+      h += `<div class="dev"><b>${CATALOG[c.type].n} · ${c.id}</b><div class="g">
+        <span>n <em>${(S.rpm||0).toFixed(0)}</em> d/dak</span>
+        <span>M <em>${(S.M||0).toFixed(0)}</em> Nm</span>
+        <span>P <em>${(S.kW||0).toFixed(2)}</em> kW</span>
+        <span>Q <em>${((S.Q||0)*60000).toFixed(1)}</em> L/dak</span></div></div>`;
+    });
+  }
+  if (valves.length || props.length){
+    h += `<div class="sect">Kumanda</div>`;
+    props.forEach(c=>{
+      h += `<div class="ctlrow"><span>${c.id} · oransal</span>
+        <input type="range" min="-100" max="100" step="1" data-up="${c.id}" value="${c.params.u}" style="flex:2">
+        <span style="flex:0 0 40px;text-align:right;font-family:var(--mono);font-size:12px">${c.params.u|0}%</span></div>`;
+    });
+    valves.forEach(c=>{
+      const def = CATALOG[c.type], pos = c.pos!=null?c.pos:def.home;
+      h += `<div class="ctlrow"><span>${c.id} · ${def.n.replace(" yön valfi","")}</span>` +
+        def.cells.map((_,i)=>`<button data-vp="${c.id}" data-vi="${i}" aria-pressed="${pos===i}">${
+          def.cells.length===2?(i===0?"a":"b"):(i===0?"a":i===1?"0":"b")}</button>`).join("") + `</div>`;
+    });
+  }
+  h += `<div class="sect">Hat renkleri</div><div class="legend">` +
+    Object.keys(KINDS).map(k=>`<div><i style="display:inline-block;width:22px;border-top:3px solid ${KINDS[k].color}"></i>${KINDS[k].label}</div>`).join("") +
+    `</div>`;
+  dashBody.innerHTML = h;
+  dashBody.querySelectorAll("[data-up]").forEach(r=>r.oninput=()=>{
+    const c = byId(r.dataset.up); c.params.u = parseInt(r.value,10);
+    r.nextElementSibling.textContent = r.value+"%"; render();
+  });
+  dashBody.querySelectorAll("[data-vp]").forEach(b=>b.onclick=()=>{
+    const c = byId(b.dataset.vp); c.pos = +b.dataset.vi; render(); drawDash();
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11 · ÇALIŞTIR / DÖNGÜ
+   ═══════════════════════════════════════════════════════════════ */
+const btnRun = document.getElementById("btnRun");
+function toggleRun(){
+  sim.on = !sim.on;
+  if (sim.on){ resetSim(); }
+  btnRun.textContent = sim.on ? "⏸ Durdur" : "▶ Çalıştır";
+  btnRun.className = "btn " + (sim.on ? "stop" : "go");
+  render(); drawDash();
+}
+btnRun.onclick = toggleRun;
+document.getElementById("btnReset").onclick = ()=>{ if(sim.on) resetSim(); render(); drawDash(); };
+document.getElementById("speed").onchange = e => sim.speed = parseFloat(e.target.value);
+
+let acc = 0;
+function loop(){
+  if (sim.on){
+    if (dirty){ buildNet(); dirty = false; }
+    simFrame();
+    render(); 
+    if ((acc++ % 6) === 0) drawDash();
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ═══════════════════════════════════════════════════════════════
+   12 · ÖRNEK DEVRELER
+   ═══════════════════════════════════════════════════════════════ */
+const EX = [
+{ name:"1 · Temel devre — 4/3 kapalı merkez",
+  c:[["cylDouble",456,84],["valve43c",372,312,{act:["solenoid","solenoid"]}],["pump",168,540],
+     ["motorElec",84,555],["relief",252,312],["tank",252,204,{rot:180}],["tank",168,708],
+     ["tank",456,540],["junction",288,456],["gauge",180,300]],
+  w:[[0,"A",1,"A","pressure"],[0,"B",1,"B","pressure"],
+     [2,"P",8,"W","pressure"],[8,"E",1,"P","pressure"],[8,"N",4,"P","pressure"],
+     [4,"T",5,"T","return"],[1,"T",7,"T","return"],[2,"S",6,"T","suction"],[8,"S",9,"A","pressure"]]},
+
+{ name:"2 · Çıkış kısma ile hız kontrolü",
+  c:[["cylDouble",456,84],["valve43t",372,312,{act:["lever","spring"]}],["throttleCheck",492,180,{rot:90}],
+     ["pump",168,540],["motorElec",84,555],["relief",252,312],["tank",252,204,{rot:180}],
+     ["tank",168,708],["tank",456,540],["junction",288,456],["gauge",180,300]],
+  w:[[0,"A",1,"A","pressure"],[0,"B",2,"A","return"],[2,"B",1,"B","return"],
+     [3,"P",9,"W","pressure"],[9,"E",1,"P","pressure"],[9,"N",5,"P","pressure"],
+     [5,"T",6,"T","return"],[1,"T",8,"T","return"],[3,"S",7,"T","suction"],[9,"S",10,"A","pressure"]]},
+
+{ name:"3 · Çift yönlü hidrolik motor",
+  c:[["motorHydBi",492,96,{rot:270}],["valve43o",372,312,{act:["solenoid","solenoid"]}],["pump",168,540],
+     ["motorElec",84,555],["relief",252,312],["tank",252,204,{rot:180}],["tank",168,708],
+     ["tank",456,540],["junction",288,456],["gauge",180,300]],
+  w:[[0,"A",1,"A","pressure"],[0,"B",1,"B","pressure"],
+     [2,"P",8,"W","pressure"],[8,"E",1,"P","pressure"],[8,"N",4,"P","pressure"],
+     [4,"T",5,"T","return"],[1,"T",7,"T","return"],[2,"S",6,"T","suction"],[8,"S",9,"A","pressure"]]},
+
+{ name:"4 · Manifold + iki tüketici",
+  c:[["manifoldP",348,252],["valve42",264,396,{act:["solenoid","spring"]}],["valve42",540,396,{act:["lever","spring"]}],
+     ["cylSingle",264,564],["cylSingle",540,564],["pump",168,552],["motorElec",84,567],
+     ["relief",168,312],["tank",168,204,{rot:180}],["tank",168,720],["junction",240,264],["gauge",84,300]],
+  w:[[5,"P",10,"S","pressure"],[10,"N",7,"P","pressure"],[7,"T",8,"T","return"],[10,"E",0,"IN","pressure"],
+     [0,"A1",1,"P","pressure"],[0,"A5",2,"P","pressure"],[1,"A",3,"A","pressure"],[2,"A",4,"A","pressure"],
+     [5,"S",9,"T","suction"],[10,"W",11,"A","pressure"]]},
+
+{ name:"5 · Akümülatörlü, basınç şalterli devre",
+  c:[["cylDouble",480,84],["valve43c",396,312,{act:["solenoid","solenoid"]}],["pumpVar",168,540],
+     ["motorElec",84,555],["relief",252,312],["tank",252,204,{rot:180}],["tank",168,708],
+     ["tank",480,540],["junction",300,456],["accumGas",324,204],["pressSwitch",192,396],["gauge",108,300]],
+  w:[[0,"A",1,"A","pressure"],[0,"B",1,"B","pressure"],
+     [2,"P",8,"W","pressure"],[8,"E",1,"P","pressure"],[8,"N",4,"P","pressure"],
+     [4,"T",5,"T","return"],[1,"T",7,"T","return"],[2,"S",6,"T","suction"],
+     [8,"S",10,"P","pressure"],[9,"A",4,"P","pressure"],[10,"P",11,"A","pressure"]]},
+
+{ name:"6 · Load-sensing devre (LS pompa + oransal valf)",
+  c:[["cylDouble",420,84],["lsValve",336,312,{act:["solenoid","solenoid"]}],["pumpLS",144,540],
+     ["motorElec",60,555],["relief",228,312],["tank",228,204,{rot:180}],["tank",144,708],
+     ["tank",420,540],["junction",264,456],["gauge",156,300]],
+  w:[[0,"A",1,"A","pressure"],[0,"B",1,"B","pressure"],
+     [2,"P",8,"W","pressure"],[8,"E",1,"P","pressure"],[8,"N",4,"P","pressure"],
+     [4,"T",5,"T","return"],[1,"T",7,"T","return"],[2,"S",6,"T","suction"],
+     [8,"S",9,"A","pressure"],[1,"LS",2,"LS","pilot"]]},
+
+{ name:"7 · Kartuş denge valfi ile yük tutma",
+  c:[["cylDouble",456,72],["cartCbal",434,192],["valve43c",372,384,{act:["solenoid","solenoid"]}],
+     ["pump",168,564],["motorElec",84,579],["relief",252,384],["tank",252,276,{rot:180}],
+     ["tank",168,732],["tank",456,564],["junction",288,504],["gauge",180,372]],
+  w:[[0,"A",1,"A","pressure"],[1,"P",2,"A","pressure"],[0,"B",2,"B","pressure"],
+     [3,"P",9,"W","pressure"],[9,"E",2,"P","pressure"],[9,"N",5,"P","pressure"],
+     [5,"T",6,"T","return"],[2,"T",8,"T","return"],[3,"S",7,"T","suction"],[9,"S",10,"A","pressure"]]},
+
+{ name:"8 · Sıra valfi ile ardışık hareket",
+  c:[["cylSingle",300,120],["cylSingle",588,120],["sequence",516,264],
+     ["valve42",264,396,{act:["solenoid","spring"]}],["pump",168,576],["motorElec",84,591],
+     ["relief",252,396],["tank",252,288,{rot:180}],["tank",168,744],["tank",264,576],
+     ["junction",300,516],["tank",516,432]],
+  w:[[0,"A",3,"A","pressure"],[3,"A",2,"P","pressure"],[2,"A",1,"A","pressure"],
+     [2,"Y",11,"T","drain"],
+     [4,"P",10,"W","pressure"],[10,"E",3,"P","pressure"],[10,"N",6,"P","pressure"],
+     [6,"T",7,"T","return"],[3,"T",9,"T","return"],[4,"S",8,"T","suction"]]},
+
+{ name:"9 · Hidrostatik transmisyon (kapalı devre)",
+  c:[["pumpBi",168,420],["motorHydVar",540,420],["motorElec",84,435],
+     ["junction",360,372],["junction",360,564],["relief",456,420,{rot:180}],
+     ["check",216,600],["tank",168,700],["gauge",300,324]],
+  w:[[0,"P",3,"W","pressure"],[3,"E",1,"A","pressure"],[1,"B",4,"E","return"],[4,"W",0,"S","return"],
+     [3,"S",5,"P","pressure"],[5,"T",4,"N","return"],
+     [6,"B",4,"S","suction"],[7,"T",6,"A","suction"],[3,"N",8,"A","pressure"]]},
+
+];
+
+function loadExample(i){
+  const ex = EX[i];
+  state.comps=[]; state.wires=[]; state.sel=null; pending=null; state.seq=1;
+  const made = ex.c.map(s=>{ const c = addComp(s[0],s[1],s[2],true);
+    if (s[3]){ if(s[3].rot!=null) c.rot=s[3].rot; if(s[3].act) c.act=s[3].act.slice(); } return c; });
+  ex.w.forEach(w=>connect({cid:made[w[0]].id,pid:w[1]},{cid:made[w[2]].id,pid:w[3]},w[4]));
+  dirty=true; if (sim.on) resetSim();
+  render(); drawDash(); growView(); fitView();
+}
+const exSel = document.getElementById("examples");
+EX.forEach((e,i)=>exSel.append(new Option(e.name,i)));
+exSel.onchange = ()=>{ if(exSel.value!=="") loadExample(+exSel.value); exSel.value=""; };
+
+/* ═══════════════════════════════════════════════════════════════
+   13 · KAYDET / AÇ / DIŞA AKTAR
+   ═══════════════════════════════════════════════════════════════ */
+function download(n,t,m){
+  const u = URL.createObjectURL(new Blob([t],{type:m})), a = document.createElement("a");
+  a.href=u; a.download=n; a.click(); setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+document.getElementById("btnRotate").onclick = rotateSel;
+document.getElementById("btnDelete").onclick = deleteSel;
+document.getElementById("btnSave").onclick = ()=>download("devre.json",
+  JSON.stringify({v:3,comps:state.comps.map(c=>({id:c.id,type:c.type,x:c.x,y:c.y,rot:c.rot,act:c.act,pos:c.pos,params:c.params})),wires:state.wires},null,2),
+  "application/json");
+document.getElementById("btnLoad").onclick = ()=>document.getElementById("fileIn").click();
+document.getElementById("fileIn").onchange = e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{ try{
+      const d = JSON.parse(r.result);
+      state.comps = (d.comps||[]).map(c=>Object.assign({s:{}},c));
+      state.wires = d.wires||[];
+      state.seq = state.comps.length+state.wires.length+1;
+      state.sel=null; pending=null; dirty=true;
+      if (sim.on) resetSim();
+      render(); drawDash();
+    } catch(err){ hint.textContent = "Dosya okunamadı"; } };
+  r.readAsText(f); e.target.value="";
+};
+document.getElementById("btnSvg").onclick = ()=>{
+  const cl = canvas.cloneNode(true);
+  cl.querySelectorAll(".hit,.porthit,.wirehit,.acthit,.port,.frame,.flowdash,#ghostwire").forEach(n=>n.remove());
+  cl.querySelector("#bg").setAttribute("fill","#ffffff");
+  cl.querySelectorAll(".wire").forEach(n=>n.removeAttribute("style"));
+  cl.setAttribute("xmlns",NS);
+  cl.insertAdjacentHTML("afterbegin","<style>"+
+   ".sym{fill:none;stroke:#1a1d21;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}"+
+   ".sym .f{fill:#1a1d21;stroke:none}.sym .thick{stroke-width:2.6}.sym .thin{stroke-width:1.1}"+
+   ".sym .dash{stroke-dasharray:4 3}.sym text{font-family:sans-serif;font-size:15px;fill:#1a1d21;stroke:none;text-anchor:middle}"+
+   ".wire{fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
+   ".k-pressure{stroke:#C0451B}.k-return{stroke:#2F6F9E}.k-suction{stroke:#6B7A55}"+
+   ".k-pilot{stroke:#C79A1E;stroke-dasharray:9 5}.k-drain{stroke:#4A7A4E;stroke-dasharray:3 3}"+
+   ".tag{font-family:monospace;font-size:10.5px;fill:#5F6660;text-anchor:middle}.jdot{fill:#1a1d21}.rdg{font-family:monospace;font-size:10.5px;fill:#5F6660;text-anchor:middle}</style>");
+  download("devre.svg", cl.outerHTML, "image/svg+xml");
+};
+document.getElementById("btnClear").onclick = ()=>{
+  state.comps=[]; state.wires=[]; state.sel=null; pending=null; nearWire=null; dirty=true;
+  ghost.removeAttribute("d"); render(); drawDash();
+};
+
+buildPalette();
+applyView();
+loadExample(0);
+drawDash();
+window.addEventListener("resize", ()=>{ if(!sim.on) fitView(); });
+</script>
+</body>
 </html>
