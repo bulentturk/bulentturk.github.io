@@ -200,7 +200,7 @@ const copy = {
       ],
     },
     platform: {
-      kicker: "04 / Platform",
+      kicker: "05 / Platform",
       title: "Mobil makineler için araçlar ve teknik notlar.",
       intro:
         "CAN, J1939, kontrol sistemleri ve saha verisi üzerine; işe yaradığı ölçüde büyüyen bir çalışma alanı.",
@@ -220,7 +220,7 @@ const copy = {
       ],
     },
     contact: {
-      kicker: "05 / İletişim",
+      kicker: "06 / İletişim",
       title: "Bir konu varsa, yazabilirsiniz.",
       intro: "Araçlarla ilgili hata, öneri veya teknik iş birliği için.",
       name: "İsim",
@@ -433,7 +433,7 @@ const copy = {
       ],
     },
     platform: {
-      kicker: "04 / Platform",
+      kicker: "05 / Platform",
       title: "Tools and technical notes for mobile machines.",
       intro:
         "A working space for CAN, J1939, control systems, and field data—growing only where it proves useful.",
@@ -453,7 +453,7 @@ const copy = {
       ],
     },
     contact: {
-      kicker: "05 / Contact",
+      kicker: "06 / Contact",
       title: "If there is something to discuss, write.",
       intro: "For tool feedback, bug reports, or technical collaboration.",
       name: "Name",
