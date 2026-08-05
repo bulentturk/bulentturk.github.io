@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import newsArchive from "./content/news-archive.json";
+import { newsDetails } from "./content/news-details";
 
 type Language = "tr" | "en";
 type Category = "all" | "health" | "science-tech" | "mobile-machines" | "mining";
@@ -46,6 +47,7 @@ export default function NewsPage() {
         intro: "Sağlık, bilim ve teknoloji, mobil iş makineleri ve madencilik teknolojilerinden güvenilir kaynaklara dayanan kalıcı bir haber arşivi.",
         count: "haber",
         why: "Mühendislik açısından neden önemli?",
+        details: "Ayrıntılar ve bağlam",
         source: "Kaynağı aç",
         published: "Yayımlanma tarihi",
         healthNote: "Sağlık içerikleri hakkında",
@@ -58,6 +60,7 @@ export default function NewsPage() {
         intro: "A permanent, source-backed archive spanning health, science and technology, mobile machinery, and mining technology.",
         count: "stories",
         why: "Why does this matter to engineers?",
+        details: "Details and context",
         source: "Open source",
         published: "Published",
         healthNote: "About health coverage",
@@ -117,6 +120,7 @@ export default function NewsPage() {
         <p className="news-result-count">{items.length} {labels.count}</p>
         {items.map((item, index) => {
           const categoryLabel = newsArchive.labels.find((entry) => entry.key === item.category);
+          const detail = newsDetails[item.id]?.[language];
           return (
             <article className={`news-story news-story--${item.category}`} id={`news-${item.id}`} key={item.id}>
               <div className="news-story-visual" aria-hidden="true">
@@ -131,6 +135,12 @@ export default function NewsPage() {
                 </div>
                 <h2>{getText(item.titleTr, item.titleEn)}</h2>
                 <p className="news-story-summary">{getText(item.summaryTr, item.summaryEn)}</p>
+                {detail ? (
+                  <div className="news-story-detail">
+                    <h3>{labels.details}</h3>
+                    {detail.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  </div>
+                ) : null}
                 <aside>
                   <strong>{labels.why}</strong>
                   <p>{getText(item.whyTr, item.whyEn)}</p>
