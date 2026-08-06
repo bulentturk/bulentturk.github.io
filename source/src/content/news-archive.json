@@ -1,5 +1,5 @@
 {
-  "updatedDate": "2026-08-05",
+  "updatedDate": "2026-08-06",
   "labels": [
     {
       "key": "all",
@@ -28,6 +28,70 @@
     }
   ],
   "items": [
+    {
+      "id": "fda-orzeyful-narcolepsy-orexin",
+      "category": "health",
+      "publishedDate": "2026-08-05",
+      "sourceName": "U.S. Food and Drug Administration",
+      "sourceUrl": "https://www.fda.gov/news-events/press-announcements/fda-approves-first-drug-treat-full-range-narcolepsy-type-1-symptoms",
+      "titleTr": "FDA, oreksin sinyalini yeniden etkinleştiren ilk narkolepsi tip 1 ilacını onayladı",
+      "titleEn": "FDA approves the first narcolepsy type 1 drug that restores orexin signalling",
+      "summaryTr": "ABD Gıda ve İlaç Dairesi, yetişkinlerde narkolepsi tip 1 tedavisi için oreksin reseptör agonisti oveporexton içeren Orzeyful tabletlerini onayladı. İlaç, yalnız gündüz uykululuğu veya katapleksi gibi ayrı belirtileri baskılamak yerine, hastalıkta kaybolan oreksin sinyalini doğrudan yeniden etkinleştiren ilk onaylı tedavi olarak tanımlanıyor. Etkinlik ve güvenlik, toplam 273 yetişkinin katıldığı iki randomize, çift kör, plasebo kontrollü 12 haftalık çalışmada değerlendirildi; 2 mg kullananlarda uyanıklığı sürdürme, gündüz uykululuğu ve katapleksi dâhil birden çok ölçütte iyileşme bildirildi. En sık yan etkiler uykusuzluk, idrara çıkma sıklığı veya aciliyeti ve tükürük artışıydı. On sekiz yaş altındaki güvenlik ve etkinlik belirlenmedi; güçlü CYP3A inhibitörleriyle birlikte kullanım önerilmiyor ve ürünün pazarlanması DEA sınıflandırma kararını bekliyor.",
+      "summaryEn": "The U.S. Food and Drug Administration approved Orzeyful tablets containing the orexin-receptor agonist oveporexton for adults with narcolepsy type 1. It is described as the first approved treatment to reactivate the orexin signalling lost in the disorder rather than separately suppressing symptoms such as daytime sleepiness or cataplexy. Efficacy and safety were assessed in two randomized, double-blind, placebo-controlled 12-week trials involving 273 adults; the 2 mg dose improved sustained wakefulness, daytime sleepiness, cataplexy, and broader symptom measures. The most common adverse effects were insomnia, increased urinary frequency or urgency, and increased saliva. Safety and efficacy are not established below age 18, strong CYP3A inhibitors are not recommended, and marketing still awaits a DEA scheduling decision.",
+      "whyTr": "Mühendislik açısından dikkat çekici nokta, eksik nörotransmiter sinyalini reseptör düzeyinde yeniden kuran mekanizma-temelli bir ürünün klinik ölçütlere ve düzenleyici onaya bağlanmasıdır. İki çalışma kısa süreli olduğundan uzun dönem güvenlik, gerçek yaşam uyumu ve farklı hasta gruplarındaki performans için satış sonrası izlem kritik olacaktır. Bu haber kişisel tedavi önerisi değildir.",
+      "whyEn": "The engineering significance is the translation of a mechanism-based product that restores a missing neurotransmitter signal at receptor level into measurable clinical endpoints and regulatory approval. Because both trials were short, post-market monitoring will be important for long-term safety, real-world adherence, and performance across patient groups. This item is not personal medical advice.",
+      "evidenceTr": "FDA onayı; iki randomize kontrollü klinik çalışma",
+      "evidenceEn": "FDA approval; two randomized controlled clinical trials",
+      "addedDate": "2026-08-06"
+    },
+    {
+      "id": "voyager-2-big-bang-power-saving",
+      "category": "science-tech",
+      "publishedDate": "2026-08-04",
+      "sourceName": "NASA Jet Propulsion Laboratory",
+      "sourceUrl": "https://www.jpl.nasa.gov/news/nasa-engineers-help-prolong-voyager-2s-science-mission/",
+      "titleTr": "Voyager 2’nin güç sistemi yeniden düzenlenerek bilim görevi en az bir yıl uzatılıyor",
+      "titleEn": "Voyager 2 power reconfiguration extends its science mission by at least a year",
+      "summaryTr": "NASA/JPL ekibi, Voyager 2’nin azalan enerji bütçesini yönetmek için “Big Bang” adını verdiği tek seferlik bir yeniden yapılandırma uyguladı. Bazı elektrikli birimler aynı anda kapatılırken görev için gerekli işlevler daha düşük güçlü alternatiflere aktarıldı; değişiklikler sondanın çalışabileceği kadar sıcak kalma koşuluyla birlikte doğrulandı. Voyager’ın radyoizotop termoelektrik jeneratörleri, plütonyum bozunması nedeniyle her yıl yaklaşık 4 W daha az güç üretiyor. Elde edilen tasarrufun, yıldızlararası uzayda veri toplayan üç bilim aygıtını en az bir yıl daha açık tutması bekleniyor. Bu bir operasyon mühendisliği güncellemesi; yeni bir bilimsel keşif veya garanti edilen ömür tahmini değil.",
+      "summaryEn": "NASA/JPL carried out a one-time reconfiguration nicknamed “Big Bang” to manage Voyager 2’s shrinking power budget. Several powered devices were switched off together while essential functions were transferred to lower-power alternatives, with the changes also checked against the spacecraft’s minimum thermal requirements. Voyager’s radioisotope thermoelectric generators lose about 4 watts of output each year as their plutonium decays. The savings are expected to keep three science instruments collecting data in interstellar space for at least one additional year. This is an operations-engineering update, not a new scientific discovery or a guaranteed lifetime forecast.",
+      "whyTr": "Çalışma, sabit donanımlı ve bakım yapılamayan bir sistemde işlev, ısı ve güç marjlarının birlikte yeniden tahsis edilebileceğini gösteriyor. Benzer yaklaşım; uydu, uzak sensör ve uzun ömürlü endüstriyel sistemlerde kritik olmayan yüklerin önceliklendirilmesi ile hata sonrası çalışma planlarına örnek olabilir. Kazanım yeni donanımdan değil, sistem düzeyi doğrulama ve kontrollü risk kabulünden geliyor.",
+      "whyEn": "The operation shows how function, thermal margin, and power margin can be reallocated together in fixed hardware that cannot be serviced. The same pattern can inform prioritization of noncritical loads and degraded-mode planning for satellites, remote sensors, and long-lived industrial systems. The gain comes from system-level validation and controlled risk acceptance rather than new hardware.",
+      "evidenceTr": "Aktif görev operasyon mühendisliği güncellemesi",
+      "evidenceEn": "Active-mission operations engineering update",
+      "addedDate": "2026-08-06"
+    },
+    {
+      "id": "caterpillar-q2-2026-construction-demand",
+      "category": "mobile-machines",
+      "publishedDate": "2026-08-04",
+      "sourceName": "Caterpillar",
+      "sourceUrl": "https://www.caterpillar.com/en/news/corporate-press-releases/h/2q26-results-caterpillar-inc.html",
+      "titleTr": "Caterpillar’ın ikinci çeyrek verileri inşaat makinelerinde güçlü talep artışına işaret ediyor",
+      "titleEn": "Caterpillar’s second-quarter data point to strong construction-equipment demand",
+      "summaryTr": "Caterpillar, 2026 ikinci çeyreğinde toplam satış ve gelirini yıllık %24 artışla 20,543 milyar dolara çıkardığını açıkladı. Artışın 3,113 milyar doları satış hacminden, 595 milyon doları fiyat gerçekleşmesinden geldi; şirket yüksek hacmi ağırlıkla son kullanıcılara daha fazla ekipman satışıyla ilişkilendirdi. İnşaat Endüstrileri bölümünün satışı %35 artarak 8,346 milyar dolara, bölüm kârı %57 artarak 1,947 milyar dolara ulaştı. Bölgesel inşaat satışları Kuzey Amerika’da %50, Latin Amerika’da %25, EAME’de %23 ve Asya-Pasifik’te %3 yükseldi; Kuzey Amerika verisinde bayi stok değişikliklerinin de etkisi vardı. Rakamlar yeni bir makine veya teknoloji lansmanı değil, üreticinin kendi finansal açıklamasına dayanan dönemsel talep göstergeleridir.",
+      "summaryEn": "Caterpillar reported second-quarter 2026 sales and revenue of $20.543 billion, up 24% year over year. Of the increase, $3.113 billion came from sales volume and $595 million from price realization; the company linked the higher volume mainly to greater equipment sales to end users. Construction Industries sales rose 35% to $8.346 billion and segment profit increased 57% to $1.947 billion. Regional construction sales grew 50% in North America, 25% in Latin America, 23% in EAME, and 3% in Asia-Pacific, with dealer-inventory changes also affecting the North American figure. These numbers are not a machine or technology launch but a periodic demand signal from the manufacturer’s own financial disclosure.",
+      "whyTr": "Hızlanan son kullanıcı talebi, üretim kapasitesi, komponent tedariki, yedek parça ve servis ağı planlamasını doğrudan etkiler; filo sahipleri için de teslim süresi ve ikinci el değerleri üzerinde baskı oluşturabilir. Ancak bayi stok hareketleri ve fiyat etkisi ayrıştırılmadan tek bir çeyrek, kalıcı pazar büyümesi olarak okunmamalıdır. Sağlıklı kapasite kararları sipariş birikimi, kullanım saatleri ve bölgesel altyapı yatırımlarıyla birlikte doğrulama gerektirir.",
+      "whyEn": "Faster end-user demand directly affects production capacity, component supply, spare-parts availability, and service-network planning; it can also influence lead times and residual values for fleet owners. However, one quarter should not be treated as durable market growth without separating dealer-inventory movement and pricing effects. Sound capacity decisions require confirmation from backlog, utilization hours, and regional infrastructure investment.",
+      "evidenceTr": "Üretici finansal ve pazar açıklaması",
+      "evidenceEn": "Manufacturer financial and market disclosure",
+      "addedDate": "2026-08-06"
+    },
+    {
+      "id": "codelco-andes-norte-seismic-risk-pause",
+      "category": "mining",
+      "publishedDate": "2026-08-05",
+      "sourceName": "Reuters / Mining Weekly",
+      "sourceUrl": "https://www.miningweekly.com/article/chiles-codelco-pauses-el-teniente-mine-expansion-over-new-signs-of-seismic-risk-2026-08-05",
+      "titleTr": "Codelco, yeni sismik risk işaretleri üzerine Andes Norte genişlemesini durdurdu",
+      "titleEn": "Codelco pauses Andes Norte expansion after emerging seismic-risk signals",
+      "summaryTr": "Codelco, El Teniente yeraltı madenindeki Andes Norte genişleme çalışmalarını, son altı ayda yapılan analizlerin daha önce izlenenlerden farklı bir sismik risk olasılığı göstermesi üzerine durdurdu. Şirket, riskin yatağın daha büyük derinliğiyle ilişkili olabileceğini ve mevcut kanıtların ortaya çıkan bir tehlikeyle uyumlu olduğunu belirterek incelemelerin süreceğini açıkladı. Andes Norte, 31 Temmuz 2025’te altı işçinin yaşamını yitirdiği ve yaklaşık 4,2 büyüklüğünde deprem eşdeğeri etki oluşturan çökmeden en fazla etkilenen Andesita ve Teniente 7 kesimlerinin yakınında bulunuyor. El Teniente’nin 4.500 km’den uzun galeri ağı, ölçüm, modelleme ve tahliye kararlarının ölçeğini zorlaştırıyor. Durdurma kararı üretim takvimi açısından maliyetli olsa da risk modeli doğrulanmadan genişlemeye devam etmeme yönünde bir emniyet kapısı işlevi görüyor.",
+      "summaryEn": "Codelco paused expansion work at Andes Norte in the El Teniente underground mine after six months of analysis indicated a possible seismic hazard unlike the risks monitored historically. The company said the emerging risk may be related to the greater depth of the deposit and that technical studies will continue. Andes Norte lies near Andesita and Teniente 7, the areas most affected by the July 31, 2025 collapse that killed six workers and produced an impact equivalent to about magnitude 4.2. El Teniente’s network of more than 4,500 kilometres of underground tunnels and galleries complicates the scale of monitoring, modelling, and evacuation decisions. Although the pause is costly to the production schedule, it acts as a safety gate against continuing expansion before the risk model is validated.",
+      "whyTr": "Derinleşen madenlerde geçmiş sismisite verisine dayalı modellerin aynı şekilde geçerli kalacağı varsayılamaz; gerilme dağılımı, kaya kütlesi davranışı ve üretim sırası yeniden kalibre edilmelidir. Karar, izleme eşikleri ile operasyonel durdurma yetkisinin jeoteknik yönetim sistemine açıkça bağlanmasının önemini gösteriyor. Üretim hedefleri ancak bağımsız doğrulama ve güncellenmiş acil durum senaryolarından sonra yeniden devreye alınmalıdır.",
+      "whyEn": "In deeper mines, seismic models calibrated to historical behavior cannot be assumed to remain valid; stress distribution, rock-mass response, and extraction sequence need recalibration. The decision shows why monitoring thresholds and stop-work authority must be explicitly connected within the geotechnical management system. Production targets should resume only after independent validation and updated emergency scenarios.",
+      "evidenceTr": "Şirket açıklamasına dayalı jeoteknik risk güncellemesi",
+      "evidenceEn": "Geotechnical risk update based on company statement",
+      "addedDate": "2026-08-06"
+    },
     {
       "id": "sae-j1939da-202607",
       "category": "mobile-machines",
