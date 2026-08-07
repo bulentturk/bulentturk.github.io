@@ -1,5 +1,5 @@
 {
-  "updatedDate": "2026-08-06",
+  "updatedDate": "2026-08-07",
   "labels": [
     {
       "key": "all",
@@ -28,6 +28,70 @@
     }
   ],
   "items": [
+    {
+      "id": "dronabinol-ptsd-nightmares-rct",
+      "category": "health",
+      "publishedDate": "2026-08-05",
+      "sourceName": "Charité – Universitätsmedizin Berlin / Nature Medicine",
+      "sourceUrl": "https://www.nature.com/articles/s41591-026-04546-9",
+      "titleTr": "Dronabinol, randomize çalışmada PTSD’ye bağlı kâbusları plasebodan daha fazla azalttı",
+      "titleEn": "Dronabinol reduced PTSD-related nightmares more than placebo in a randomized trial",
+      "summaryTr": "Nature Medicine’da yayımlanan çok merkezli, çift kör ve plasebo kontrollü çalışmada, PTSD ve tekrarlayan kâbusları bulunan 171 yetişkin 10 hafta boyunca gece yatmadan önce 2,5–15 mg dronabinol veya plasebo almak üzere randomize edildi. Onuncu haftada kâbus sıklığı ve şiddetini ölçen CAPS-IV B2 puanındaki azalma dronabinol grubunda plaseboya göre 1,50 puan daha büyüktü; etki büyüklüğü 0,65 ve p değeri 0,001’in altındaydı. Charité, tedavi grubunun üçte birinden fazlasında kâbusların tamamen kaybolduğunu, ayrıca %21’inde yükün en az yarıya indiğini bildirdi. Advers olay oranı dronabinolde %89,7, plaseboda %77,1; ciddi advers olay oranı sırasıyla %8 ve %0 olarak raporlandı, ancak tedaviyi olay nedeniyle bırakma oranları %5,7 ve %7,2 idi. Çalışma yalnız 10 haftayı kapsıyor; uzun dönem etkililik, tolerans gelişimi ve güvenlik henüz belirlenmiş değil.",
+      "summaryEn": "A multicentre, double-blind, placebo-controlled trial published in Nature Medicine randomized 171 adults with PTSD and recurrent nightmares to nightly dronabinol at 2.5–15 mg or placebo for ten weeks. At week ten, the reduction in the CAPS-IV B2 measure of nightmare frequency and intensity was 1.50 points greater with dronabinol, with an effect size of 0.65 and P<0.001. Charité reported that nightmares disappeared in more than one-third of treated participants and fell by at least half in another 21%. Adverse events occurred in 89.7% of the dronabinol group and 77.1% of the placebo group; serious adverse events were reported in 8% and 0%, while discontinuation due to adverse events was 5.7% and 7.2%, respectively. The trial lasted only ten weeks, so long-term efficacy, tolerance, and safety remain unknown.",
+      "whyTr": "Çalışma; doz, klinisyen değerlendirmesi ve plasebo kontrolünü aynı protokolde birleştirerek kâbus gibi öznel bir belirtinin ölçümünü güçlendiriyor. Buna karşılık ciddi advers olay dengesizliğinin nedenleri, körlemenin THC etkileri nedeniyle bozulup bozulmadığı ve uzun dönem performans ayrıntılı doğrulama gerektiriyor. Sonuçlar kişisel tedavi veya ilaç kullanımı önerisi değildir.",
+      "whyEn": "The trial strengthens measurement of a subjective symptom by combining controlled dosing, clinician assessment, and placebo comparison in one protocol. However, the serious-adverse-event imbalance, possible unblinding from recognizable THC effects, and long-term performance require detailed validation. The findings are not personal treatment or medication advice.",
+      "evidenceTr": "171 yetişkinli çok merkezli, çift kör, randomize kontrollü klinik çalışma",
+      "evidenceEn": "Multicentre, double-blind randomized controlled trial in 171 adults",
+      "addedDate": "2026-08-07"
+    },
+    {
+      "id": "nasa-ixpe-vacuum-birefringence-magnetar",
+      "category": "science-tech",
+      "publishedDate": "2026-08-05",
+      "sourceName": "NASA / Nature",
+      "sourceUrl": "https://science.nasa.gov/missions/ixpe/nasas-ixpe-may-have-proven-90-year-old-theory/",
+      "titleTr": "IXPE, 90 yıllık vakum çift kırılması öngörüsüne en güçlü gözlemsel desteği sağladı",
+      "titleEn": "IXPE provides the strongest observational support yet for 90-year-old vacuum birefringence theory",
+      "summaryTr": "NASA’nın IXPE görevi, 1E 1547.0-5408 magnetarındaki X-ışını kutuplanmasını ölçerek 1936’dan beri öngörülen vakum çift kırılması etkisine en güçlü gözlemsel desteği sundu. IXPE, NICER ve Avustralya’daki Parkes radyo teleskobuyla birlikte Mart–Nisan 2025 arasında 140 saatten fazla gözlem yaptı; bu, bir magnetarın ilk eşzamanlı radyo ve X-ışını kutuplanma ölçümüydü. Yaklaşık 2,1 saniyede dönen kaynağın iki yayım bölgesinde %40 ve %80 düzeyinde kutuplanma hesaplandı; toplam sinyal benzer kaynaklarda görülenden yaklaşık üç kat daha yüksekti. Standart yüzey yayım modelleri bu büyüklüğü açıklayamazken, radyo kısıtlarını da kullanan benzetimler aşırı manyetik alanın boşluğu prizma benzeri davranmaya zorladığı modeli destekledi. Sonuç Nature’da yayımlandı, ancak etkinin ilk doğrudan gözlemi sayılabilmesi için aynı ve başka magnetarlarda ek IXPE ölçümleri gerekiyor.",
+      "summaryEn": "NASA’s IXPE mission measured X-ray polarization from magnetar 1E 1547.0-5408 and produced the strongest observational support yet for vacuum birefringence, predicted since 1936. IXPE observed for more than 140 hours between March and April 2025 alongside NICER and Australia’s Parkes radio telescope, creating the first coordinated radio and X-ray polarization measurement of a magnetar. Polarization levels of 40% and 80% were inferred for two emission regions of the roughly 2.1-second rotator, with the overall signal nearly three times stronger than in similar sources. Standard surface-emission models could not explain the magnitude, while simulations constrained by the radio data supported a model in which the extreme magnetic field makes the vacuum act like a directional optical filter. The result was published in Nature, but additional IXPE observations of this and other magnetars are needed before treating it as a confirmed first direct detection.",
+      "whyTr": "Bu sonuç, laboratuvarda üretilemeyen alan şiddetlerinde kuantum elektrodinamiğini sınamak için zaman eşlemeli çoklu-alet ölçümünün nasıl kullanılabileceğini gösteriyor. Mühendislik değeri yalnız sensör hassasiyetinde değil; radyo ve X-ışını saatlerinin, geometrik modelin ve kutuplanma kalibrasyonunun ortak hata bütçesinde birleştirilmesinde yatıyor. Bağımsız kaynaklarda tekrarlanabilirlik, model kaynaklı yanlılığı ayırmanın ana koşulu olacak.",
+      "whyEn": "The result shows how time-aligned multi-instrument measurements can test quantum electrodynamics at field strengths that cannot be produced in laboratories. Its engineering value lies not only in sensor sensitivity but in combining radio and X-ray timing, geometry, and polarization calibration within a common error budget. Reproducibility across independent sources will be essential for separating the signal from model bias.",
+      "evidenceTr": "Hakemli Nature çalışması; koordineli radyo ve X-ışını gözlemi",
+      "evidenceEn": "Peer-reviewed Nature study; coordinated radio and X-ray observation",
+      "addedDate": "2026-08-07"
+    },
+    {
+      "id": "ritchie-bros-q2-2026-used-equipment-prices",
+      "category": "mobile-machines",
+      "publishedDate": "2026-08-06",
+      "sourceName": "Ritchie Bros. / Rouse Services",
+      "sourceUrl": "https://blog.ritchiebros.com/july-market-trends-report-q2-2026-construction-transportation-pricing/",
+      "titleTr": "İkinci el iş makinesi fiyatları ABD’de yatay kalırken Kanada’da çeyreklik %11 arttı",
+      "titleEn": "Used construction-equipment prices stayed flat in the US while rising 11% quarter on quarter in Canada",
+      "summaryTr": "Ritchie Bros., açık artırma işlemleri ve Rouse perakende verilerinden hazırladığı 2026 ikinci çeyrek raporunda ABD inşaat ve taşımacılık ekipmanı fiyatlarının önceki çeyreğe göre yaklaşık yatay kaldığını açıkladı. Kanada’da ise inşaat ekipmanı fiyat endeksi bir önceki çeyreğe göre yaklaşık %11 yükselirken taşımacılık fiyatları büyük ölçüde değişmedi. ABD açık artırmalarında çoğu hafriyat kategorisinin yıllık medyan fiyatı arttı; dozerler geriledi, motor greyderler yatay kaldı, personel yükselticileri, telehandler ve forklift fiyatları da düştü. Belden kırmalı damper, lastikli yükleyici, kazıcı-yükleyici ve çok arazi yükleyicilerinde yaş ve kullanım saati profili aynı veya daha yüksek olmasına rağmen fiyat artışı görüldü. Veriler tek bir büyük pazar yerinin işlem ve perakende gözlemleridir; tüm filo satışlarını ya da yeni makine talebini doğrudan temsil etmez.",
+      "summaryEn": "Ritchie Bros.’ second-quarter 2026 report, built from auction transactions and Rouse retail data, found that US construction and transportation equipment prices were broadly flat from the previous quarter. In Canada, the construction-equipment price index rose about 11% quarter on quarter while transportation pricing was largely unchanged. Year-over-year US auction medians increased across most earthmoving categories, except dozers declined and motor graders were flat; aerial equipment, telehandlers, and forklifts also fell. Articulated dump trucks, wheel loaders, backhoe loaders, and multi-terrain loaders gained despite similar or higher average age and usage profiles. The data reflect transactions and retail observations from a major marketplace rather than every fleet sale or demand for new machines.",
+      "whyTr": "İkinci el değerleri, filo yenileme zamanı, kiralama tarifesi, teminat değeri ve toplam sahip olma maliyeti modellerinin doğrudan girdisidir. Kategori ortalamaları yaş ve çalışma saatiyle normalize edilmeden fiyat hareketini yalnız talep artışı diye yorumlamak hatalı olabilir. Satın alma ekipleri bu sinyali yerel teslim süresi, bakım geçmişi ve yeni makine iskonto oranlarıyla birlikte kullanmalı.",
+      "whyEn": "Used-equipment values feed directly into fleet replacement timing, rental rates, collateral values, and total-cost-of-ownership models. Treating price movement as demand alone can be misleading unless category averages are normalized for age and operating hours. Procurement teams should combine this signal with local lead times, maintenance history, and discounts on new machines.",
+      "evidenceTr": "Açık artırma ve perakende pazar verisi özeti",
+      "evidenceEn": "Auction and retail market-data report",
+      "addedDate": "2026-08-07"
+    },
+    {
+      "id": "codelco-ntt-iown-remote-mining-poc",
+      "category": "mining",
+      "publishedDate": "2026-08-06",
+      "sourceName": "NTT DOCOMO BUSINESS / CODELCO",
+      "sourceUrl": "https://www.ntt.com/en/about-us/press-releases/news/article/2026/0806.html",
+      "titleTr": "Codelco ve NTT, El Teniente için fotonik ağ üzerinden uzaktan makine işletme denemesi başlattı",
+      "titleEn": "Codelco and NTT launch photonic-network remote machinery trial for El Teniente",
+      "summaryTr": "NTT DOCOMO BUSINESS ve Codelco, El Teniente bakır madenindeki ağır makinelerin uzaktan işletilmesini IOWN All-Photonics Network üzerinden sınamak üzere ortak çalışma ve kavram kanıtı başlattı. Japonya İçişleri ve İletişim Bakanlığı tarafından desteklenen proje, madeni Rancagua’daki uzak operasyon merkezine uçtan uca optik dalga boyu yolu sağlayan yüksek kapasiteli ve düşük gecikmeli bir bağlantıyla bağlamayı hedefliyor. Ekip; uzaktan kumanda için gerekli haberleşme ortamını, yüksek çözünürlüklü video gözetimini, operasyon merkezlerinin birleştirilmesini ve yeni işletme modelinin uygulanabilirliğini değerlendirecek. Gerekçe, yeraltındaki göçük gibi tehlikelere insan maruziyetini azaltmak, nitelikli operatör açığını yönetmek ve farklı madenlerde dağınık işlevleri merkezileştirmek. Duyuru henüz ölçülmüş gecikme, paket kaybı, kumanda çevrimi kararlılığı veya üretim kazancı vermiyor; dolayısıyla bu bir saha sonucu değil, tanımlanmış bir doğrulama programı.",
+      "summaryEn": "NTT DOCOMO BUSINESS and Codelco launched a joint study and proof of concept to test remote operation of heavy machinery at the El Teniente copper mine over an IOWN All-Photonics Network. Commissioned through Japan’s Ministry of Internal Affairs and Communications, the project aims to link the mine with a remote operations centre in Rancagua using an end-to-end optical wavelength path designed for high capacity and low latency. The team will assess the communications environment for remote control, high-definition video monitoring, consolidation of operations centres, and the feasibility of the operating model. The stated goals are to reduce human exposure to underground hazards such as collapses, address skilled-operator shortages, and centralize functions distributed across mines. The announcement provides no measured latency, packet-loss, control-loop stability, or production-gain results yet, so it describes a validation programme rather than a completed field outcome.",
+      "whyTr": "Uzaktan ağır makine kontrolünde ortalama gecikmeden çok en kötü durum gecikmesi, jitter, paket kaybı ve bağlantı kesildiğinde güvenli duruş davranışı belirleyicidir. Kavram kanıtının değeri, video ve kumanda trafiğini gerçek maden koşullarında aynı güvenlik vakasına bağlayabilmesinde olacak. Ölçekleme kararı; yedek iletişim yolu, siber güvenlik, operatör insan-makine arayüzü ve yerel manuel geri dönüş senaryoları doğrulanmadan verilmemeli.",
+      "whyEn": "For remote heavy-machinery control, worst-case latency, jitter, packet loss, and fail-safe behaviour during a link outage matter more than average latency. The proof of concept will be valuable if it ties video and control traffic to one safety case under real mine conditions. Scaling should wait for validation of redundant communications, cybersecurity, operator interfaces, and local manual fallback.",
+      "evidenceTr": "Kamu destekli ortak çalışma ve saha kavram kanıtı duyurusu",
+      "evidenceEn": "Government-backed joint study and field proof-of-concept announcement",
+      "addedDate": "2026-08-07"
+    },
     {
       "id": "fda-orzeyful-narcolepsy-orexin",
       "category": "health",
