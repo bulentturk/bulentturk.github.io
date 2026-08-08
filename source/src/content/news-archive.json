@@ -1,5 +1,5 @@
 {
-  "updatedDate": "2026-08-07",
+  "updatedDate": "2026-08-08",
   "labels": [
     {
       "key": "all",
@@ -28,6 +28,54 @@
     }
   ],
   "items": [
+    {
+      "id": "duke-cholinergic-hub-opioid-reward-mice",
+      "category": "health",
+      "publishedDate": "2026-08-05",
+      "sourceName": "Duke University School of Medicine / Nature",
+      "sourceUrl": "https://neurosurgery.duke.edu/news/new-tools-reopen-old-path-less-addictive-opioids",
+      "titleTr": "Farelerde opioid ödül öğrenmesini yöneten kolinerjik bir kapı belirlendi",
+      "titleEn": "A cholinergic gate controlling opioid-reward learning was identified in mice",
+      "summaryTr": "Duke Üniversitesi ekibi, morfinin ağrı kesici etkisi ile ilaca bağlı ödül öğrenmesini ayırabilecek bir sinir devresini fare deneylerinde inceledi. Araştırmacılar, DART adlı hücreye özgü hedefleme sistemiyle naloksonu nucleus accumbens içindeki asetilkolin salgılayan internöronlara yöneltti ve yalnız bu hücreleri morfine duyarsızlaştırdı. Müdahale, farelerin morfin verilen ortamı tercih etmeyi öğrenmesini engellerken akut analjeziyi, morfinin hareket üzerindeki etkilerini ve nucleus accumbens’teki dopamin artışını korudu. Mikrodiyaliz ölçümleri, ödül öğrenmesi için dopamin artışının tek başına yetmediğini; morfinin bu küçük hücre grubunda oluşturduğu asetilkolin düşüşünün de gerekli olabileceğini gösterdi. Çalışma insanlarda yapılmadı ve koşullu yer tercihi bağımlılığın tamamını temsil etmez; güvenli, seçici bir ilaca dönüşüp dönüşemeyeceği bilinmiyor.",
+      "summaryEn": "A Duke University team used mouse experiments to investigate a neural circuit that may separate morphine analgesia from drug-associated reward learning. With the cell-targeting DART system, the researchers directed a naloxone analogue to acetylcholine-releasing interneurons in the nucleus accumbens, selectively making those cells insensitive to morphine. The intervention prevented mice from learning a preference for the morphine-paired chamber while preserving acute analgesia, morphine-related locomotor effects, and the dopamine increase in the nucleus accumbens. Microdialysis indicated that elevated dopamine alone may be insufficient for reward learning and that the morphine-induced fall in acetylcholine from this small neuronal population may also be required. This was a mouse study, conditioned place preference does not capture all aspects of addiction, and it remains unknown whether the mechanism can be targeted safely in people.",
+      "whyTr": "Hücre tipine özgü ilaç iletimi, bir reseptörü bütün beyinde kapatmak yerine faydalı ve istenmeyen etkileri devre düzeyinde ayırma olanağı sunuyor. Ancak klinik ölçekleme; hedefleme özgüllüğü, insan beynine güvenli taşıma, doz kontrolü ve uzun dönem davranışsal etkilerin ayrı ayrı doğrulanmasını gerektirir. Bulgular tıbbi tedavi önerisi değildir.",
+      "whyEn": "Cell-type-specific drug delivery offers a way to separate beneficial and unwanted effects at circuit level instead of blocking a receptor throughout the brain. Clinical translation would require independent validation of targeting specificity, safe delivery to the human brain, dose control, and long-term behavioral effects. The findings are not medical treatment advice.",
+      "evidenceTr": "Hakemli Nature çalışması; farelerde hücre tipine özgü farmakoloji ve davranış deneyleri",
+      "evidenceEn": "Peer-reviewed Nature study; cell-type-specific pharmacology and behavioral experiments in mice",
+      "addedDate": "2026-08-08"
+    },
+    {
+      "id": "optica-sunlight-quantum-entanglement",
+      "category": "science-tech",
+      "publishedDate": "2026-08-06",
+      "sourceName": "Optica Publishing Group",
+      "sourceUrl": "https://www.optica.org/about/newsroom/news_releases/2026/researchers_generate_quantum_entanglement_using_sunlight/",
+      "titleTr": "Araştırmacılar güneş ışığından kuantum dolaşıklık üretti",
+      "titleEn": "Researchers generated quantum entanglement from sunlight",
+      "summaryTr": "Ottawa Üniversitesi ve Max Planck Işık Bilimi Enstitüsü araştırmacıları, lazer yerine doğrudan güneş ışığını pompa kaynağı olarak kullanarak kutuplanma dolaşıklığına sahip foton çiftleri üretti. Sistem, pencere büyüklüğünde bir Fresnel mercekle toplanan ışığı tümü cam konik bir yoğunlaştırıcı üzerinden saç teli kalınlığındaki optik fibere, oradan da yaklaşık bir milimetrelik doğrusal olmayan kristale aktardı. Spontan parametrik aşağı dönüşümle oluşturulan durum, kuantum durum tomografisinde ideal dolaşık duruma yaklaşık %94 benzerlik gösterdi ve Bell eşitsizliğini ihlal eden korelasyonlar verdi. Deney, geniş tayflı ve uzaysal-zamansal olarak tutarsız doğal ışığın, dolaşıklık yalnız kutuplanmada kodlandığında kullanılabileceğini gösteren açık hava bir ilke kanıtıdır. Foton parlaklığı ve dolaşıklık kalitesi henüz saha tipi haberleşme ya da uydu sistemleri için yeterli değil; ekip bu iki ölçütü artırmaya çalışıyor.",
+      "summaryEn": "Researchers from the University of Ottawa and the Max Planck Institute for the Science of Light generated polarization-entangled photon pairs using direct sunlight instead of a laser pump. A window-sized Fresnel lens collected the light, an all-glass cone concentrator coupled it into a hair-width optical fiber, and the fiber delivered it to a nonlinear crystal roughly one millimeter across. The state created by spontaneous parametric down-conversion reached about 94% similarity to an ideal entangled state in quantum-state tomography and produced correlations that violated Bell’s inequality. The outdoor proof of principle shows that broadband, spatially and temporally incoherent natural light can work when entanglement is encoded only in polarization. Photon brightness and entanglement quality are not yet sufficient for deployable communication or satellite systems, and the team is working to improve both.",
+      "whyTr": "Doğal ışıkla pompalama, özellikle uzay tabanlı kuantum bağlantılarında lazer, güç elektroniği ve ısıl yönetim yükünü azaltabilecek yeni bir mimari seçenek sunuyor. Buna karşılık gerçek bir bağlantı bütçesi için parlaklık, atmosferik değişkenlik, yönlendirme kararlılığı ve anahtar üretim hızının birlikte doğrulanması gerekir.",
+      "whyEn": "Sunlight pumping offers a new architecture that could reduce laser hardware, electrical power, and thermal-management burden in space-based quantum links. A practical link budget will still require joint validation of brightness, atmospheric variability, pointing stability, and secure-key generation rate.",
+      "evidenceTr": "Hakemli Optica makalesi; açık hava ilke kanıtı deneyi",
+      "evidenceEn": "Peer-reviewed Optica paper; outdoor proof-of-principle experiment",
+      "addedDate": "2026-08-08"
+    },
+    {
+      "id": "northisle-2026-integrated-resource-estimate",
+      "category": "mining",
+      "publishedDate": "2026-08-06",
+      "sourceName": "Northisle Copper and Gold",
+      "sourceUrl": "https://www.northisle.ca/wp-content/uploads/2026/08/20260806-NCX-Mineral-Resource-Update.pdf",
+      "titleTr": "Northisle dört yatağı birleştiren 1,24 milyar tonluk ölçülmüş kaynak tahmini yayımladı",
+      "titleEn": "Northisle reports a 1.24-billion-tonne indicated estimate integrating four deposits",
+      "summaryTr": "Northisle Copper and Gold, British Columbia’daki North Island projesi için Northwest Expo, Red Dog, West Goodspeed ve Hushamu yataklarını tek modelde birleştiren 2026 maden kaynağı tahminini açıkladı. Bağımsız uzman tarafından hazırlanan tahminde, 11 ABD doları/ton NSR eşik değerinde 1,236 milyar ton ölçülmüş kaynak; ortalama %0,14 bakır, 0,22 g/t altın, 79,5 ppm molibden ve 0,44 ppm renyum tenörüyle raporlandı. Bu sınıfın geri kazanım ayarlı içeriği 10,1 milyar libre bakır eşdeğeri veya 16,2 milyon ons altın eşdeğeri olarak verildi; ayrıca 260 milyon ton çıkarımsal kaynak bulunuyor. Model, yeni West Goodspeed verisini ekliyor ve Northwest Expo ile Red Dog’daki dönüşüm/genişlemeleri içeriyor; şirket tahmini 2027’nin ilk çeyreğini hedefleyen ön fizibilite çalışmasında kullanacak. NI 43-101 teknik raporu henüz yayımlanmadı ve 45 gün içinde dosyalanacak; fiyat, geri kazanım, kesme değeri ve işletme varsayımları ön fizibilite sırasında değişebilir.",
+      "summaryEn": "Northisle Copper and Gold released a 2026 mineral-resource estimate for its North Island project in British Columbia, integrating the Northwest Expo, Red Dog, West Goodspeed, and Hushamu deposits in one model. At an US$11-per-tonne NSR cut-off, the independent estimate reports 1.236 billion tonnes of Indicated resources averaging 0.14% copper, 0.22 g/t gold, 79.5 ppm molybdenum, and 0.44 ppm rhenium. Recovery-adjusted contained metal in that category is stated as 10.1 billion pounds of copper equivalent or 16.2 million ounces of gold equivalent, with a further 260 million tonnes classified as Inferred. The model adds the new West Goodspeed resource and incorporates conversion and expansion at Northwest Expo and Red Dog; the company plans to use it in a pre-feasibility study targeted for the first quarter of 2027. The NI 43-101 technical report has not yet been filed and is due within 45 days, while pricing, recovery, cut-off, and operating assumptions may change during pre-feasibility work.",
+      "whyTr": "Dört yatağın ortak ekonomik ve jeolojik çerçevede modellenmesi; ocak sıralaması, tesis kapasitesi, tenör harmanlama ve altyapı yerleşimi gibi sistem düzeyindeki kararları etkiler. Kaynak, rezerv değildir; mühendislik kararı için jeoteknik, metalurjik geri kazanım, sermaye maliyeti ve izin risklerinin teknik rapor ile ön fizibilitede doğrulanması gerekir.",
+      "whyEn": "Modeling four deposits within a common economic and geological framework affects system-level decisions such as pit sequencing, plant capacity, grade blending, and infrastructure placement. A resource is not a reserve; geotechnical conditions, metallurgical recovery, capital cost, and permitting risk must be validated in the technical report and pre-feasibility study.",
+      "evidenceTr": "Şirket duyurusu; bağımsız NI 43-101 kaynak tahmini, teknik rapor bekleniyor",
+      "evidenceEn": "Company disclosure; independent NI 43-101 resource estimate, technical report pending",
+      "addedDate": "2026-08-08"
+    },
     {
       "id": "dronabinol-ptsd-nightmares-rct",
       "category": "health",
