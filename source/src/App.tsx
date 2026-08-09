@@ -123,12 +123,6 @@ const copy = {
           text: "İki trace dosyası arasında yeni, kayıp veya davranışı değişen mesajları bulma.",
         },
         {
-          code: "TELEMETRY",
-          discipline: "Telemetri",
-          title: "Olay Kütüphanesi Oluşturucu",
-          text: "Sinyal, eşik, süre ve koşullardan telemetri olay tanımları hazırlama.",
-        },
-        {
           code: "SAFETY",
           discipline: "Makine Emniyeti",
           title: "PL Hesaplama Çalışma Sayfası",
@@ -173,12 +167,6 @@ const copy = {
           title: "CAN hattında mesaj analizine nereden başlanır?",
           text: "Fiziksel katman, çevrim zamanı, jitter, byte order ve ölçek doğrulaması için pratik başlangıç sırası.",
           href: "/blog/#can-analizi",
-        },
-        {
-          type: "Mühendislik Notu / Telemetri",
-          title: "Her veriyi değil, doğru olayı kaydetmek",
-          text: "Sürekli, koşula bağlı ve olay tabanlı sinyalleri ayırmak için pratik çerçeve.",
-          href: "/blog/#olay-tabanli-telemetri",
         },
         {
           type: "Araştırma Notu / Saha Doğrulaması",
@@ -357,12 +345,6 @@ const copy = {
           text: "Find new, missing, or behaviorally changed messages across two trace files.",
         },
         {
-          code: "TELEMETRY",
-          discipline: "Telemetry",
-          title: "Event Library Builder",
-          text: "Build telemetry event definitions from signals, thresholds, durations, and conditions.",
-        },
-        {
           code: "SAFETY",
           discipline: "Machine Safety",
           title: "PL Calculation Worksheet",
@@ -407,12 +389,6 @@ const copy = {
           title: "Where should CAN message analysis begin?",
           text: "A practical starting sequence for the physical layer, cycle time, jitter, byte order, and scaling.",
           href: "/blog/#can-analizi",
-        },
-        {
-          type: "Engineering Note / Telemetry",
-          title: "Record the right event, not every value",
-          text: "A practical way to separate continuous, conditional, and event-based signals.",
-          href: "/blog/#olay-tabanli-telemetri",
         },
         {
           type: "Research Note / Field Validation",
