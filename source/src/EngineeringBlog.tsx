@@ -188,7 +188,7 @@ export default function EngineeringBlog() {
     ? {
         back: "Araçlara dön",
         overline: "ALGO TEAM / MÜHENDİSLİK BLOGU",
-        title: "Teknik makaleler ve mühendislik notları.",
+        title: "CAN Bus, J1939 ve saha mühendisliği yazıları.",
         intro: "CAN, J1939, telemetri, kontrol ve saha doğrulaması üzerine; araştırmaya, ölçüme ve gerçek uygulamaya dayanan kalıcı içerikler.",
         archive: "Teknik makaleler ve araştırmalar",
         archiveIntro: "Sahada tekrar kullanılabilecek açıklamalar, kontrol sıraları ve doğrulama notları.",
@@ -198,7 +198,7 @@ export default function EngineeringBlog() {
     : {
         back: "Back to tools",
         overline: "ALGO TEAM / ENGINEERING BLOG",
-        title: "Technical articles and engineering notes.",
+        title: "CAN Bus, J1939, and field engineering articles.",
         intro: "Evergreen work grounded in research, measurement, and real applications across CAN, J1939, telemetry, controls, and field validation.",
         archive: "Technical articles and research",
         archiveIntro: "Explanations, check sequences, and validation notes designed for repeated use in the field.",
