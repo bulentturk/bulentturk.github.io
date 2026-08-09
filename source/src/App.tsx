@@ -95,7 +95,7 @@ const copy = {
       kicker: "02 / Yol Haritası",
       title: "Sıradaki mühendislik araçları.",
       intro:
-        "Hidrolik, mekanik, elektrik, kontrol, CAN/J1939, telemetri ve makine emniyeti aynı araç altyapısında adım adım büyüyecek.",
+        "Hidrolik, mekanik, elektrik, kontrol, CAN/J1939 ve makine emniyeti aynı araç altyapısında adım adım büyüyecek.",
       status: "Planlanıyor",
       items: [
         {
@@ -121,12 +121,6 @@ const copy = {
           discipline: "Veri Analizi",
           title: "CAN Trace Karşılaştırıcı",
           text: "İki trace dosyası arasında yeni, kayıp veya davranışı değişen mesajları bulma.",
-        },
-        {
-          code: "TELEMETRY",
-          discipline: "Telemetri",
-          title: "Olay Kütüphanesi Oluşturucu",
-          text: "Sinyal, eşik, süre ve koşullardan telemetri olay tanımları hazırlama.",
         },
         {
           code: "SAFETY",
@@ -173,12 +167,6 @@ const copy = {
           title: "CAN hattında mesaj analizine nereden başlanır?",
           text: "Fiziksel katman, çevrim zamanı, jitter, byte order ve ölçek doğrulaması için pratik başlangıç sırası.",
           href: "/blog/#can-analizi",
-        },
-        {
-          type: "Mühendislik Notu / Telemetri",
-          title: "Her veriyi değil, doğru olayı kaydetmek",
-          text: "Sürekli, koşula bağlı ve olay tabanlı sinyalleri ayırmak için pratik çerçeve.",
-          href: "/blog/#olay-tabanli-telemetri",
         },
         {
           type: "Araştırma Notu / Saha Doğrulaması",
@@ -236,7 +224,7 @@ const copy = {
     },
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
-      note: "CAN · J1939 · TELEMETRY · MOBILE MACHINES",
+      note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
     },
   },
   en: {
@@ -329,7 +317,7 @@ const copy = {
       kicker: "02 / Roadmap",
       title: "Engineering tools coming next.",
       intro:
-        "Hydraulics, mechanical, electrical, controls, CAN/J1939, telemetry, and machine safety will grow step by step on one tool foundation.",
+        "Hydraulics, mechanical, electrical, controls, CAN/J1939, and machine safety will grow step by step on one tool foundation.",
       status: "Planned",
       items: [
         {
@@ -355,12 +343,6 @@ const copy = {
           discipline: "Data Analysis",
           title: "CAN Trace Comparator",
           text: "Find new, missing, or behaviorally changed messages across two trace files.",
-        },
-        {
-          code: "TELEMETRY",
-          discipline: "Telemetry",
-          title: "Event Library Builder",
-          text: "Build telemetry event definitions from signals, thresholds, durations, and conditions.",
         },
         {
           code: "SAFETY",
@@ -407,12 +389,6 @@ const copy = {
           title: "Where should CAN message analysis begin?",
           text: "A practical starting sequence for the physical layer, cycle time, jitter, byte order, and scaling.",
           href: "/blog/#can-analizi",
-        },
-        {
-          type: "Engineering Note / Telemetry",
-          title: "Record the right event, not every value",
-          text: "A practical way to separate continuous, conditional, and event-based signals.",
-          href: "/blog/#olay-tabanli-telemetri",
         },
         {
           type: "Research Note / Field Validation",
@@ -470,7 +446,7 @@ const copy = {
     },
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
-      note: "CAN · J1939 · TELEMETRY · MOBILE MACHINES",
+      note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
     },
   },
 } as const;
