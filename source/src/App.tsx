@@ -95,7 +95,7 @@ const copy = {
       kicker: "02 / Yol Haritası",
       title: "Sıradaki mühendislik araçları.",
       intro:
-        "Hidrolik, mekanik, elektrik, kontrol, CAN/J1939, telemetri ve makine emniyeti aynı araç altyapısında adım adım büyüyecek.",
+        "Hidrolik, mekanik, elektrik, kontrol, CAN/J1939 ve makine emniyeti aynı araç altyapısında adım adım büyüyecek.",
       status: "Planlanıyor",
       items: [
         {
@@ -224,7 +224,7 @@ const copy = {
     },
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
-      note: "CAN · J1939 · TELEMETRY · MOBILE MACHINES",
+      note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
     },
   },
   en: {
@@ -317,7 +317,7 @@ const copy = {
       kicker: "02 / Roadmap",
       title: "Engineering tools coming next.",
       intro:
-        "Hydraulics, mechanical, electrical, controls, CAN/J1939, telemetry, and machine safety will grow step by step on one tool foundation.",
+        "Hydraulics, mechanical, electrical, controls, CAN/J1939, and machine safety will grow step by step on one tool foundation.",
       status: "Planned",
       items: [
         {
@@ -446,7 +446,7 @@ const copy = {
     },
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
-      note: "CAN · J1939 · TELEMETRY · MOBILE MACHINES",
+      note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
     },
   },
 } as const;
