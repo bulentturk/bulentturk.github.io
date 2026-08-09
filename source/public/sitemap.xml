@@ -2,23 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://algo-team.com/</loc>
+    <lastmod>2026-08-09</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/dbc-editor/</loc>
+    <lastmod>2026-08-09</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/can-viewer/</loc>
+    <lastmod>2026-08-09</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/can-log-analyzer/</loc>
+    <lastmod>2026-08-09</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/j1939-dtc-decoder/</loc>
+    <lastmod>2026-08-09</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/hydraulic-simulator/</loc>
+    <lastmod>2026-08-09</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/blog/</loc>
+    <lastmod>2026-08-09</lastmod>
+  </url>
+  <url>
+    <loc>https://algo-team.com/news/</loc>
+    <lastmod>2026-08-09</lastmod>
   </url>
 </urlset>
