@@ -9,6 +9,8 @@ const clientOutDir = resolve(projectRoot, "dist");
 const serverOutDir = resolve(projectRoot, ".ssr-build");
 const staticPages = [
   { route: "/", path: resolve(clientOutDir, "index.html") },
+  { route: "/learn/", path: resolve(clientOutDir, "learn/index.html") },
+  { route: "/tools/", path: resolve(clientOutDir, "tools/index.html") },
   { route: "/blog/", path: resolve(clientOutDir, "blog/index.html") },
   { route: "/news/", path: resolve(clientOutDir, "news/index.html") },
 ];
