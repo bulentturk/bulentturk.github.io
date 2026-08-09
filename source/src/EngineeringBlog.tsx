@@ -75,42 +75,8 @@ const articles = {
       note: "CAN verisinin sürekli sıfır çıkması çoğu zaman mesaj tanımından değil, yanlış register adresi, tetikleme koşulu veya ham/fiziksel değer dönüşümünün eksik olmasından kaynaklanır.",
     },
     {
-      id: "hibrit-mikser-guvenli-gecis",
-      code: "HYBRID / 05",
-      title: "Hibrit mikserde dizel ve elektrik modu arasında güvenli geçiş",
-      lead: "Aynı hidrolik yükü iki farklı güç kaynağının sürebildiği bir makinede güvenlik, kontaktör seçiminden önce durum makinesi ve geçiş sırasıyla başlar.",
-      details: [
-        "Elektrikli mikser aktifken dizel motor beklenmedik biçimde çalışırsa iki pompa hattı aynı anda yüklenmemelidir. Elektrik motorunun hız/tork isteği rampa ile sıfıra indirilir, gerçek hızın düşük olduğu doğrulanır, motor enable kapatılır ve ancak bundan sonra hidrolik seçici valf dizel pompa hattına alınır.",
-        "Şebeke şarjında enerji kaynağı önceliği de deterministik olmalıdır. 380 Vac bağlıyken 220 Vac araç üstü inverter hattı şarj cihazından elektriksel olarak ayrılır; elektrikli mikser modu kilitlenir ve gerekiyorsa karıştırma dizel pompa üzerinden yapılır. Operatör komutu geçiş sonrasında otomatik devam etmez, yeni komut beklenir.",
-      ],
-      points: [
-        "Her çalışma durumunu; izinler, kontaktörler, valf konumu ve beklenen geri bildirimlerle bir durum tablosunda tanımla.",
-        "Precharge tamamlanmadan ana kontaktörü ve yüksek güçlü yükleri devreye alma.",
-        "Komut edilen hız yerine gerçek motor hızını ve valf geri bildirimini geçiş koşulu olarak kullan.",
-        "Timeout, kaynak çakışması ve beklenmeyen diesel_running gibi durumları ayrı arıza sınıfları olarak ele al.",
-      ],
-      note: "Güvenli geçişin özü 'önce torku kaldır, sonra mekanik/hidrolik yolu değiştir' ilkesidir; yazılım bu sırayı geri bildirimlerle kanıtlamadan sonraki adıma geçmemelidir.",
-    },
-    {
-      id: "sanziman-test-unitesi",
-      code: "TEST BENCH / 06",
-      title: "Şanzıman test ünitesinde kontrol ve ölçüm mimarisi",
-      lead: "Bir şanzıman test tezgâhı yalnız motoru döndüren bir sistem değildir; kontrollü yük, yağlama, basınç, sıcaklık ve emniyet zincirinin birlikte doğrulandığı bir ölçüm platformudur.",
-      details: [
-        "BODAS kontrolörü valfleri ve test sırasını yönetirken, sürücüye analog/dijital komut veya saha haberleşmesi üzerinden hız ve tork referansı verebilir. PC tarafı operatör arayüzü, reçete ve kayıt görevini üstlenir; CAN–Modbus gateway ise test kontrolünün tek güvenlik katmanı değil, veri köprüsü olarak kalmalıdır.",
-        "Her kavrama adımı için dolum süresi, basınç yükselme eğimi, kararlı basınç, giriş/çıkış hızı ve sıcaklık birlikte kaydedilir. Böylece yalnız 'vites geçti' sonucu değil, kavrama kalitesi ve olası kaçak/sürtünme problemi de karşılaştırılabilir hâle gelir.",
-      ],
-      points: [
-        "Maksimum hız ve tork limitlerini hem sürücüde hem kontrolörde bağımsız sınırla.",
-        "Yağ basıncı, yağ sıcaklığı, acil durdurma ve kapak/koruma sinyallerini doğrudan emniyet zincirine bağla.",
-        "Test reçetesini adım, hedef, rampa, bekleme, kabul kriteri ve arıza tepkisiyle tanımla.",
-        "Ham sensör ve CAN verisini zaman damgasıyla sakla; rapor değerlerini sonradan aynı kayıttan yeniden üretebil.",
-      ],
-      note: "Test tezgâhında otomasyonun görevi operatörün kararını gizlemek değil, her adımı aynı koşullarda tekrar edilebilir ve izlenebilir hâle getirmektir.",
-    },
-    {
       id: "j1939-spn-pgn-okuma",
-      code: "J1939 / 07",
+      code: "J1939 / 05",
       title: "J1939 arıza kodunu SPN ve FMI üzerinden okumak",
       lead: "Bir J1939 arıza kaydında SPN hangi parametrede sorun görüldüğünü, FMI ise kontrolörün o parametrede nasıl bir hata algıladığını anlatır; ikisi birlikte yorumlanmalıdır.",
       details: [
@@ -196,42 +162,8 @@ const articles = {
       note: "An all-zero CAN payload usually points to the wrong register, an unmet trigger condition, or a missing raw-to-physical conversion—not necessarily a bad CAN definition.",
     },
     {
-      id: "hibrit-mikser-guvenli-gecis",
-      code: "HYBRID / 05",
-      title: "Safe transitions between diesel and electric mixer modes",
-      lead: "When two power sources can drive the same hydraulic load, safety begins with the state machine and transition sequence before contactor selection.",
-      details: [
-        "If the diesel starts unexpectedly while electric mixing is active, the two pump paths must not load the circuit together. Ramp electric torque and speed request to zero, confirm low actual speed, remove motor enable, and only then switch the hydraulic selector to the diesel pump.",
-        "Grid charging also needs deterministic source priority. While 380 Vac is connected, isolate the onboard 220 Vac inverter feed from the charger, lock electric mixing, and use the diesel pump if rotation is required. Do not resume the previous operator command automatically after a transition.",
-      ],
-      points: [
-        "Define every state with its permissions, contactors, valve position, and expected feedback.",
-        "Do not close the main contactor or apply a high-power load before precharge is confirmed.",
-        "Use actual motor speed and valve feedback—not only commands—as transition conditions.",
-        "Handle timeout, source conflict, and unexpected diesel_running as separate fault classes.",
-      ],
-      note: "The core rule is remove torque before changing the hydraulic path. Software must prove each step through feedback before advancing.",
-    },
-    {
-      id: "sanziman-test-unitesi",
-      code: "TEST BENCH / 06",
-      title: "Control and measurement architecture for a transmission test bench",
-      lead: "A transmission test bench is not just a motor that turns a gearbox; it is a measurement platform that validates controlled load, lubrication, pressure, temperature, and safety together.",
-      details: [
-        "A BODAS controller can manage valves and test sequencing while sending speed or torque references to the drive. The PC handles recipes, operator interaction, and records; a CAN–Modbus gateway remains a data bridge rather than the only safety layer.",
-        "For each clutch step, log fill time, pressure slope, stabilized pressure, input/output speed, and temperature together. This shows not only whether a gear engaged but also whether clutch quality suggests leakage or friction problems.",
-      ],
-      points: [
-        "Limit maximum speed and torque independently in both drive and controller.",
-        "Put oil pressure, oil temperature, emergency stop, and guard signals in the safety chain.",
-        "Define recipes with target, ramp, dwell, acceptance criteria, and fault response for every step.",
-        "Timestamp raw sensor and CAN data so reports can be reproduced from the original record.",
-      ],
-      note: "Automation should not hide operator judgment; it should make every test step repeatable, comparable, and traceable.",
-    },
-    {
       id: "j1939-spn-pgn-okuma",
-      code: "J1939 / 07",
+      code: "J1939 / 05",
       title: "Reading J1939 faults through SPN and FMI",
       lead: "In a J1939 fault record, the SPN identifies the affected parameter and the FMI describes how the controller believes it failed; they must be interpreted together.",
       details: [
