@@ -93,8 +93,8 @@ const bitrates = [
 const copy = {
   tr: {
     back: "Ana site",
-    title: "CAN Viewer",
-    subtitle: "PCAN-USB ile canlı izleme, güvenli gönderme ve CAN kaydı",
+    title: "Online CAN Bus İzleyici",
+    subtitle: "PCAN-USB ile canlı CAN mesajlarını izleyin, güvenli mesaj gönderin, TRC/CSV kaydı alın ve DBC sinyallerini çözün",
     readonly: "Varsayılan güvenli mod",
     privacy: "DBC ve CAN verisi bilgisayarınızdan dışarı çıkmaz",
     bridge: "Yerel köprü",
@@ -242,8 +242,8 @@ const copy = {
   },
   en: {
     back: "Main site",
-    title: "CAN Viewer",
-    subtitle: "Live monitoring, controlled transmission, and CAN recording via PCAN-USB",
+    title: "Online CAN Bus Viewer",
+    subtitle: "Monitor live CAN messages via PCAN-USB, transmit safely, record TRC/CSV logs, and decode DBC signals",
     readonly: "Safe mode by default",
     privacy: "DBC and CAN data stay on your computer",
     bridge: "Local bridge",

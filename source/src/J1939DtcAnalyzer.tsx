@@ -49,15 +49,15 @@ type ReportMetadata = {
 
 const copy = {
   tr: {
-    title: "J1939 DM1 / DTC Analyzer",
-    subtitle: "Motor CAN trace’inden arıza teşhisi",
+    title: "J1939 SPN/FMI Arıza Kodu Çözücü",
+    subtitle: "DM1 mesajlarını ve SPN/FMI arıza kodlarını CAN kayıtlarından çözümleyin",
     back: "Engineering Tools",
     privacy: "Dosyalar tarayıcınızda işlenir · Sunucuya yüklenmez",
-    loadTrace: "Trace Dosyası Yükle ve Teşhis Et",
+    loadTrace: "J1939 SPN/FMI Arıza Kodu Çözücü",
     loadTraceShort: "Trace yükle",
     traceFormats: "PEAK TRC · Vector ASC · CSV · SocketCAN LOG",
     traceHelp:
-      "Motor CAN hattından aldığınız kaydı bırakın. DM1, çok paketli TP mesajları ve ECU adresleri otomatik analiz edilir.",
+      "TRC, ASC, CSV veya SocketCAN kaydını yükleyin; DM1 (PGN 65226), SPN/FMI arıza kodları, ECU adresleri ve çok paketli TP trafiğini tarayıcıda analiz edin.",
     heroPoints: [
       "DM1 + lamba durumu",
       "BAM / TP.DT birleştirme",
@@ -203,15 +203,15 @@ const copy = {
     noContextGraph: "Bu zaman aralığında çizilebilecek DBC sinyali bulunamadı.",
   },
   en: {
-    title: "J1939 DM1 / DTC Analyzer",
-    subtitle: "Fault diagnosis from an engine CAN trace",
+    title: "J1939 SPN/FMI Fault Code Decoder",
+    subtitle: "Decode DM1 messages and SPN/FMI fault codes from CAN trace files",
     back: "Engineering Tools",
     privacy: "Files are processed in your browser · Nothing is uploaded",
-    loadTrace: "Load Trace File and Diagnose",
+    loadTrace: "J1939 SPN/FMI Fault Code Decoder",
     loadTraceShort: "Load trace",
     traceFormats: "PEAK TRC · Vector ASC · CSV · SocketCAN LOG",
     traceHelp:
-      "Drop a capture from the engine CAN bus. DM1, multi-packet TP traffic, and ECU addresses are analyzed automatically.",
+      "Upload a TRC, ASC, CSV, or SocketCAN capture to analyze DM1 (PGN 65226), SPN/FMI fault codes, ECU addresses, and multi-packet TP traffic in your browser.",
     heroPoints: [
       "DM1 + lamp states",
       "BAM / TP.DT reassembly",

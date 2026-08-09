@@ -42,8 +42,8 @@ const CHART_COLORS = ["#087f8c", "#e08b36", "#446aa3", "#9a5877"];
 const copy = {
   tr: {
     back: "Ana site",
-    title: "CAN Log Analyzer",
-    subtitle: "CAN kayıtlarını açın · zamanlamayı inceleyin · DBC ile sinyalleri çözün",
+    title: "Online CAN Log Analiz Programı",
+    subtitle: "TRC, ASC, CSV ve SocketCAN kayıtlarında periyot, jitter, kayıp mesaj ve DBC sinyallerini inceleyin",
     privacy: "Tüm analiz tarayıcınızda yapılır; dosyalar sunucuya yüklenmez",
     openLog: "CAN log dosyası aç",
     example: "Örnek kaydı dene",
@@ -53,9 +53,9 @@ const copy = {
     diagnoseJ1939: "DM1 arızalarını analiz et",
     printReport: "Rapor / PDF",
     supported: "PEAK TRC 1.0–3.0 · Vector ASC · CSV · SocketCAN LOG",
-    emptyTitle: "Analiz için bir CAN kaydı açın",
+    emptyTitle: "Online CAN Log Analiz Programı",
     emptyText:
-      "PCAN-View/Explorer .trc, Vector .asc, başlıklı .csv veya candump .log dosyası kullanabilirsiniz.",
+      "PEAK TRC, Vector ASC, CSV veya SocketCAN kayıtlarını yükleyin; mesaj periyodu, jitter, tahmini kayıp ve DBC sinyallerini tarayıcıda analiz edin.",
     local: "Yerel işlem",
     frames: "Toplam frame",
     ids: "Benzersiz ID",
@@ -164,8 +164,8 @@ const copy = {
   },
   en: {
     back: "Main site",
-    title: "CAN Log Analyzer",
-    subtitle: "Open CAN captures · inspect timing · decode signals with DBC",
+    title: "Online CAN Log Analyzer",
+    subtitle: "Inspect timing, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and SocketCAN captures",
     privacy: "All analysis runs in your browser; files are never uploaded",
     openLog: "Open CAN log",
     example: "Try example capture",
@@ -175,9 +175,9 @@ const copy = {
     diagnoseJ1939: "Analyze DM1 faults",
     printReport: "Report / PDF",
     supported: "PEAK TRC 1.0–3.0 · Vector ASC · CSV · SocketCAN LOG",
-    emptyTitle: "Open a CAN capture to start analysis",
+    emptyTitle: "Online CAN Log Analyzer",
     emptyText:
-      "Use a PCAN-View/Explorer .trc, Vector .asc, header-based .csv, or candump .log file.",
+      "Upload PEAK TRC, Vector ASC, CSV, or SocketCAN captures to analyze message periods, jitter, estimated loss, and DBC signals in your browser.",
     local: "Local processing",
     frames: "Total frames",
     ids: "Unique IDs",
