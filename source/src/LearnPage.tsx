@@ -112,7 +112,7 @@ export default function LearnPage() {
               <div className="hub-card-meta"><span>{item.code}</span><small>{item.state}</small></div>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-              {item.href ? <a href={item.href}>{t.openCategory} →</a> : <span className="hub-planned">{t.planned}</span>}
+              {"href" in item && item.href ? <a href={item.href}>{t.openCategory} →</a> : <span className="hub-planned">{t.planned}</span>}
             </article>
           ))}
         </div>
