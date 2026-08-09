@@ -3,6 +3,8 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import EngineeringBlog from "./EngineeringBlog";
 import NewsPage from "./NewsPage";
+import LearnPage from "./LearnPage";
+import ToolsPage from "./ToolsPage";
 import CanLogAnalyzer from "./CanLogAnalyzer";
 import CanViewer from "./CanViewer";
 import DbcEditor from "./DbcEditor";
@@ -17,6 +19,8 @@ const isCanLogAnalyzer = route === "/can-log-analyzer";
 const isJ1939DtcAnalyzer = route === "/j1939-dtc-decoder";
 const isEngineeringBlog = route === "/blog";
 const isNews = route === "/news";
+const isLearn = route === "/learn";
+const isToolsHub = route === "/tools";
 const isHydraulicSimulator = route === "/hydraulic-simulator";
 
 const root = document.getElementById("root")!;
@@ -32,6 +36,10 @@ const application = (
           ? <J1939DtcAnalyzer />
           : isHydraulicSimulator
             ? <HydraulicSimulator />
+          : isLearn
+            ? <LearnPage />
+          : isToolsHub
+            ? <ToolsPage />
           : isEngineeringBlog
             ? <EngineeringBlog />
           : isNews

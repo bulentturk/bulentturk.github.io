@@ -8,6 +8,7 @@ const copy = {
   tr: {
     nav: {
       home: "Ana Sayfa",
+      learn: "Learn",
       engineering: "Mühendislik",
       tools: "Mevcut Araçlar",
       simulators: "Simülatörler",
@@ -241,6 +242,7 @@ const copy = {
   en: {
     nav: {
       home: "Home",
+      learn: "Learn",
       engineering: "Engineering",
       tools: "Available Tools",
       simulators: "Simulators",
@@ -512,32 +514,19 @@ export default function Home() {
           ALGO<span>TEAM</span>
         </a>
         <nav className="desktop-nav" aria-label="Ana menü">
-          <details className="nav-dropdown">
-            <summary>{t.nav.engineering}</summary>
-            <div>
-              <a href="#available-tools"><span>01</span>{t.nav.tools}</a>
-              <a href="#simulators"><span>02</span>{t.nav.simulators}</a>
-              <a href="#roadmap"><span>03</span>{t.nav.roadmap}</a>
-            </div>
-          </details>
-          <details className="nav-dropdown">
-            <summary>{t.nav.content}</summary>
-            <div>
-              <a href="/blog/"><span>01</span>{t.nav.blog}</a>
-              <a href="/news/"><span>02</span>{t.nav.news}</a>
-            </div>
-          </details>
+          <a href="/learn/">{t.nav.learn}</a>
+          <a href="/tools/">Tools</a>
+          <a href="/news/">{t.nav.news}</a>
           <a href="#platform">{t.nav.principles}</a>
           <a href="#contact">{t.nav.contact}</a>
         </nav>
         <details className="mobile-site-menu">
           <summary>{t.nav.menu}</summary>
           <div>
-            <a href="#available-tools">{t.nav.tools}</a>
-            <a href="#simulators">{t.nav.simulators}</a>
-            <a href="#roadmap">{t.nav.roadmap}</a>
-            <a href="/blog/">{t.nav.blog}</a>
+            <a href="/learn/">{t.nav.learn}</a>
+            <a href="/tools/">Tools</a>
             <a href="/news/">{t.nav.news}</a>
+            <a href="#platform">{t.nav.principles}</a>
             <a href="#contact">{t.nav.contact}</a>
           </div>
         </details>
