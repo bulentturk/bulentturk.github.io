@@ -437,7 +437,9 @@ export default function DbcEditor() {
   useEffect(() => {
     document.documentElement.lang = language;
     document.title =
-      language === "tr" ? "DBC Editör | ALGO TEAM" : "DBC Editor | ALGO TEAM";
+      language === "tr"
+        ? "Ücretsiz Online DBC Editörü (CAN/CAN FD) | ALGO TEAM"
+        : "Free Online DBC Editor (CAN/CAN FD) | ALGO TEAM";
   }, [language]);
 
   useEffect(() => {
