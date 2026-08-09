@@ -36,8 +36,8 @@ const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const labels = {
   tr: {
     back: "Ana site",
-    title: "DBC Editör",
-    privacy: "Dosyanız bu tarayıcıdan dışarı çıkmaz",
+    title: "Ücretsiz Online DBC Editörü",
+    privacy: "CAN ve CAN FD mesajlarını ve sinyallerini düzenleyin, doğrulayın ve indirin · Dosya tarayıcıdan dışarı çıkmaz",
     new: "Yeni",
     example: "Örnek",
     guide: "PDF Kılavuzu",
@@ -126,8 +126,8 @@ const labels = {
   },
   en: {
     back: "Main site",
-    title: "DBC Editor",
-    privacy: "Your file never leaves this browser",
+    title: "Free Online DBC Editor",
+    privacy: "Edit, validate, and download CAN and CAN FD messages and signals · Your file stays in this browser",
     new: "New",
     example: "Example",
     guide: "PDF Guide",
@@ -677,7 +677,7 @@ export default function DbcEditor() {
           </a>
           <span className="dbc-topbar-divider" />
           <div>
-            <strong>{t.title}</strong>
+            <h1>{t.title}</h1>
             <small>{t.privacy}</small>
           </div>
         </div>
@@ -854,7 +854,7 @@ export default function DbcEditor() {
                     <div className="dbc-card-heading">
                       <div>
                         <span>MESSAGE / {displayCanId(selectedMessage)}</span>
-                        <h1>{selectedMessage.name}</h1>
+                        <h2>{selectedMessage.name}</h2>
                       </div>
                       <div className="dbc-card-actions">
                         <button type="button" onClick={duplicateMessage}>{t.duplicate}</button>
@@ -1098,7 +1098,7 @@ export default function DbcEditor() {
               ) : (
                 <section className="dbc-no-message">
                   <span>BO_</span>
-                  <h1>{t.noMessages}</h1>
+                  <h2>{t.noMessages}</h2>
                   <button type="button" onClick={addMessage}>＋ {t.addMessage}</button>
                 </section>
               )}
