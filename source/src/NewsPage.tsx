@@ -83,7 +83,9 @@ export default function NewsPage() {
   return (
     <main className="news-page">
       <header className="site-header news-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">ALGO<span>TEAM</span></a>
+        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">
+          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
+        </a>
         <nav className="news-top-nav" aria-label="İçerik menüsü">
           <a href="/">{labels.back}</a>
           <a href="/blog/">{labels.blog}</a>

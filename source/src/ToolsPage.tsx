@@ -65,7 +65,9 @@ export default function ToolsPage() {
   return (
     <main className="hub-page tools-hub">
       <header className="site-header hub-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">ALGO<span>TEAM</span></a>
+        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">
+          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
+        </a>
         <nav className="hub-nav" aria-label="Ana menü">
           <a href="/">{t.nav.home}</a>
           <a href="/learn/">{t.nav.learn}</a>
