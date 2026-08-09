@@ -20,7 +20,7 @@ const copy = {
       menu: "Site Menüsü",
     },
     hero: {
-      title: "Mühendislik Araçları",
+      title: "CAN Bus, J1939 ve Hidrolik Mühendislik Araçları",
       fields: ["Mobil İş Makineleri", "CAN Bus", "J1939"],
       fieldLabel: "Mühendislik alanları",
       scroll: "Araçlar",
@@ -253,7 +253,7 @@ const copy = {
       menu: "Site Menu",
     },
     hero: {
-      title: "Engineering Tools",
+      title: "CAN Bus, J1939 & Hydraulic Engineering Tools",
       fields: ["Off-Highway Machinery", "CAN Bus", "J1939"],
       fieldLabel: "Engineering fields",
       scroll: "Tools",
