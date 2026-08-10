@@ -216,7 +216,9 @@ export default function EngineeringBlog() {
   return (
     <main className="blog-page">
       <header className="site-header blog-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">ALGO<span>TEAM</span></a>
+        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">
+          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
+        </a>
         <a className="blog-back" href="/">← {labels.back}</a>
         <div className="language-switch" aria-label="Dil seçimi">
           <button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button>

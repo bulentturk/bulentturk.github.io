@@ -28,11 +28,6 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-.brand span {
-  color: var(--signal);
-  margin-left: 0.18em;
-}
-
 .site-header {
   backdrop-filter: blur(10px);
   background: rgba(245, 242, 235, 0.84);
@@ -932,9 +927,16 @@ button {
 }
 
 .brand {
-  font-size: 24px;
-  font-weight: 550;
-  letter-spacing: -0.04em;
+  align-items: center;
+  display: inline-flex;
+  justify-self: start;
+  line-height: 0;
+}
+
+.brand img {
+  display: block;
+  height: auto;
+  width: clamp(168px, 14vw, 204px);
 }
 
 .desktop-nav {
@@ -2430,8 +2432,8 @@ footer p {
     display: none;
   }
 
-  .brand {
-    font-size: 20px;
+  .brand img {
+    width: 156px;
   }
 
   .hero {

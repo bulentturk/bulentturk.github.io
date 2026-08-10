@@ -487,7 +487,7 @@ export default function Home() {
     <main id="top">
       <header className="site-header">
         <a className="brand" href="#top" aria-label="ALGO TEAM ana sayfa">
-          ALGO<span>TEAM</span>
+          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
         </a>
         <nav className="desktop-nav" aria-label="Ana menü">
           <a href="/learn/">{t.nav.learn}</a>
