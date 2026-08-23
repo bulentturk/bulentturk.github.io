@@ -25,6 +25,15 @@ import {
   displayCanId,
   parseDbc,
 } from "./dbc/dbc";
+import {
+  type TxByteConfig,
+  advanceTxCounters,
+  clampByte,
+  createDefaultTxByteConfigs,
+  formatTxByte,
+  generateTxPayload,
+  normalizeTxByteConfig,
+} from "./can/tx-generation";
 import "./can-viewer.css";
 
 type Language = "tr" | "en";
@@ -62,6 +71,8 @@ type SentMessage = {
   id: number;
   extended: boolean;
   data: number[];
+  byteValues: number[];
+  byteConfigs: TxByteConfig[];
   cycleMs: number;
   enabled: boolean;
   sentCount: number;
@@ -192,6 +203,24 @@ const copy = {
     txData: "Veri byte’ları",
     txCycle: "Cycle (ms)",
     txCycleHint: "10–60000 ms · tarayıcı zamanlaması",
+    dynamicTitle: "Dinamik mesaj üretici",
+    dynamicIntro:
+      "Her byte için sabit, manuel, sayaç veya checksum davranışı seçin. Değişiklikler çalışan mesajın sonraki çevrimine uygulanır.",
+    fixedMode: "Sabit",
+    manualMode: "Manuel",
+    counterMode: "Sayaç",
+    checksumMode: "Checksum",
+    minimum: "Minimum",
+    maximum: "Maksimum",
+    step: "Adım",
+    currentValue: "Değer",
+    wrapsAtMaximum: "Üst sınırdan sonra minimuma döner",
+    checksumAlgorithm: "Algoritma",
+    checksumRange: "Hesap aralığı",
+    checksumExcludesSelf: "Çıkış byte’ı hesaplamaya katılmaz",
+    livePreview: "Sonraki gönderim önizlemesi",
+    decrease: "Azalt",
+    increase: "Artır",
     sendOnce: "Bir kez gönder",
     startCycle: "Periyodik listeye ekle",
     stopCycle: "Periyodik durdur",
@@ -341,6 +370,24 @@ const copy = {
     txData: "Data bytes",
     txCycle: "Cycle (ms)",
     txCycleHint: "10–60000 ms · browser timing",
+    dynamicTitle: "Dynamic message generator",
+    dynamicIntro:
+      "Choose fixed, manual, counter, or checksum behavior for each byte. Changes apply to the next cycle of a running message.",
+    fixedMode: "Fixed",
+    manualMode: "Manual",
+    counterMode: "Counter",
+    checksumMode: "Checksum",
+    minimum: "Minimum",
+    maximum: "Maximum",
+    step: "Step",
+    currentValue: "Value",
+    wrapsAtMaximum: "Wraps to minimum after the maximum",
+    checksumAlgorithm: "Algorithm",
+    checksumRange: "Input range",
+    checksumExcludesSelf: "The output byte is excluded from the calculation",
+    livePreview: "Next transmission preview",
+    decrease: "Decrease",
+    increase: "Increase",
     sendOnce: "Send once",
     startCycle: "Add cyclic message",
     stopCycle: "Stop cyclic",
@@ -584,6 +631,9 @@ export default function CanViewer() {
   const [txExtended, setTxExtended] = useState(false);
   const [txDlc, setTxDlc] = useState(8);
   const [txBytes, setTxBytes] = useState<string[]>(() => Array(8).fill("00"));
+  const [txByteConfigs, setTxByteConfigs] = useState<TxByteConfig[]>(
+    createDefaultTxByteConfigs,
+  );
   const [txCycle, setTxCycle] = useState("100");
   const [txBusy, setTxBusy] = useState(false);
   const [sentMessages, setSentMessages] = useState<SentMessage[]>([]);
@@ -619,6 +669,23 @@ export default function CanViewer() {
   const cycleTimersRef = useRef<Map<number, number>>(new Map());
   const nextTxUidRef = useRef(1);
   const t = copy[language];
+
+  const editingMessage = useMemo(
+    () => sentMessages.find((message) => message.uid === editingTxUid) ?? null,
+    [editingTxUid, sentMessages],
+  );
+
+  const txPreview = useMemo(() => {
+    if (editingMessage?.enabled) {
+      return generateTxPayload(
+        editingMessage.byteValues,
+        editingMessage.byteConfigs,
+        editingMessage.data.length,
+      );
+    }
+    const values = parseDataBytes(txBytes, txDlc);
+    return values ? generateTxPayload(values, txByteConfigs, txDlc) : null;
+  }, [editingMessage, txByteConfigs, txBytes, txDlc]);
 
   const recordFrames = useCallback((frames: CanFrame[], direction: "rx" | "tx") => {
     if (!recordingRef.current || !frames.length) return;
@@ -1112,13 +1179,30 @@ export default function CanViewer() {
     }
   }
 
-  function preparedTx(): { id: number; extended: boolean; data: number[]; cycleMs: number } | null {
+  function preparedTx(): {
+    id: number;
+    extended: boolean;
+    data: number[];
+    byteValues: number[];
+    byteConfigs: TxByteConfig[];
+    cycleMs: number;
+  } | null {
     const id = parseCanId(txId, txExtended);
-    const data = parseDataBytes(txBytes, txDlc);
+    const byteValues = parseDataBytes(txBytes, txDlc);
     const cycleMs = Number(txCycle);
-    return id === null || data === null
+    const byteConfigs = txByteConfigs
+      .slice(0, txDlc)
+      .map((config) => normalizeTxByteConfig(config, txDlc));
+    return id === null || byteValues === null
       ? null
-      : { id, extended: txExtended, data, cycleMs };
+      : {
+          id,
+          extended: txExtended,
+          data: generateTxPayload(byteValues, byteConfigs, txDlc),
+          byteValues,
+          byteConfigs,
+          cycleMs,
+        };
   }
 
   async function transmitPrepared(
@@ -1189,7 +1273,14 @@ export default function CanViewer() {
   }
 
   function saveMessageDefinition(
-    prepared: { id: number; extended: boolean; data: number[]; cycleMs: number },
+    prepared: {
+      id: number;
+      extended: boolean;
+      data: number[];
+      byteValues: number[];
+      byteConfigs: TxByteConfig[];
+      cycleMs: number;
+    },
     enabled: boolean,
     sentIncrement: number,
   ): SentMessage {
@@ -1198,11 +1289,18 @@ export default function CanViewer() {
       : sentMessagesRef.current.find((message) => message.uid === editingTxUid) ?? null;
     const uid = existing?.uid ?? nextTxUidRef.current++;
     if (existing?.enabled) stopMessage(uid);
+    const byteValues = prepared.byteValues.map((value, index) => (
+      existing && prepared.byteConfigs[index]?.mode === "counter"
+        ? existing.byteValues[index] ?? value
+        : value
+    ));
     const message: SentMessage = {
       uid,
       id: prepared.id,
       extended: prepared.extended,
-      data: [...prepared.data],
+      data: generateTxPayload(byteValues, prepared.byteConfigs, prepared.data.length),
+      byteValues,
+      byteConfigs: prepared.byteConfigs.map((config) => ({ ...config })),
       cycleMs: prepared.cycleMs,
       enabled,
       sentCount: (existing?.sentCount ?? 0) + sentIncrement,
@@ -1250,10 +1348,15 @@ export default function CanViewer() {
     }
 
     const startedAt = performance.now();
+    const data = generateTxPayload(
+      message.byteValues,
+      message.byteConfigs,
+      message.data.length,
+    );
     const sent = await transmitPrepared(
       message.id,
       message.extended,
-      message.data,
+      data,
       false,
       false,
     );
@@ -1262,11 +1365,20 @@ export default function CanViewer() {
       setToast(t.sendFailed);
       return;
     }
-    updateSentMessage(uid, (item) => ({
-      ...item,
-      sentCount: item.sentCount + 1,
-      lastSentAt: Date.now(),
-    }));
+    updateSentMessage(uid, (item) => {
+      const nextByteValues = advanceTxCounters(
+        item.byteValues,
+        item.byteConfigs,
+        item.data.length,
+      );
+      return {
+        ...item,
+        data,
+        byteValues: nextByteValues,
+        sentCount: item.sentCount + 1,
+        lastSentAt: Date.now(),
+      };
+    });
     const current = sentMessagesRef.current.find((item) => item.uid === uid);
     if (!current?.enabled) return;
     const remaining = Math.max(0, current.cycleMs - (performance.now() - startedAt));
@@ -1320,8 +1432,12 @@ export default function CanViewer() {
     setTxExtended(message.extended);
     setTxDlc(message.data.length);
     setTxBytes([
-      ...message.data.map((byte) => byte.toString(16).toUpperCase().padStart(2, "0")),
-      ...Array(Math.max(0, 8 - message.data.length)).fill("00"),
+      ...message.byteValues.map(formatTxByte),
+      ...Array(Math.max(0, 8 - message.byteValues.length)).fill("00"),
+    ].slice(0, 8));
+    setTxByteConfigs([
+      ...message.byteConfigs.map((config) => ({ ...config })),
+      ...createDefaultTxByteConfigs().slice(message.byteConfigs.length),
     ].slice(0, 8));
     setTxCycle(String(message.cycleMs));
     window.requestAnimationFrame(() =>
@@ -1338,7 +1454,15 @@ export default function CanViewer() {
     setTxExtended(false);
     setTxDlc(8);
     setTxBytes(Array(8).fill("00"));
+    setTxByteConfigs(createDefaultTxByteConfigs());
     setTxCycle("100");
+  }
+
+  function changeTxDlc(nextDlc: number) {
+    setTxDlc(nextDlc);
+    setTxByteConfigs((current) => current.map((config) => (
+      normalizeTxByteConfig(config, nextDlc)
+    )));
   }
 
   function deleteSentMessage(uid: number) {
@@ -1350,11 +1474,85 @@ export default function CanViewer() {
     setToast(t.messageDeleted);
   }
 
-  function updateTxByte(index: number, value: string) {
-    const normalized = value.replace(/[^0-9a-fA-F]/g, "").slice(0, 2).toUpperCase();
+  function syncEditedByte(
+    index: number,
+    value?: number,
+    config?: TxByteConfig,
+  ) {
+    if (editingTxUid === null) return;
+    updateSentMessage(editingTxUid, (message) => {
+      const byteValues = [...message.byteValues];
+      const byteConfigs = message.byteConfigs.map((item) => ({ ...item }));
+      if (value !== undefined && index < byteValues.length) {
+        byteValues[index] = clampByte(value);
+      }
+      if (config && index < byteConfigs.length) {
+        byteConfigs[index] = normalizeTxByteConfig(config, message.data.length);
+      }
+      return {
+        ...message,
+        byteValues,
+        byteConfigs,
+        data: generateTxPayload(byteValues, byteConfigs, message.data.length),
+      };
+    });
+  }
+
+  function setTxByteValue(index: number, value: number) {
+    const normalized = formatTxByte(value);
     setTxBytes((current) => current.map((byte, byteIndex) => (
       byteIndex === index ? normalized : byte
     )));
+    syncEditedByte(index, value);
+  }
+
+  function updateTxByteConfig(index: number, patch: Partial<TxByteConfig>) {
+    const mergedConfig = { ...txByteConfigs[index], ...patch };
+    if (patch.min !== undefined) {
+      mergedConfig.min = clampByte(patch.min);
+      mergedConfig.max = Math.max(mergedConfig.min, mergedConfig.max);
+    }
+    if (patch.max !== undefined) {
+      mergedConfig.max = clampByte(patch.max);
+      mergedConfig.min = Math.min(mergedConfig.min, mergedConfig.max);
+    }
+    const nextConfig = normalizeTxByteConfig(
+      mergedConfig,
+      txDlc,
+    );
+    const nextConfigs = txByteConfigs.map((config, byteIndex) => (
+      byteIndex === index ? nextConfig : config
+    ));
+    setTxByteConfigs(nextConfigs);
+
+    const currentValue = Number.parseInt(txBytes[index] || "00", 16);
+    const boundedValue = nextConfig.mode === "manual" || nextConfig.mode === "counter"
+      ? Math.min(nextConfig.max, Math.max(nextConfig.min, currentValue))
+      : currentValue;
+    if (boundedValue !== currentValue) {
+      setTxBytes((current) => current.map((byte, byteIndex) => (
+        byteIndex === index ? formatTxByte(boundedValue) : byte
+      )));
+    }
+    syncEditedByte(index, boundedValue, nextConfig);
+  }
+
+  function updateTxByte(index: number, value: string) {
+    let normalized = value.replace(/[^0-9a-fA-F]/g, "").slice(0, 2).toUpperCase();
+    const config = txByteConfigs[index];
+    if (
+      normalized.length === 2 &&
+      (config.mode === "manual" || config.mode === "counter")
+    ) {
+      const parsed = Number.parseInt(normalized, 16);
+      normalized = formatTxByte(Math.min(config.max, Math.max(config.min, parsed)));
+    }
+    setTxBytes((current) => current.map((byte, byteIndex) => (
+      byteIndex === index ? normalized : byte
+    )));
+    if (normalized.length === 2) {
+      syncEditedByte(index, Number.parseInt(normalized, 16));
+    }
     if (normalized.length === 2 && index + 1 < txDlc) {
       window.requestAnimationFrame(() => txByteRefs.current[index + 1]?.focus());
     }
@@ -1619,7 +1817,7 @@ export default function CanViewer() {
               <span>{t.txDlc}</span>
               <select
                 value={txDlc}
-                onChange={(event) => setTxDlc(Number(event.target.value))}
+                onChange={(event) => changeTxDlc(Number(event.target.value))}
               >
                 {Array.from({ length: 9 }, (_, dlc) => (
                   <option key={dlc} value={dlc}>{dlc}</option>
@@ -1644,6 +1842,10 @@ export default function CanViewer() {
               <div className="can-byte-editor" aria-label={t.txData}>
                 {txBytes.map((byte, index) => {
                   const enabled = index < txDlc;
+                  const config = txByteConfigs[index];
+                  const displayByte = enabled && config.mode === "checksum" && txPreview
+                    ? formatTxByte(txPreview[index])
+                    : byte;
                   return (
                     <label key={index} className={enabled ? "is-active" : "is-disabled"}>
                       <small>B{index}</small>
@@ -1652,19 +1854,138 @@ export default function CanViewer() {
                           txByteRefs.current[index] = element;
                         }}
                         aria-label={`${t.byteLabel} ${index}`}
-                        value={enabled ? byte : ""}
+                        value={enabled ? displayByte : ""}
                         placeholder={enabled ? "00" : "—"}
                         maxLength={2}
                         inputMode="text"
                         autoComplete="off"
                         spellCheck={false}
-                        disabled={!enabled}
+                        disabled={!enabled || config.mode === "checksum"}
                         onFocus={(event) => event.currentTarget.select()}
                         onChange={(event) => updateTxByte(index, event.target.value)}
                         onKeyDown={(event) => onTxByteKeyDown(index, event)}
                         onPaste={(event) => onTxBytePaste(index, event)}
                       />
                     </label>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="can-dynamic-builder">
+              <div className="can-dynamic-head">
+                <div>
+                  <span>{t.dynamicTitle}</span>
+                  <p>{t.dynamicIntro}</p>
+                </div>
+                <div className="can-live-preview">
+                  <small>{t.livePreview}</small>
+                  <code>{txPreview?.length ? formatData(txPreview) : "—"}</code>
+                </div>
+              </div>
+              <div className="can-dynamic-grid">
+                {txByteConfigs.slice(0, txDlc).map((config, index) => {
+                  const storedValue = Number.parseInt(txBytes[index] || "00", 16);
+                  const liveValue = editingMessage?.enabled
+                    ? editingMessage.byteValues[index] ?? storedValue
+                    : storedValue;
+                  return (
+                    <article key={index} className={`can-dynamic-byte is-${config.mode}`}>
+                      <div className="can-dynamic-byte-head">
+                        <strong>B{index}</strong>
+                        <code>{formatTxByte(
+                          config.mode === "checksum" && txPreview
+                            ? txPreview[index]
+                            : liveValue,
+                        )}</code>
+                      </div>
+                      <label className="can-mode-select">
+                        <span>{t.mode}</span>
+                        <select
+                          value={config.mode}
+                          onChange={(event) => updateTxByteConfig(index, {
+                            mode: event.target.value as TxByteConfig["mode"],
+                          })}
+                        >
+                          <option value="fixed">{t.fixedMode}</option>
+                          <option value="manual">{t.manualMode}</option>
+                          <option value="counter">{t.counterMode}</option>
+                          <option value="checksum">{t.checksumMode}</option>
+                        </select>
+                      </label>
+
+                      {config.mode === "manual" ? (
+                        <>
+                          <div className="can-slider-row">
+                            <button
+                              type="button"
+                              aria-label={`${t.decrease} B${index}`}
+                              onClick={() => setTxByteValue(
+                                index,
+                                Math.max(config.min, liveValue - config.step),
+                              )}
+                            >−</button>
+                            <input
+                              aria-label={`${t.byteLabel} ${index} ${t.currentValue}`}
+                              type="range"
+                              min={config.min}
+                              max={config.max}
+                              step={config.step}
+                              value={Math.min(config.max, Math.max(config.min, liveValue))}
+                              onChange={(event) => setTxByteValue(index, Number(event.target.value))}
+                            />
+                            <button
+                              type="button"
+                              aria-label={`${t.increase} B${index}`}
+                              onClick={() => setTxByteValue(
+                                index,
+                                Math.min(config.max, liveValue + config.step),
+                              )}
+                            >+</button>
+                          </div>
+                          <div className="can-config-fields is-three">
+                            <label><span>{t.minimum}</span><input type="number" min={0} max={255} value={config.min} onChange={(event) => updateTxByteConfig(index, { min: Number(event.target.value) })} /></label>
+                            <label><span>{t.maximum}</span><input type="number" min={0} max={255} value={config.max} onChange={(event) => updateTxByteConfig(index, { max: Number(event.target.value) })} /></label>
+                            <label><span>{t.step}</span><input type="number" min={1} max={255} value={config.step} onChange={(event) => updateTxByteConfig(index, { step: Number(event.target.value) })} /></label>
+                          </div>
+                        </>
+                      ) : null}
+
+                      {config.mode === "counter" ? (
+                        <>
+                          <div className="can-config-fields is-four">
+                            <label><span>{t.currentValue}</span><input type="number" min={config.min} max={config.max} value={liveValue} onChange={(event) => setTxByteValue(index, Number(event.target.value))} /></label>
+                            <label><span>{t.minimum}</span><input type="number" min={0} max={255} value={config.min} onChange={(event) => updateTxByteConfig(index, { min: Number(event.target.value) })} /></label>
+                            <label><span>{t.maximum}</span><input type="number" min={0} max={255} value={config.max} onChange={(event) => updateTxByteConfig(index, { max: Number(event.target.value) })} /></label>
+                            <label><span>{t.step}</span><input type="number" min={1} max={255} value={config.step} onChange={(event) => updateTxByteConfig(index, { step: Number(event.target.value) })} /></label>
+                          </div>
+                          <small className="can-mode-note">↻ {t.wrapsAtMaximum}</small>
+                        </>
+                      ) : null}
+
+                      {config.mode === "checksum" ? (
+                        <>
+                          <label className="can-checksum-algorithm">
+                            <span>{t.checksumAlgorithm}</span>
+                            <select value={config.checksumAlgorithm} onChange={(event) => updateTxByteConfig(index, { checksumAlgorithm: event.target.value as TxByteConfig["checksumAlgorithm"] })}>
+                              <option value="sum8">SUM8</option>
+                              <option value="xor8">XOR8</option>
+                              <option value="crc8-sae-j1850">CRC-8 SAE J1850</option>
+                            </select>
+                          </label>
+                          <div className="can-checksum-range">
+                            <span>{t.checksumRange}</span>
+                            <select value={config.checksumStart} onChange={(event) => updateTxByteConfig(index, { checksumStart: Number(event.target.value) })}>
+                              {Array.from({ length: txDlc }, (_, byteIndex) => <option key={byteIndex} value={byteIndex}>B{byteIndex}</option>)}
+                            </select>
+                            <i>→</i>
+                            <select value={config.checksumEnd} onChange={(event) => updateTxByteConfig(index, { checksumEnd: Number(event.target.value) })}>
+                              {Array.from({ length: txDlc }, (_, byteIndex) => <option key={byteIndex} value={byteIndex}>B{byteIndex}</option>)}
+                            </select>
+                          </div>
+                          <small className="can-mode-note">✓ {t.checksumExcludesSelf}</small>
+                        </>
+                      ) : null}
+                    </article>
                   );
                 })}
               </div>
