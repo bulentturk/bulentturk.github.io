@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import ToolSeoContent from "./ToolSeoContent";
 import {
   activeMessageSignals,
   createInitialSignalValues,
@@ -544,8 +545,8 @@ export default function DbcEcuSimulator() {
         <label><span>{t.channel}</span><select value={channel} disabled={Boolean(bridge.connected)} onChange={(event) => setChannel(Number(event.target.value))}>{Array.from({ length: 16 }, (_, index) => <option value={index + 1} key={index}>PCAN_USBBUS{index + 1}</option>)}</select></label>
         <label><span>{t.bitrate}</span><select value={bitrate} disabled={Boolean(bridge.connected)} onChange={(event) => setBitrate(Number(event.target.value))}>{bitrates.map((value) => <option value={value} key={value}>{value >= 1_000_000 ? "1 Mbit/s" : `${value / 1000} kbit/s`}</option>)}</select></label>
         <div className="sim-connect-actions">
-          <button className="is-primary" type="button" disabled={busy || (!bridge.connected && !acknowledged)} onClick={() => void (bridge.connected ? disconnect() : connect())}>{bridge.connected ? t.disconnect : t.connect}</button>
-          <button type="button" disabled={busy || Boolean(bridge.connected)} onClick={toggleDemo}>{demo ? t.stopDemo : t.demo}</button>
+          <button className="is-primary" data-analytics-action="toggle_connection" type="button" disabled={busy || (!bridge.connected && !acknowledged)} onClick={() => void (bridge.connected ? disconnect() : connect())}>{bridge.connected ? t.disconnect : t.connect}</button>
+          <button data-analytics-action="toggle_demo" type="button" disabled={busy || Boolean(bridge.connected)} onClick={toggleDemo}>{demo ? t.stopDemo : t.demo}</button>
         </div>
       </section>
 
@@ -555,8 +556,8 @@ export default function DbcEcuSimulator() {
         <div className="sim-config-head"><span>DBC / 01</span><div><h2>{t.loadTitle}</h2><p>{t.loadIntro}</p></div><strong>{dbcName || t.noDbc}</strong></div>
         <div className="sim-load-row">
           <input ref={fileRef} type="file" accept=".dbc,text/plain" hidden onChange={onDbcChange} />
-          <button type="button" onClick={() => fileRef.current?.click()}>{t.loadDbc}</button>
-          <button type="button" onClick={loadExample}>{t.exampleDbc}</button>
+          <button data-analytics-action="open_dbc" type="button" onClick={() => fileRef.current?.click()}>{t.loadDbc}</button>
+          <button data-analytics-action="load_example" type="button" onClick={loadExample}>{t.exampleDbc}</button>
           {database ? <div className="sim-dbc-summary"><span>{t.summary}</span><strong>{database.messages.length} message · {counts.standard} STD · {counts.extended} EXT · {database.nodes.length} node</strong></div> : null}
         </div>
 
@@ -617,6 +618,8 @@ export default function DbcEcuSimulator() {
           </article>;
         })}
       </section>
+
+      <ToolSeoContent tool="dbc-ecu-simulator" language={language} />
 
       <footer className="sim-footer"><p>ALGO TEAM · DBC ECU Simulator</p><p>CAN · J1939 · PCAN-BASIC</p></footer>
       {toast ? <div className="sim-toast" role="status">{toast}</div> : null}

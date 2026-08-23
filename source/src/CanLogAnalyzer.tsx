@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import ToolSeoContent from "./ToolSeoContent";
 import "./can-log-analyzer.css";
 import type { DbcDatabase, DbcMessage, DbcSignal } from "./dbc/dbc";
 import { createExampleDatabase, parseDbc } from "./dbc/dbc";
@@ -719,10 +720,10 @@ export default function CanLogAnalyzer() {
       <h1>{t.emptyTitle}</h1>
       <p>{t.emptyText}</p>
       <div>
-        <button className="cla-button cla-button--primary" onClick={() => logInputRef.current?.click()} type="button">
+        <button className="cla-button cla-button--primary" data-analytics-action="open_log" onClick={() => logInputRef.current?.click()} type="button">
           {t.openLog}<b>↗</b>
         </button>
-        <button className="cla-button" onClick={() => loadParsedLog(createExampleLog())} type="button">
+        <button className="cla-button" data-analytics-action="load_example" onClick={() => loadParsedLog(createExampleLog())} type="button">
           {t.example}
         </button>
       </div>
@@ -1191,6 +1192,8 @@ export default function CanLogAnalyzer() {
           </section>
         </>
       )}
+
+      <ToolSeoContent tool="can-log-analyzer" language={language} />
 
       {toast && <div className="cla-toast" role="status">{toast}</div>}
     </main>

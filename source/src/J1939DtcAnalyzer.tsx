@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import ToolSeoContent from "./ToolSeoContent";
 import type { ChangeEvent, DragEvent } from "react";
 import { parseCanLog, type ParsedLog } from "./can-log/log";
 import { loadTransferredCanLog } from "./can-log/transfer";
@@ -1222,6 +1223,8 @@ export default function J1939DtcAnalyzer() {
           </div>
         </>
       )}
+
+      <ToolSeoContent tool="j1939-dtc-decoder" language={language} />
 
       {error && <div className="jda-error-toast"><span>!</span>{error}<button onClick={() => setError("")} type="button">×</button></div>}
       {toast && <div className="jda-toast"><i />{toast}</div>}

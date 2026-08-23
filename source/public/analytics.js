@@ -31,6 +31,7 @@
     "/can-viewer": "can_viewer",
     "/can-log-analyzer": "can_log_analyzer",
     "/dbc-editor": "dbc_editor",
+    "/dbc-ecu-simulator": "dbc_ecu_simulator",
     "/j1939-dtc-decoder": "j1939_dtc_decoder",
     "/hydraulic-simulator": "hydraulic_simulator",
   };
@@ -42,9 +43,23 @@
     });
   }
 
+  if (normalizedPath.indexOf("/learn/") === 0 && normalizedPath !== "/learn") {
+    window.gtag("event", "guide_open", {
+      guide_slug: normalizedPath.split("/").filter(Boolean).pop(),
+    });
+  }
+
   document.addEventListener("click", function (event) {
     var target = event.target instanceof Element ? event.target : null;
     if (!target) return;
+
+    var actionTarget = target.closest("[data-analytics-action]");
+    if (actionTarget && toolNames[normalizedPath]) {
+      window.gtag("event", "tool_action", {
+        tool_name: toolNames[normalizedPath],
+        action_name: actionTarget.getAttribute("data-analytics-action"),
+      });
+    }
 
     var contactLink = target.closest('a[href^="mailto:"], a[href^="tel:"], a[href="#contact"]');
     if (contactLink) {

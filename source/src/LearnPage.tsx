@@ -19,7 +19,7 @@ const content = {
     available: "Yayında",
     planned: "Hazırlanıyor",
     categories: [
-      { code: "01", title: "CAN & J1939", text: "Fiziksel katmandan PGN, SPN/FMI ve DM1 teşhisine uzanan uygulamalı öğrenme yolu.", state: "5 içerik yayında", href: "/blog/#can-analizi" },
+      { code: "01", title: "CAN & J1939", text: "Fiziksel katmandan DBC, log analizi, ECU simülasyonu ve DM1 teşhisine uzanan uygulamalı öğrenme yolu.", state: "8 içerik yayında", href: "/learn/dbc-dosyasi-nedir/" },
       { code: "02", title: "Elektrik", text: "24 V sistemler, kablo kesiti, gerilim düşümü, sigorta seçimi ve saha ölçümleri.", state: "Hazırlanıyor" },
       { code: "03", title: "Hidrolik", text: "Basınç, debi, silindir kuvveti, valf davranışı ve devre doğrulama temelleri.", state: "Hazırlanıyor" },
       { code: "04", title: "Makine", text: "ISO 286 yaklaşımı, tolerans bölgeleri, geçmeler, cıvata bağlantıları ve imalat kararları.", state: "Hazırlanıyor" },
@@ -27,9 +27,9 @@ const content = {
       { code: "06", title: "Mühendislik Temelleri", text: "Ölçüm, belirsizlik, saha doğrulaması, teknik çizim ve tekrar edilebilir test yaklaşımı.", state: "1 içerik yayında", href: "/blog/#saha-dogrulamasi" },
     ],
     featured: [
-      { code: "CAN / 01", title: "CAN hattında mesaj analizine nereden başlanır?", text: "Fiziksel katman, zamanlama, jitter, byte order ve ölçek doğrulaması için pratik sıra.", href: "/blog/#can-analizi" },
-      { code: "GATEWAY / 04", title: "GCAN-205 ile Modbus verisini CAN'a güvenli eşlemek", text: "Register sırası, byte order, ölçek ve gönderim tetiklerini tek sözleşmede doğrulama.", href: "/blog/#gcan-modbus-can-esleme" },
-      { code: "J1939 / 05", title: "J1939 arızalarını SPN ve FMI ile okumak", text: "DM1/DM2, occurrence count ve fiziksel ölçümü birlikte yorumlama.", href: "/blog/#j1939-spn-pgn-okuma" },
+      { code: "DBC / 01", title: "DBC dosyası nedir?", text: "Mesaj, sinyal, factor, offset, byte order ve Standard/Extended CAN alanlarını uygulamalı öğrenin.", href: "/learn/dbc-dosyasi-nedir/" },
+      { code: "CAN LOG / 02", title: "CAN log analizi nasıl yapılır?", text: "TRC, ASC, CSV ve candump kayıtlarında periyot, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.", href: "/learn/can-log-analizi/" },
+      { code: "ECU SIM / 03", title: "DBC ile ECU simülasyonu", text: "Fiziksel sinyal değerlerinden Standard veya Extended CAN payload üretin ve güvenli test akışını kurun.", href: "/learn/dbc-ile-ecu-simulasyonu/" },
       { code: "FIELD / 03", title: "Hesap doğruysa makine neden farklı davranır?", text: "Komut, ham değer, ölçekli değer ve bağımsız ölçümü aynı zaman çizelgesinde karşılaştırma.", href: "/blog/#saha-dogrulamasi" },
     ],
     policyTitle: "Yayın ilkesi",
@@ -49,7 +49,7 @@ const content = {
     available: "Published",
     planned: "In preparation",
     categories: [
-      { code: "01", title: "CAN & J1939", text: "A practical path from the physical layer to PGNs, SPN/FMI, DM1, and diagnosis.", state: "5 articles published", href: "/blog/#can-analizi" },
+      { code: "01", title: "CAN & J1939", text: "A practical path from the physical layer through DBC, log analysis, ECU simulation, and DM1 diagnosis.", state: "8 articles published", href: "/learn/dbc-dosyasi-nedir/" },
       { code: "02", title: "Electrical", text: "24 V systems, cable sizing, voltage drop, fuse selection, and field measurements.", state: "In preparation" },
       { code: "03", title: "Hydraulics", text: "Pressure, flow, cylinder force, valve behavior, and circuit-validation fundamentals.", state: "In preparation" },
       { code: "04", title: "Mechanical", text: "ISO 286 concepts, tolerance zones, fits, bolted joints, and manufacturing decisions.", state: "In preparation" },
@@ -57,9 +57,9 @@ const content = {
       { code: "06", title: "Engineering Fundamentals", text: "Measurement, uncertainty, field validation, technical drawings, and repeatable testing.", state: "1 article published", href: "/blog/#saha-dogrulamasi" },
     ],
     featured: [
-      { code: "CAN / 01", title: "Where should CAN message analysis begin?", text: "A practical sequence for the physical layer, timing, jitter, byte order, and scaling.", href: "/blog/#can-analizi" },
-      { code: "GATEWAY / 04", title: "Mapping Modbus data to CAN safely with a GCAN-205", text: "Validate register order, byte order, scaling, and transmission triggers in one contract.", href: "/blog/#gcan-modbus-can-esleme" },
-      { code: "J1939 / 05", title: "Reading J1939 faults through SPN and FMI", text: "Interpret DM1/DM2, occurrence count, and physical measurements together.", href: "/blog/#j1939-spn-pgn-okuma" },
+      { code: "DBC / 01", title: "What is a DBC file?", text: "Learn messages, signals, factor, offset, byte order, and Standard/Extended CAN fields through examples.", href: "/learn/dbc-dosyasi-nedir/" },
+      { code: "CAN LOG / 02", title: "How to analyze a CAN log", text: "Inspect period, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and candump logs.", href: "/learn/can-log-analizi/" },
+      { code: "ECU SIM / 03", title: "ECU simulation with a DBC", text: "Build Standard or Extended CAN payloads from physical signal values and follow a safe test workflow.", href: "/learn/dbc-ile-ecu-simulasyonu/" },
       { code: "FIELD / 03", title: "Why does the machine behave differently when the math is right?", text: "Compare command, raw value, scaled value, and independent measurement on one timeline.", href: "/blog/#saha-dogrulamasi" },
     ],
     policyTitle: "Editorial policy",
