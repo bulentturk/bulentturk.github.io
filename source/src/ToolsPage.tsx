@@ -22,9 +22,10 @@ const content = {
     items: [
       { no: "01", code: "CAN / J1939", title: "Ücretsiz Online DBC Editörü", text: "CAN ve CAN FD mesajlarını ve sinyallerini oluşturun, doğrulayın ve DBC olarak indirin.", features: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"], href: "/dbc-editor/", status: "Beta" },
       { no: "02", code: "CAN / HARDWARE", title: "Online CAN Bus İzleyici", text: "PCAN-USB ile canlı CAN trafiğini izleyin, kontrollü mesaj gönderin ve TRC/CSV kaydı alın.", features: ["PCAN-USB", "RX / TX", "TRC / CSV"], href: "/can-viewer/", status: "Beta" },
-      { no: "03", code: "DATA ANALYSIS", title: "Online CAN Log Analiz Programı", text: "TRC, ASC, CSV ve SocketCAN kayıtlarında periyot, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.", features: ["Çoklu format", "Periyot / jitter", "Sinyal grafikleri"], href: "/can-log-analyzer/", status: "Beta" },
-      { no: "04", code: "J1939 / DIAGNOSTICS", title: "J1939 SPN/FMI Arıza Kodu Çözücü", text: "DM1 mesajlarını, SPN/FMI kodlarını, ECU adreslerini ve çok paketli TP trafiğini çözümleyin.", features: ["DM1", "SPN / FMI", "BAM / TP.DT"], href: "/j1939-dtc-decoder/", status: "Beta" },
-      { no: "05", code: "HYDRAULICS", title: "Ücretsiz Online Hidrolik Devre Simülatörü", text: "Pompa, valf ve silindirleri bağlayın; basınç, debi ve hareket davranışını tarayıcıda gözlemleyin.", features: ["Sürükle / bırak", "Canlı akış", "Devre kontrolü"], href: "/hydraulic-simulator/", status: "Beta" },
+      { no: "03", code: "DBC / ECU", title: "DBC ECU Simülatörü", text: "DBC mesajlarını sinyal kontrollerine dönüştürün; Standard veya Extended CAN frame’lerini PCAN-USB ile gönderin.", features: ["Sinyal kodlama", "STD / EXT", "Periyodik TX"], href: "/dbc-ecu-simulator/", status: "Beta" },
+      { no: "04", code: "DATA ANALYSIS", title: "Online CAN Log Analiz Programı", text: "TRC, ASC, CSV ve SocketCAN kayıtlarında periyot, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.", features: ["Çoklu format", "Periyot / jitter", "Sinyal grafikleri"], href: "/can-log-analyzer/", status: "Beta" },
+      { no: "05", code: "J1939 / DIAGNOSTICS", title: "J1939 SPN/FMI Arıza Kodu Çözücü", text: "DM1 mesajlarını, SPN/FMI kodlarını, ECU adreslerini ve çok paketli TP trafiğini çözümleyin.", features: ["DM1", "SPN / FMI", "BAM / TP.DT"], href: "/j1939-dtc-decoder/", status: "Beta" },
+      { no: "06", code: "HYDRAULICS", title: "Ücretsiz Online Hidrolik Devre Simülatörü", text: "Pompa, valf ve silindirleri bağlayın; basınç, debi ve hareket davranışını tarayıcıda gözlemleyin.", features: ["Sürükle / bırak", "Canlı akış", "Devre kontrolü"], href: "/hydraulic-simulator/", status: "Beta" },
     ],
   },
   en: {
@@ -44,9 +45,10 @@ const content = {
     items: [
       { no: "01", code: "CAN / J1939", title: "Free Online DBC Editor", text: "Create, validate, and download CAN and CAN FD messages and signals as DBC.", features: ["CAN / CAN FD", "Intel / Motorola", "DBC export"], href: "/dbc-editor/", status: "Beta" },
       { no: "02", code: "CAN / HARDWARE", title: "Online CAN Bus Viewer", text: "Monitor live CAN traffic via PCAN-USB, transmit controlled frames, and record TRC/CSV logs.", features: ["PCAN-USB", "RX / TX", "TRC / CSV"], href: "/can-viewer/", status: "Beta" },
-      { no: "03", code: "DATA ANALYSIS", title: "Online CAN Log Analyzer", text: "Inspect timing, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and SocketCAN logs.", features: ["Multiple formats", "Period / jitter", "Signal charts"], href: "/can-log-analyzer/", status: "Beta" },
-      { no: "04", code: "J1939 / DIAGNOSTICS", title: "J1939 SPN/FMI Fault Code Decoder", text: "Decode DM1 messages, SPN/FMI codes, ECU addresses, and multi-packet TP traffic.", features: ["DM1", "SPN / FMI", "BAM / TP.DT"], href: "/j1939-dtc-decoder/", status: "Beta" },
-      { no: "05", code: "HYDRAULICS", title: "Free Online Hydraulic Circuit Simulator", text: "Connect pumps, valves, and cylinders, then observe pressure, flow, and motion in the browser.", features: ["Drag / drop", "Live flow", "Circuit checks"], href: "/hydraulic-simulator/", status: "Beta" },
+      { no: "03", code: "DBC / ECU", title: "DBC ECU Simulator", text: "Turn DBC messages into signal controls and transmit Standard or Extended CAN frames via PCAN-USB.", features: ["Signal encoding", "STD / EXT", "Cyclic TX"], href: "/dbc-ecu-simulator/", status: "Beta" },
+      { no: "04", code: "DATA ANALYSIS", title: "Online CAN Log Analyzer", text: "Inspect timing, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and SocketCAN logs.", features: ["Multiple formats", "Period / jitter", "Signal charts"], href: "/can-log-analyzer/", status: "Beta" },
+      { no: "05", code: "J1939 / DIAGNOSTICS", title: "J1939 SPN/FMI Fault Code Decoder", text: "Decode DM1 messages, SPN/FMI codes, ECU addresses, and multi-packet TP traffic.", features: ["DM1", "SPN / FMI", "BAM / TP.DT"], href: "/j1939-dtc-decoder/", status: "Beta" },
+      { no: "06", code: "HYDRAULICS", title: "Free Online Hydraulic Circuit Simulator", text: "Connect pumps, valves, and cylinders, then observe pressure, flow, and motion in the browser.", features: ["Drag / drop", "Live flow", "Circuit checks"], href: "/hydraulic-simulator/", status: "Beta" },
     ],
   },
 } as const;

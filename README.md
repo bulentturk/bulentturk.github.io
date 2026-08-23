@@ -14,10 +14,18 @@ backend upload.
 decodes live signals with a user-supplied DBC file. Browser-to-driver access is
 provided by the receive-only Windows bridge in `companion/pcan-bridge/`.
 
-The bridge binds only to `127.0.0.1`, exposes no transmit endpoint, and rejects
-the PCAN connection when listen-only mode cannot be enabled. Browser requests
-are restricted to the live site and local development origins. The official
-PEAK driver is required separately and is not distributed in this repository.
+The bridge binds only to `127.0.0.1`. Connections start in listen-only mode;
+transmission is available only after explicit acknowledgement and a reconnect
+in transmit mode. Browser requests are restricted to the live site and local
+development origins. The official PEAK driver is required separately and is
+not distributed in this repository.
+
+## DBC ECU Simulator
+
+`/dbc-ecu-simulator/` turns DBC messages into editable physical signal controls
+and encodes them back into classic CAN payloads. Standard 11-bit and extended
+29-bit messages can coexist in one DBC and can be transmitted once or cyclically
+through the same local PCAN bridge safety flow.
 
 ## CAN Log Analyzer
 
