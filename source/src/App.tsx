@@ -82,6 +82,16 @@ const copy = {
         {
           kind: "simulator",
           no: "05",
+          code: "DBC ECU",
+          discipline: "CAN / J1939",
+          title: "DBC ECU Simülatörü",
+          text: "DBC mesajlarını sinyal kontrollerine dönüştürün; Standard veya Extended CAN frame’lerini tek seferlik ya da periyodik gönderin.",
+          features: ["Sinyal kodlama", "STD / EXT", "Periyodik TX"],
+          href: "/dbc-ecu-simulator/",
+        },
+        {
+          kind: "simulator",
+          no: "06",
           code: "HYDRAULICS",
           discipline: "Hidrolik",
           title: "Hidrolik Devre Simülatörü",
@@ -304,6 +314,16 @@ const copy = {
         {
           kind: "simulator",
           no: "05",
+          code: "DBC ECU",
+          discipline: "CAN / J1939",
+          title: "DBC ECU Simulator",
+          text: "Turn DBC messages into signal controls, then transmit Standard or Extended CAN frames once or cyclically.",
+          features: ["Signal encoding", "STD / EXT", "Cyclic TX"],
+          href: "/dbc-ecu-simulator/",
+        },
+        {
+          kind: "simulator",
+          no: "06",
           code: "HYDRAULICS",
           discipline: "Hydraulics",
           title: "Hydraulic Circuit Simulator",

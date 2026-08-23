@@ -17,6 +17,7 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         "dbc-editor": resolve(__dirname, "dbc-editor/index.html"),
         "can-viewer": resolve(__dirname, "can-viewer/index.html"),
+        "dbc-ecu-simulator": resolve(__dirname, "dbc-ecu-simulator/index.html"),
         "can-log-analyzer": resolve(__dirname, "can-log-analyzer/index.html"),
         "j1939-dtc-decoder": resolve(__dirname, "j1939-dtc-decoder/index.html"),
         "hydraulic-simulator": resolve(__dirname, "hydraulic-simulator/index.html"),

@@ -22,7 +22,6 @@ import {
 import {
   type DbcDatabase,
   createExampleDatabase,
-  displayCanId,
   parseDbc,
 } from "./dbc/dbc";
 import {
@@ -39,6 +38,7 @@ import "./can-viewer.css";
 type Language = "tr" | "en";
 type ViewMode = "messages" | "trace";
 type ConnectionMode = "listen" | "transmit";
+type NumericFormat = "hex" | "decimal";
 
 type RecordedFrame = {
   frame: CanFrame;
@@ -268,6 +268,12 @@ const copy = {
     recording: "Kayıt yapılıyor",
     notRecording: "Kayıt bekliyor",
     txCount: "Gönderilen",
+    displayFormat: "Gösterim",
+    idDisplay: "CAN ID",
+    dataDisplay: "Veri byte'ları",
+    hexadecimal: "HEX",
+    decimal: "DEC",
+    openEcuSimulator: "DBC ECU Simülatörü",
   },
   en: {
     back: "Main site",
@@ -435,6 +441,12 @@ const copy = {
     recording: "Recording",
     notRecording: "Ready to record",
     txCount: "Transmitted",
+    displayFormat: "Display",
+    idDisplay: "CAN ID",
+    dataDisplay: "Data bytes",
+    hexadecimal: "HEX",
+    decimal: "DEC",
+    openEcuSimulator: "DBC ECU Simulator",
   },
 } as const;
 
@@ -560,18 +572,43 @@ function escapeCsv(value: string | number): string {
   return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }
 
-function parseCanId(value: string, extended: boolean): number | null {
+function parseCanId(
+  value: string,
+  extended: boolean,
+  format: NumericFormat = "hex",
+): number | null {
   const clean = value.trim().replace(/^0x/i, "");
-  if (!/^[0-9a-fA-F]+$/.test(clean)) return null;
-  const id = Number.parseInt(clean, 16);
+  const pattern = format === "hex" ? /^[0-9a-fA-F]+$/ : /^\d+$/;
+  if (!pattern.test(clean)) return null;
+  const id = Number.parseInt(clean, format === "hex" ? 16 : 10);
   const maximum = extended ? 0x1fffffff : 0x7ff;
   return Number.isFinite(id) && id >= 0 && id <= maximum ? id : null;
 }
 
-function formatTxMessageId(message: Pick<SentMessage, "id" | "extended">): string {
+function formatTxMessageId(
+  message: Pick<SentMessage, "id" | "extended">,
+  format: NumericFormat = "hex",
+): string {
+  if (format === "decimal") return message.id.toString(10);
   return message.extended
     ? `0x${message.id.toString(16).toUpperCase().padStart(8, "0")}`
     : `0x${message.id.toString(16).toUpperCase().padStart(3, "0")}`;
+}
+
+function formatFrameId(
+  frame: Pick<CanFrame, "id" | "extended">,
+  format: NumericFormat,
+): string {
+  return format === "hex" ? formatCanId(frame) : Math.max(0, frame.id).toString(10);
+}
+
+function formatPayload(data: number[], format: NumericFormat): string {
+  return format === "hex" ? formatData(data) : data.join(" ");
+}
+
+function displayTxByte(value: string, format: NumericFormat): string {
+  if (format === "hex" || !/^[0-9A-Fa-f]{2}$/.test(value)) return value;
+  return Number.parseInt(value, 16).toString(10);
 }
 
 function parseDataBytes(values: string[], dlc: number): number[] | null {
@@ -587,7 +624,16 @@ function parseDataBytes(values: string[], dlc: number): number[] | null {
   return activeValues.map((value) => Number.parseInt(value, 16));
 }
 
-function pastedDataBytes(value: string): string[] {
+function pastedDataBytes(value: string, format: NumericFormat = "hex"): string[] {
+  if (format === "decimal") {
+    const separated = value.trim().split(/[\s,;]+/).filter(Boolean);
+    if (!separated.length || separated.some((token) => !/^\d{1,3}$/.test(token))) {
+      return [];
+    }
+    const values = separated.map(Number);
+    if (values.some((item) => item < 0 || item > 255)) return [];
+    return values.map(formatTxByte);
+  }
   const trimmed = value.trim().replaceAll("0x", "").replaceAll("0X", "");
   if (!trimmed) return [];
   const separated = trimmed.split(/[\s,;]+/).filter(Boolean);
@@ -655,6 +701,8 @@ export default function CanViewer() {
   const [recordingCount, setRecordingCount] = useState(0);
   const [recordingElapsed, setRecordingElapsed] = useState(0);
   const [recordLimitReached, setRecordLimitReached] = useState(false);
+  const [idFormat, setIdFormat] = useState<NumericFormat>("hex");
+  const [dataFormat, setDataFormat] = useState<NumericFormat>("hex");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const arrivalTimesRef = useRef<number[]>([]);
   const demoSequenceRef = useRef(1);
@@ -876,6 +924,7 @@ export default function CanViewer() {
         formatCanId(row.frame),
         row.frame.id.toString(),
         formatData(row.frame.data),
+        row.frame.data.join(" "),
         message?.name ?? "",
         ...(message?.signals.map((signal) => signal.name) ?? []),
       ]
@@ -896,6 +945,7 @@ export default function CanViewer() {
           formatCanId(frame),
           frame.id.toString(),
           formatData(frame.data),
+          frame.data.join(" "),
           message?.name ?? "",
           ...(message?.signals.map((signal) => signal.name) ?? []),
         ]
@@ -1187,7 +1237,7 @@ export default function CanViewer() {
     byteConfigs: TxByteConfig[];
     cycleMs: number;
   } | null {
-    const id = parseCanId(txId, txExtended);
+    const id = parseCanId(txId, txExtended, idFormat);
     const byteValues = parseDataBytes(txBytes, txDlc);
     const cycleMs = Number(txCycle);
     const byteConfigs = txByteConfigs
@@ -1428,7 +1478,7 @@ export default function CanViewer() {
 
   function editSentMessage(message: SentMessage) {
     setEditingTxUid(message.uid);
-    setTxId(message.id.toString(16).toUpperCase());
+    setTxId(message.id.toString(idFormat === "hex" ? 16 : 10).toUpperCase());
     setTxExtended(message.extended);
     setTxDlc(message.data.length);
     setTxBytes([
@@ -1450,7 +1500,7 @@ export default function CanViewer() {
 
   function newTxMessage() {
     setEditingTxUid(null);
-    setTxId("201");
+    setTxId(idFormat === "hex" ? "201" : "513");
     setTxExtended(false);
     setTxDlc(8);
     setTxBytes(Array(8).fill("00"));
@@ -1538,7 +1588,20 @@ export default function CanViewer() {
   }
 
   function updateTxByte(index: number, value: string) {
-    let normalized = value.replace(/[^0-9a-fA-F]/g, "").slice(0, 2).toUpperCase();
+    let normalized: string;
+    if (dataFormat === "decimal") {
+      const decimal = value.replace(/\D/g, "").slice(0, 3);
+      if (!decimal) {
+        setTxBytes((current) => current.map((byte, byteIndex) => (
+          byteIndex === index ? "" : byte
+        )));
+        return;
+      }
+      const parsedDecimal = Math.min(255, Number(decimal));
+      normalized = formatTxByte(parsedDecimal);
+    } else {
+      normalized = value.replace(/[^0-9a-fA-F]/g, "").slice(0, 2).toUpperCase();
+    }
     const config = txByteConfigs[index];
     if (
       normalized.length === 2 &&
@@ -1553,7 +1616,11 @@ export default function CanViewer() {
     if (normalized.length === 2) {
       syncEditedByte(index, Number.parseInt(normalized, 16));
     }
-    if (normalized.length === 2 && index + 1 < txDlc) {
+    if (
+      normalized.length === 2 &&
+      index + 1 < txDlc &&
+      (dataFormat === "hex" || value.length >= 3)
+    ) {
       window.requestAnimationFrame(() => txByteRefs.current[index + 1]?.focus());
     }
   }
@@ -1573,7 +1640,7 @@ export default function CanViewer() {
   }
 
   function onTxBytePaste(index: number, event: ClipboardEvent<HTMLInputElement>) {
-    const pasted = pastedDataBytes(event.clipboardData.getData("text"));
+    const pasted = pastedDataBytes(event.clipboardData.getData("text"), dataFormat);
     if (!pasted.length) return;
     event.preventDefault();
     setTxBytes((current) => {
@@ -1598,6 +1665,15 @@ export default function CanViewer() {
           ? t.transmitMode
           : t.active
         : t.disconnected;
+
+  function changeIdFormat(nextFormat: NumericFormat) {
+    if (nextFormat === idFormat) return;
+    const currentId = parseCanId(txId, txExtended, idFormat);
+    setIdFormat(nextFormat);
+    if (currentId !== null) {
+      setTxId(currentId.toString(nextFormat === "hex" ? 16 : 10).toUpperCase());
+    }
+  }
 
   return (
     <main className="can-viewer">
@@ -1769,6 +1845,24 @@ export default function CanViewer() {
         </section>
       ) : null}
 
+      <section className="can-format-panel" aria-label={t.displayFormat}>
+        <strong>{t.displayFormat}</strong>
+        <div>
+          <span>{t.idDisplay}</span>
+          <div className="can-format-switch">
+            <button className={idFormat === "hex" ? "is-active" : ""} type="button" onClick={() => changeIdFormat("hex")}>{t.hexadecimal}</button>
+            <button className={idFormat === "decimal" ? "is-active" : ""} type="button" onClick={() => changeIdFormat("decimal")}>{t.decimal}</button>
+          </div>
+        </div>
+        <div>
+          <span>{t.dataDisplay}</span>
+          <div className="can-format-switch">
+            <button className={dataFormat === "hex" ? "is-active" : ""} type="button" onClick={() => setDataFormat("hex")}>{t.hexadecimal}</button>
+            <button className={dataFormat === "decimal" ? "is-active" : ""} type="button" onClick={() => setDataFormat("decimal")}>{t.decimal}</button>
+          </div>
+        </div>
+      </section>
+
       <section className="can-io-panel" aria-label="CAN transmit and recording">
         <article className="can-tx-card">
           <div className="can-io-head">
@@ -1795,11 +1889,12 @@ export default function CanViewer() {
           ) : null}
           <div className="can-tx-fields">
             <label className="can-tx-id">
-              <span>{t.txId}</span>
+              <span>{idFormat === "hex" ? t.txId : `${t.idDisplay} (${t.decimal})`}</span>
               <input
                 value={txId}
                 onChange={(event) => setTxId(event.target.value)}
-                placeholder={txExtended ? "18FF50E5" : "201"}
+                placeholder={idFormat === "hex" ? (txExtended ? "18FF50E5" : "201") : (txExtended ? "419385573" : "513")}
+                inputMode={idFormat === "decimal" ? "numeric" : "text"}
                 spellCheck={false}
               />
             </label>
@@ -1854,10 +1949,10 @@ export default function CanViewer() {
                           txByteRefs.current[index] = element;
                         }}
                         aria-label={`${t.byteLabel} ${index}`}
-                        value={enabled ? displayByte : ""}
-                        placeholder={enabled ? "00" : "—"}
-                        maxLength={2}
-                        inputMode="text"
+                        value={enabled ? displayTxByte(displayByte, dataFormat) : ""}
+                        placeholder={enabled ? (dataFormat === "hex" ? "00" : "0") : "—"}
+                        maxLength={dataFormat === "hex" ? 2 : 3}
+                        inputMode={dataFormat === "decimal" ? "numeric" : "text"}
                         autoComplete="off"
                         spellCheck={false}
                         disabled={!enabled || config.mode === "checksum"}
@@ -1879,7 +1974,7 @@ export default function CanViewer() {
                 </div>
                 <div className="can-live-preview">
                   <small>{t.livePreview}</small>
-                  <code>{txPreview?.length ? formatData(txPreview) : "—"}</code>
+                  <code>{txPreview?.length ? formatPayload(txPreview, dataFormat) : "—"}</code>
                 </div>
               </div>
               <div className="can-dynamic-grid">
@@ -1892,11 +1987,9 @@ export default function CanViewer() {
                     <article key={index} className={`can-dynamic-byte is-${config.mode}`}>
                       <div className="can-dynamic-byte-head">
                         <strong>B{index}</strong>
-                        <code>{formatTxByte(
-                          config.mode === "checksum" && txPreview
-                            ? txPreview[index]
-                            : liveValue,
-                        )}</code>
+                        <code>{dataFormat === "hex"
+                          ? formatTxByte(config.mode === "checksum" && txPreview ? txPreview[index] : liveValue)
+                          : String(config.mode === "checksum" && txPreview ? txPreview[index] : liveValue)}</code>
                       </div>
                       <label className="can-mode-select">
                         <span>{t.mode}</span>
@@ -2120,7 +2213,7 @@ export default function CanViewer() {
                           type="checkbox"
                           checked={message.enabled}
                           onChange={() => toggleSentMessage(message.uid)}
-                          aria-label={`${formatTxMessageId(message)} · ${
+                          aria-label={`${formatTxMessageId(message, idFormat)} · ${
                             message.enabled ? t.stopCycle : t.startCycle
                           }`}
                         />
@@ -2129,7 +2222,7 @@ export default function CanViewer() {
                       </label>
                     </td>
                     <td>
-                      <strong>{formatTxMessageId(message)}</strong>
+                      <strong>{formatTxMessageId(message, idFormat)}</strong>
                     </td>
                     <td>
                       <span className={`can-frame-type${message.extended ? " is-ext" : ""}`}>
@@ -2137,7 +2230,7 @@ export default function CanViewer() {
                       </span>
                     </td>
                     <td>{message.data.length}</td>
-                    <td><code>{formatData(message.data) || "—"}</code></td>
+                    <td><code>{formatPayload(message.data, dataFormat) || "—"}</code></td>
                     <td>{message.cycleMs} ms</td>
                     <td>{message.sentCount.toLocaleString()}</td>
                     <td>
@@ -2196,6 +2289,7 @@ export default function CanViewer() {
               {t.openDbc}
             </button>
             <button type="button" onClick={loadExample}>{t.exampleDbc}</button>
+            <a href="/dbc-ecu-simulator/">{t.openEcuSimulator} →</a>
           </div>
           <div className="can-toolbar-actions">
             <div className="can-view-switch">
@@ -2280,7 +2374,7 @@ export default function CanViewer() {
                               onClick={() => setSelectedFrame(row.frame)}
                             >
                               <td>{(row.lastSeen / 1000).toFixed(3)}</td>
-                              <td><strong>{formatCanId(row.frame)}</strong></td>
+                              <td><strong>{formatFrameId(row.frame, idFormat)}</strong></td>
                               <td>{message?.name ?? "—"}</td>
                               <td>
                                 <span className={`can-frame-type${row.frame.extended ? " is-ext" : ""}`}>
@@ -2294,7 +2388,7 @@ export default function CanViewer() {
                                 </span>
                               </td>
                               <td>{row.frame.data.length}</td>
-                              <td><code>{formatData(row.frame.data) || "—"}</code></td>
+                              <td><code>{formatPayload(row.frame.data, dataFormat) || "—"}</code></td>
                               <td>{row.count.toLocaleString()}</td>
                               <td>{row.periodMs === null ? "—" : `${row.periodMs.toFixed(1)} ms`}</td>
                             </tr>
@@ -2310,7 +2404,7 @@ export default function CanViewer() {
                               onClick={() => setSelectedFrame(frame)}
                             >
                               <td>{(frame.timestampMs / 1000).toFixed(3)}</td>
-                              <td><strong>{formatCanId(frame)}</strong></td>
+                              <td><strong>{formatFrameId(frame, idFormat)}</strong></td>
                               <td>{message?.name ?? "—"}</td>
                               <td>
                                 <span className={`can-frame-type${frame.extended ? " is-ext" : ""}`}>
@@ -2324,7 +2418,7 @@ export default function CanViewer() {
                                 </span>
                               </td>
                               <td>{frame.data.length}</td>
-                              <td><code>{formatData(frame.data) || "—"}</code></td>
+                              <td><code>{formatPayload(frame.data, dataFormat) || "—"}</code></td>
                             </tr>
                           );
                         })}
@@ -2339,9 +2433,9 @@ export default function CanViewer() {
               <span>{t.details}</span>
               {selectedFrame ? (
                 <>
-                  <strong>{selectedMessage?.name ?? formatCanId(selectedFrame)}</strong>
+                  <strong>{selectedMessage?.name ?? formatFrameId(selectedFrame, idFormat)}</strong>
                   <small>
-                    {formatCanId(selectedFrame)} · {selectedFrame.data.length} byte
+                    {formatFrameId(selectedFrame, idFormat)} · {selectedFrame.data.length} byte
                   </small>
                 </>
               ) : null}
@@ -2351,7 +2445,7 @@ export default function CanViewer() {
               <p className="can-decode-message">{t.chooseFrame}</p>
             ) : !selectedMessage ? (
               <div className="can-no-dbc-match">
-                <span>{formatCanId(selectedFrame)}</span>
+                <span>{formatFrameId(selectedFrame, idFormat)}</span>
                 <p>{t.noMatch}</p>
                 <button type="button" onClick={() => fileInputRef.current?.click()}>
                   {t.openDbc}
@@ -2393,7 +2487,7 @@ export default function CanViewer() {
                   {selectedFrame.data.map((byte, index) => (
                     <span key={index}>
                       <small>{index}</small>
-                      <strong>{byte.toString(16).toUpperCase().padStart(2, "0")}</strong>
+                      <strong>{dataFormat === "hex" ? byte.toString(16).toUpperCase().padStart(2, "0") : byte}</strong>
                     </span>
                   ))}
                 </div>
