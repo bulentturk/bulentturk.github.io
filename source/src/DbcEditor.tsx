@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import ToolSeoContent from "./ToolSeoContent";
 import {
   cloneMessage,
   cloneSignal,
@@ -697,6 +698,7 @@ export default function DbcEditor() {
           </a>
           <button
             className="dbc-tool-button"
+            data-analytics-action="load_example"
             type="button"
             onClick={() => {
               if (window.confirm(t.confirmNew)) replaceDatabase(createDatabase());
@@ -714,10 +716,10 @@ export default function DbcEditor() {
           <button className="dbc-tool-button" type="button" onClick={loadDraft}>
             <Icon>↺</Icon>{t.draft}
           </button>
-          <button className="dbc-tool-button" type="button" onClick={() => fileInputRef.current?.click()}>
+          <button className="dbc-tool-button" data-analytics-action="open_dbc" type="button" onClick={() => fileInputRef.current?.click()}>
             <Icon>↑</Icon>{t.open}
           </button>
-          <button className="dbc-tool-button dbc-tool-button--primary" type="button" onClick={downloadDbc}>
+          <button className="dbc-tool-button dbc-tool-button--primary" data-analytics-action="download_dbc" type="button" onClick={downloadDbc}>
             <Icon>↓</Icon>{t.save}
           </button>
           <input
@@ -1174,6 +1176,8 @@ export default function DbcEditor() {
           ) : null}
         </section>
       </div>
+
+      <ToolSeoContent tool="dbc-editor" language={language} />
 
       <datalist id="dbc-nodes">
         {database.nodes.map((node) => <option key={node} value={node} />)}

@@ -11,6 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
+import ToolSeoContent from "./ToolSeoContent";
 import {
   type CanFrame,
   decodeMessage,
@@ -2285,10 +2286,10 @@ export default function CanViewer() {
               onChange={onDbcChange}
               hidden
             />
-            <button type="button" onClick={() => fileInputRef.current?.click()}>
+            <button data-analytics-action="open_dbc" type="button" onClick={() => fileInputRef.current?.click()}>
               {t.openDbc}
             </button>
-            <button type="button" onClick={loadExample}>{t.exampleDbc}</button>
+            <button data-analytics-action="load_example" type="button" onClick={loadExample}>{t.exampleDbc}</button>
             <a href="/dbc-ecu-simulator/">{t.openEcuSimulator} →</a>
           </div>
           <div className="can-toolbar-actions">
@@ -2500,6 +2501,8 @@ export default function CanViewer() {
           <p className="can-dropped">{t.dropped}: {bridge.dropped.toLocaleString()}</p>
         ) : null}
       </section>
+
+      <ToolSeoContent tool="can-viewer" language={language} />
 
       <footer className="can-footer">
         <p>ALGO TEAM · CAN Viewer</p>
