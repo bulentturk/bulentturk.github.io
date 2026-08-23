@@ -655,6 +655,204 @@
   opacity: 0.38;
 }
 
+.can-dynamic-builder {
+  border-bottom: 1px solid var(--can-line);
+  grid-column: 1 / -1;
+  padding: 20px 16px 22px;
+}
+
+.can-dynamic-head {
+  align-items: end;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.can-dynamic-head > div:first-child > span,
+.can-live-preview small,
+.can-mode-select span,
+.can-config-fields span,
+.can-checksum-algorithm span,
+.can-checksum-range > span {
+  color: #78858a;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.can-dynamic-head p {
+  color: var(--can-muted);
+  font-size: 9px;
+  line-height: 1.5;
+  margin: 6px 0 0;
+  max-width: 620px;
+}
+
+.can-live-preview {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.can-live-preview code {
+  background: var(--can-ink);
+  color: #78dbe0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  min-width: 240px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.can-dynamic-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.can-dynamic-byte {
+  background: #f2f4f1;
+  border: 1px solid var(--can-line);
+  min-width: 0;
+  padding: 12px;
+}
+
+.can-dynamic-byte.is-manual {
+  border-color: #9fcfd1;
+}
+
+.can-dynamic-byte.is-counter {
+  border-color: #b8caa8;
+}
+
+.can-dynamic-byte.is-checksum {
+  background: #eef5f4;
+  border-color: #8ebfc2;
+}
+
+.can-dynamic-byte-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.can-dynamic-byte-head strong {
+  color: var(--can-ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+}
+
+.can-dynamic-byte-head code {
+  background: var(--can-ink);
+  color: #78dbe0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  min-width: 32px;
+  padding: 5px 7px;
+  text-align: center;
+}
+
+.can-mode-select,
+.can-checksum-algorithm {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: 72px 1fr;
+}
+
+.can-dynamic-byte select,
+.can-dynamic-byte input[type="number"] {
+  background: #fff;
+  border: 1px solid var(--can-line);
+  color: var(--can-ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  margin: 0;
+  min-height: 29px;
+  padding: 5px 7px;
+}
+
+.can-slider-row {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 31px 1fr 31px;
+  margin-top: 11px;
+}
+
+.can-slider-row button {
+  background: var(--can-ink);
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  height: 31px;
+}
+
+.can-slider-row button:hover {
+  background: var(--can-signal);
+}
+
+.can-slider-row input[type="range"] {
+  accent-color: var(--can-signal);
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.can-config-fields {
+  display: grid;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.can-config-fields.is-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.can-config-fields.is-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.can-config-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.can-checksum-algorithm {
+  margin-top: 10px;
+}
+
+.can-checksum-range {
+  align-items: center;
+  display: grid;
+  gap: 7px;
+  grid-template-columns: 72px 1fr auto 1fr;
+  margin-top: 8px;
+}
+
+.can-checksum-range i {
+  color: var(--can-signal);
+  font-style: normal;
+  text-align: center;
+}
+
+.can-mode-note {
+  color: #748489;
+  display: block;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 7px;
+  line-height: 1.4;
+  margin-top: 8px;
+}
+
 .can-tx-actions {
   display: grid;
   grid-column: 1 / -1;
@@ -1639,6 +1837,10 @@
     grid-template-columns: repeat(8, minmax(38px, 1fr));
   }
 
+  .can-dynamic-grid {
+    grid-template-columns: 1fr;
+  }
+
   .can-toolbar-actions {
     flex-wrap: wrap;
   }
@@ -1732,6 +1934,29 @@
 
   .can-byte-editor {
     grid-template-columns: repeat(4, minmax(45px, 1fr));
+  }
+
+  .can-dynamic-builder {
+    grid-column: 1;
+  }
+
+  .can-dynamic-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .can-live-preview {
+    align-items: stretch;
+  }
+
+  .can-live-preview code {
+    min-width: 0;
+    overflow-x: auto;
+    text-align: left;
+  }
+
+  .can-config-fields.is-four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .can-tx-actions {
