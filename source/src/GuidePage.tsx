@@ -2,6 +2,7 @@ import "./guide-page.css";
 
 export type GuideSlug =
   | "dbc-dosyasi-nedir"
+  | "can-bus-ariza-tespiti"
   | "can-log-analizi"
   | "j1939-dm1-spn-fmi-cozumleme"
   | "dbc-ile-ecu-simulasyonu";
@@ -22,6 +23,117 @@ const guides = {
       { title: "Standard ve Extended CAN kimlikleri", paragraphs: ["Standard CAN çerçevesi 11 bit, Extended CAN çerçevesi 29 bit kimlik kullanır. J1939 trafiği tipik olarak 29 bit Extended kimlik taşır; ancak yüklediğiniz DBC yalnızca Extended olmak zorunda değildir. İyi bir araç, çerçeve biçimini dosyadaki mesaj tanımından okuyup her iki yapıyı da ayrı değerlendirmelidir.", "Kimliği yalnızca sayısal değer olarak karşılaştırmak yeterli değildir. Aynı düşük bitlere sahip Standard ve Extended mesajlar farklı çerçevelerdir; kayıt ve gönderim araçlarında format bilgisini de koruyun."] },
       { title: "DBC hazırlarken pratik kontrol listesi", list: ["CAN ID ve Standard/Extended biçimini doğrulayın.", "DLC ile kullanılan en yüksek sinyal bitinin uyumlu olduğundan emin olun.", "Factor, offset, minimum, maximum ve unit alanlarını gerçek mühendislik birimleriyle karşılaştırın.", "Signed sinyallerde negatif sınırları; Motorola sinyallerde bit yönünü örnek veriyle test edin.", "Dosyayı gerçek ağ kaydıyla doğrulayın; yalnızca sentetik örneğe güvenmeyin."] },
       { title: "Sık yapılan hatalar", paragraphs: ["Ondalık CAN kimliğini hexadecimal sanmak, yanlış byte order seçmek, factor ile offset sırasını karıştırmak ve fiziksel sınırı ham değer sınırı gibi kullanmak en sık görülen sorunlardır. Bir diğer hata da DBC dosyasının ağdaki güncel yazılımla aynı sürümde olduğunu doğrulamamaktır.", "Online DBC Editörü ile mesajı ve sinyalleri oluşturabilir, bit yerleşimini kontrol edebilir ve düzenlenmiş dosyayı indirebilirsiniz. Hassas dosyalar tarayıcı içinde işlenir; yine de kurumunuzun veri politikasını uygulayın."] },
+    ],
+  },
+  "can-bus-ariza-tespiti": {
+    title: "CAN Bus arıza tespiti: 60 Ω, gerilim ve bus-off kontrolü",
+    description: "CAN hattında 60 ohm terminasyon, CAN-H/CAN-L gerilimleri, açık ve kısa devre, bitrate, hata sayacı ve bus-off kontrollerini doğru sırayla uygulayın.",
+    readTime: "12 dakika",
+    datePublished: "2026-09-08",
+    dateModified: "2026-09-08",
+    updatedLabel: "8 Eylül 2026",
+    tool: { href: "/can-viewer/", label: "CAN Viewer'ı aç" },
+    relatedTool: { href: "/can-log-analyzer/", label: "CAN Log Analyzer'ı aç" },
+    sections: [
+      {
+        title: "CAN Bus arızasında doğru kontrol sırası",
+        paragraphs: [
+          "CAN hattında hiç mesaj görülmemesi, iletişimin aralıklı kesilmesi veya bir kontrol ünitesinin bus-off durumuna geçmesi tek başına yazılım arızasını göstermez. Teşhise fiziksel katmandan başlayın: makineyi güvenli duruma alın, hattın enerjisini kesin, CAN-H ile CAN-L arasındaki direnci ölçün; ardından kısa devre kontrollerini, enerjili gerilimleri, bitrate ayarını, hata sayaçlarını ve CAN kaydını sırayla inceleyin.",
+          "Bu sıra iki yanıltıcı sonucu önler: enerjili hatta direnç ölçmek ve yaklaşık 60 Ω gördüğünüz için ağın tamamen sağlam olduğunu varsaymak. Doğru terminasyon yalnızca ilk kontroldür; kopuk bir kol, zayıf konnektör, yanlış bitrate veya hatalı bir ECU aynı direnç değeriyle birlikte bulunabilir.",
+        ],
+      },
+      {
+        title: "CAN hattında neden yaklaşık 60 Ω ölçülür?",
+        paragraphs: [
+          "Klasik yüksek hızlı CAN omurgasının iki fiziksel ucunda birer 120 Ω terminasyon bulunur. Hattın enerjisi kapalıyken CAN-H ile CAN-L arasında ölçülen iki direnç paralel olduğu için sonuç yaklaşık 60 Ω olur. Ölçümü kontak ve ana besleme kapalıyken, mümkünse ağın normalde bağlı kalan bir konnektöründen yapın.",
+          "Ölçüm toleransı; terminasyon dirençleri, ECU giriş devreleri ve multimetre nedeniyle tam 60 Ω olmayabilir. Makine üreticisinin farklı veya aktif terminasyon kullandığı özel topolojilerde önce elektrik şemasını doğrulayın.",
+        ],
+        table: {
+          columns: ["CAN-H / CAN-L ölçümü", "Muhtemel yorum", "Sonraki kontrol"],
+          rows: [
+            ["Yaklaşık 60 Ω", "İki adet 120 Ω terminasyon görülüyor", "Kolları, gerilimleri, bitrate'i ve hata sayaçlarını kontrol edin"],
+            ["Yaklaşık 120 Ω", "Bir terminasyon eksik veya omurganın bir tarafı kopuk", "İki uç direncini ve aradaki konnektörleri bulun"],
+            ["Yaklaşık 40 Ω", "Üç adet 120 Ω terminasyon paralel bağlı olabilir", "Fazladan terminasyonu veya yanlış bağlanan cihazı ayırın"],
+            ["Çok düşük / 0 Ω'a yakın", "CAN-H ile CAN-L kısa devreli olabilir", "Kabloyu bölümlere ayırarak kısa devrenin yerini daraltın"],
+            ["OL / çok yüksek", "Hat açık, iki terminasyon da görünmüyor veya ölçüm noktası kopuk", "Süreklilik ve konnektör kontrolü yapın"],
+          ],
+        },
+      },
+      {
+        title: "CAN-H ve CAN-L gerilimleri nasıl yorumlanır?",
+        paragraphs: [
+          "Hat enerjiliyken yüksek hızlı CAN'ın recessive durumunda CAN-H ve CAN-L çoğunlukla yaklaşık 2,5 V seviyesindedir. Dominant bit sırasında CAN-H yaklaşık 3,5 V'a yükselirken CAN-L yaklaşık 1,5 V'a düşer; iki hat arasında yaklaşık 2 V diferansiyel oluşur. Bunlar tipik referans değerlerdir, kesin kabul sınırı için transceiver ve makine dokümanına bakılmalıdır.",
+          "Multimetre hızlı bit geçişlerini göstermez; yalnızca trafiğin yoğunluğuna bağlı ortalama bir değer okur. Bu yüzden CAN-H'nin yaklaşık 2,5–3,5 V, CAN-L'nin yaklaşık 1,5–2,5 V arasında görünmesi mümkündür. İki hattı da ağ toprağına göre ölçün; sinyal biçimi, diferansiyel genlik, ringing ve yansımalar için osiloskop kullanın.",
+        ],
+      },
+      {
+        title: "Açık devre ve kısa devre nasıl ayrılır?",
+        list: [
+          "Enerjiyi kesin; önce CAN-H ile CAN-L, sonra her hattın şasi/ağ toprağı ve besleme hatlarıyla direncini karşılaştırın.",
+          "Şemadan omurga ve kol bağlantılarını belirleyin. Konnektörleri kontrollü biçimde ayırarak hattı bölümlere bölün ve ölçümü tekrarlayın.",
+          "Bir ECU ayrıldığında direnç veya gerilim normale dönüyorsa yalnız ECU'yu değil, o ECU'nun beslemesini, toprağını, konnektörünü ve kol kablosunu da inceleyin.",
+          "Terminasyonların omurganın iki fiziksel ucunda bulunduğunu, yıldız bağlantı yapılmadığını ve kol kablolarının üretici sınırları içinde kısa tutulduğunu doğrulayın.",
+          "Konnektörlerde geri kaçmış pin, su, oksit, ekranlama hatası, ezilmiş bükümlü çift ve şasiyle istenmeyen teması kontrol edin.",
+        ],
+      },
+      {
+        title: "Bitrate, sample point ve ACK sorunları",
+        paragraphs: [
+          "250 kbit/s çalışan bir makine ağına 500 kbit/s ayarlı arayüzle bağlanmak, anlamlı mesaj yerine hata çerçeveleri ve artan sayaçlar üretir. Nominal bitrate dışında sample point, oscillator toleransı ve CAN FD kullanılıyorsa data bitrate ayarları da ağla uyumlu olmalıdır. Önce makine dokümanındaki hızı kullanın; bilinmeyen bir hatta deneme amaçlı mesaj göndermeyin.",
+          "Tezgâhta tek bir aktif verici varsa başka düğüm ACK biti üretmediği için verici hata sayabilir ve mesajı tekrarlar. Listen-only modundaki analiz arayüzü de ACK göndermez. Bu durum kablo arızasıyla karıştırılmamalı; test düzeninde doğru bitrate'e ayarlı en az bir normal katılımcı bulunduğu doğrulanmalıdır.",
+        ],
+      },
+      {
+        title: "SocketCAN ile hata sayaçlarını kontrol etme",
+        paragraphs: [
+          "Linux üzerinde arayüz durumunu ip -details -statistics link show can1 komutuyla kontrol edin. Çıktıda bitrate, sample-point, ERROR-ACTIVE / ERROR-PASSIVE / BUS-OFF durumu, berr-counter değerleri ve alınan hata istatistikleri birlikte görülür. Trafiği zaman damgası ve hata çerçeveleriyle izlemek için candump -tz -e can1 kullanılabilir.",
+          "ERROR-ACTIVE normal çalışma durumudur. Hatalar biriktikçe düğüm ERROR-PASSIVE olabilir; iletim hata sayacı sınırı aştığında BUS-OFF durumuna geçerek ağı korumak için iletimi bırakır. restart-ms ile otomatik toparlanma ayarlamak kök nedeni çözmez ve aralıklı arızayı gizleyebilir; önce yanlış bitrate, terminasyon, kısa devre, toprak farkı ve ACK eksikliğini giderin.",
+        ],
+        code: [
+          "ip -details -statistics link show can1",
+          "candump -tz -e can1",
+        ],
+      },
+      {
+        title: "Osiloskopta ne aranır?",
+        paragraphs: [
+          "Osiloskop prob topraklarını güvenli referans noktasına bağlayın ve mümkünse CAN-H ile CAN-L arasını diferansiyel probla inceleyin. Sağlıklı dominant bitlerde iki hat zıt yönde hareket eder. Düşük genlik, yavaş kenarlar, belirgin overshoot/ringing veya bit ortasına kadar süren yansıma; aşırı kol uzunluğu, yanlış terminasyon, kablo empedansı veya bağlantı sorununa işaret edebilir.",
+          "Ölçümü yalnız servis konnektöründe değil, arızanın görüldüğü ECU yakınında da tekrarlayın. Sinyal bir noktada temiz, başka bir noktada bozuksa aradaki kablo ve bağlantılar güçlü adaydır. Kabul limitlerini kullanılan transceiver, kablo uzunluğu ve ağ hızına ait dokümanla karşılaştırın.",
+        ],
+      },
+      {
+        title: "Belirtiden olası nedene geçiş",
+        table: {
+          columns: ["Belirti", "Öncelikli kontroller"],
+          rows: [
+            ["Ağda hiç trafik yok", "ECU beslemeleri, ortak referans, kopuk omurga, bitrate ve transceiver enable"],
+            ["Yalnız bir ECU görünmüyor", "İlgili kol, konnektör, ECU besleme/toprak, filtre ve CAN ID"],
+            ["Titreşimde iletişim kesiliyor", "Pin tutuculuğu, oksit, kablo kırığı, ekranlama ve şasi teması"],
+            ["Yük altında hata artıyor", "Besleme düşümü, toprak farkı, EMI, terminasyon, kol uzunluğu ve ringing"],
+            ["İletim başlayınca bus-off oluyor", "Bitrate/sample point, ACK, CAN-H/CAN-L kısa devresi ve ters bağlantı"],
+          ],
+        },
+      },
+      {
+        title: "Saha kontrol listesi",
+        list: [
+          "Makineyi ve aktüatörleri güvenli duruma alın; ölçüm noktasını ve şemadaki ağ kolunu belirleyin.",
+          "Enerji kapalıyken CAN-H / CAN-L direncini kaydedin ve terminasyon sayısıyla karşılaştırın.",
+          "Her iki hattın şasi, ağ toprağı ve besleme ile istenmeyen temasını kontrol edin.",
+          "Enerjiyi açıp CAN-H ve CAN-L gerilimlerini aynı referansa göre ölçün.",
+          "Bitrate, sample point, CAN/CAN FD modu ve Standard/Extended filtrelerini doğrulayın.",
+          "Arayüzün durumunu, TX/RX hata sayaçlarını ve hata çerçevelerini kaydedin.",
+          "Sorun aralıklıysa konnektör, titreşim, sıcaklık, yük ve besleme değişimini CAN kaydıyla aynı zaman çizelgesinde karşılaştırın.",
+          "Onarım sonrası aynı test koşulunu tekrarlayın; yalnız hata kodunun silinmesini başarı kabul etmeyin.",
+        ],
+      },
+      {
+        title: "Sık yapılan hatalar",
+        paragraphs: [
+          "Enerjili hatta ohm ölçmek, 60 Ω sonucunu bütün ağın sağlamlığı olarak yorumlamak, osiloskop prob toprağını uygunsuz noktaya bağlamak ve bilinmeyen hatta mesaj göndermek sık yapılan hatalardır. Bir başka hata da bus-off durumundaki arayüzü sürekli yeniden başlatıp fiziksel nedeni görünmez hâle getirmektir.",
+          "CAN Viewer ile canlı kimlikleri, periyotları ve veri değişimini izleyebilir; CAN Log Analyzer ile kaydedilmiş TRC, ASC, CSV ve candump verilerinde zamanlama sapmalarını inceleyebilirsiniz. Fiziksel ölçümleri, hata sayaçlarını ve kayıt sonucunu aynı teşhis notunda birleştirin.",
+        ],
+      },
     ],
   },
   "can-log-analizi": {
@@ -105,8 +217,14 @@ export default function GuidePage({ slug }: { slug: GuideSlug }) {
       <article>
         <header className="guide-hero"><p>ALGO TEAM / CAN & J1939 REHBERİ</p><h1>{guide.title}</h1><span>{guide.readTime} · Güncelleme: {guide.updatedLabel}</span><p>{guide.description}</p><a href={guide.tool.href}>{guide.tool.label} →</a></header>
         <div className="guide-body">
-          {guide.sections.map((section) => <section key={section.title}><h2>{section.title}</h2>{"paragraphs" in section ? section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : null}{"list" in section ? <ul>{section.list.map((item) => <li key={item}>{item}</li>)}</ul> : null}</section>)}
-          <aside><h2>Uygulamaya geçin</h2><p>Örneklerinizi güvenli bir test ortamında deneyin; sonucu her zaman ham veri ve bağımsız ölçümle doğrulayın.</p><a href={guide.tool.href}>{guide.tool.label} →</a></aside>
+          {guide.sections.map((section) => <section key={section.title}>
+            <h2>{section.title}</h2>
+            {"paragraphs" in section ? section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : null}
+            {"list" in section ? <ul>{section.list.map((item) => <li key={item}>{item}</li>)}</ul> : null}
+            {"table" in section ? <div className="guide-table-wrap"><table><thead><tr>{section.table.columns.map((column) => <th scope="col" key={column}>{column}</th>)}</tr></thead><tbody>{section.table.rows.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div> : null}
+            {"code" in section ? <div className="guide-code-list">{section.code.map((line) => <pre key={line}><code>{line}</code></pre>)}</div> : null}
+          </section>)}
+          <aside><h2>Uygulamaya geçin</h2><p>Örneklerinizi güvenli bir test ortamında deneyin; sonucu her zaman ham veri ve bağımsız ölçümle doğrulayın.</p><div className="guide-actions"><a href={guide.tool.href}>{guide.tool.label} →</a>{"relatedTool" in guide ? <a className="secondary" href={guide.relatedTool.href}>{guide.relatedTool.label} →</a> : null}</div></aside>
           <nav className="guide-related" aria-label="İlgili rehberler">
             <h2>İlgili CAN ve J1939 rehberleri</h2>
             <div>{relatedGuides.map((item) => <a href={item.href} key={item.href}>{item.title} →</a>)}</div>

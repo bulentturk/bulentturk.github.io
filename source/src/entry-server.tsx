@@ -20,6 +20,7 @@ export type RenderRoute =
   | "/blog/"
   | "/news/"
   | "/learn/dbc-dosyasi-nedir/"
+  | "/learn/can-bus-ariza-tespiti/"
   | "/learn/can-log-analizi/"
   | "/learn/j1939-dm1-spn-fmi-cozumleme/"
   | "/learn/dbc-ile-ecu-simulasyonu/"
@@ -37,6 +38,7 @@ function pageForRoute(route: RenderRoute) {
     case "/can-log-analyzer/": return <CanLogAnalyzer />;
     case "/j1939-dtc-decoder/": return <J1939DtcAnalyzer />;
     case "/learn/dbc-dosyasi-nedir/": return <GuidePage slug="dbc-dosyasi-nedir" />;
+    case "/learn/can-bus-ariza-tespiti/": return <GuidePage slug="can-bus-ariza-tespiti" />;
     case "/learn/can-log-analizi/": return <GuidePage slug="can-log-analizi" />;
     case "/learn/j1939-dm1-spn-fmi-cozumleme/": return <GuidePage slug="j1939-dm1-spn-fmi-cozumleme" />;
     case "/learn/dbc-ile-ecu-simulasyonu/": return <GuidePage slug="dbc-ile-ecu-simulasyonu" />;

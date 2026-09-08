@@ -21,8 +21,8 @@ const tools = {
     uses: ["Canlı CAN mesajlarını kimlik, periyot ve veri değişimiyle izleme", "DBC dosyasıyla fiziksel sinyal değerlerini çözümleme", "Manuel, periyodik, sayaç ve checksum alanlı mesaj gönderme"],
     steps: ["PCAN-USB cihazınızı bağlayıp kanal ve bitrate seçin.", "Gerekirse DBC dosyanızı yükleyin ve mesaj filtresi uygulayın.", "Trafiği izleyin; yalnızca güvenli test ortamında mesaj gönderin veya kayıt alın."],
     faq: [["Hangi tarayıcı gerekir?", "WebUSB desteği olan masaüstü Chromium tabanlı bir tarayıcı gerekir."], ["DBC olmadan kullanılabilir mi?", "Evet. Ham CAN kimliği, DLC, veri ve zamanlama bilgileri DBC olmadan da görülebilir."], ["Gönderilen mesaj değiştirilebilir mi?", "Evet. Baytlar hex veya decimal biçimde düzenlenebilir; dinamik alan, sayaç ve checksum kurgulanabilir."]],
-    guide: "/learn/can-log-analizi/",
-    guideLabel: "CAN log analizi rehberi",
+    guide: "/learn/can-bus-ariza-tespiti/",
+    guideLabel: "CAN Bus arıza tespiti rehberi",
   },
   "dbc-ecu-simulator": {
     name: "DBC ECU Simülatörü",
