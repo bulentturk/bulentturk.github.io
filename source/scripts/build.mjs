@@ -19,6 +19,10 @@ const staticPages = [
     path: resolve(clientOutDir, "learn/dbc-dosyasi-nedir/index.html"),
   },
   {
+    route: "/learn/can-bus-ariza-tespiti/",
+    path: resolve(clientOutDir, "learn/can-bus-ariza-tespiti/index.html"),
+  },
+  {
     route: "/learn/can-log-analizi/",
     path: resolve(clientOutDir, "learn/can-log-analizi/index.html"),
   },

@@ -47,9 +47,21 @@
 .guide-body p,
 .guide-body ul { grid-column: 2; margin: 0 0 16px; color: #46564e; line-height: 1.8; }
 .guide-body li + li { margin-top: 9px; }
+.guide-table-wrap,
+.guide-code-list { grid-column: 2; min-width: 0; margin: 4px 0 18px; }
+.guide-table-wrap { overflow-x: auto; border: 1px solid #ccd8d1; border-radius: 10px; background: #fff; }
+.guide-table-wrap table { width: 100%; border-collapse: collapse; font-size: .92rem; line-height: 1.55; }
+.guide-table-wrap th,
+.guide-table-wrap td { padding: 13px 15px; border-bottom: 1px solid #e0e6e2; text-align: left; vertical-align: top; }
+.guide-table-wrap th { background: #e8efeb; color: #234536; font-size: .78rem; letter-spacing: .03em; }
+.guide-table-wrap tr:last-child td { border-bottom: 0; }
+.guide-code-list { display: grid; gap: 10px; }
+.guide-code-list pre { overflow-x: auto; margin: 0; padding: 14px 16px; border-radius: 9px; background: #17251f; color: #d9eee4; font-size: .88rem; }
 .guide-body aside { margin-top: 46px; padding: 34px; border-radius: 15px; background: #e3ece7; }
 .guide-body aside h2 { margin: 0 0 10px; }
 .guide-body aside p { max-width: 650px; color: #46564e; line-height: 1.7; }
+.guide-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.guide-actions a.secondary { border: 1px solid #7eaa96; background: transparent; color: #234536; }
 .guide-related { margin-top: 44px; padding-top: 34px; border-top: 1px solid #cdd8d1; }
 .guide-related h2 { margin: 0 0 20px; font-size: 1.25rem; }
 .guide-related div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -83,6 +95,8 @@
   .guide-body h2 { margin-bottom: 18px; }
   .guide-body p,
   .guide-body ul { margin-bottom: 16px; }
+  .guide-table-wrap,
+  .guide-code-list { margin-bottom: 18px; }
   .guide-related div { grid-template-columns: 1fr; }
   .guide-page > footer { flex-direction: column; }
 }
