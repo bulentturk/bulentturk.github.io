@@ -24,6 +24,7 @@ export default defineConfig({
         learn: resolve(__dirname, "learn/index.html"),
         "learn-dbc-dosyasi-nedir": resolve(__dirname, "learn/dbc-dosyasi-nedir/index.html"),
         "learn-can-log-analizi": resolve(__dirname, "learn/can-log-analizi/index.html"),
+        "learn-j1939-dm1-spn-fmi-cozumleme": resolve(__dirname, "learn/j1939-dm1-spn-fmi-cozumleme/index.html"),
         "learn-dbc-ile-ecu-simulasyonu": resolve(__dirname, "learn/dbc-ile-ecu-simulasyonu/index.html"),
         tools: resolve(__dirname, "tools/index.html"),
         blog: resolve(__dirname, "blog/index.html"),
