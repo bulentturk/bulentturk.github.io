@@ -23,6 +23,10 @@ const staticPages = [
     path: resolve(clientOutDir, "learn/can-log-analizi/index.html"),
   },
   {
+    route: "/learn/j1939-dm1-spn-fmi-cozumleme/",
+    path: resolve(clientOutDir, "learn/j1939-dm1-spn-fmi-cozumleme/index.html"),
+  },
+  {
     route: "/learn/dbc-ile-ecu-simulasyonu/",
     path: resolve(clientOutDir, "learn/dbc-ile-ecu-simulasyonu/index.html"),
   },

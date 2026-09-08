@@ -51,8 +51,8 @@ const tools = {
     uses: ["DM1 çerçevelerinden SPN, FMI ve occurrence count çıkarma", "Kaynak adresine göre ECU arızalarını ayırma", "BAM ve TP.DT ile taşınan çok paketli DM1 trafiğini birleştirme"],
     steps: ["Ham DM1 verisini girin veya bir CAN kayıt dosyası yükleyin.", "Kaynak adresi ve zaman aralığını seçerek arızaları ayırın.", "SPN/FMI sonucunu üretici dokümanı ve fiziksel ölçümle doğrulayın."],
     faq: [["SPN/FMI sonucu tek başına arızalı parçayı gösterir mi?", "Hayır. Kod, arıza türü ve ilgili parametre hakkında yön verir; servis dokümanı ve ölçümle doğrulanmalıdır."], ["Çok paketli DM1 destekleniyor mu?", "Evet. Uyumlu BAM ve TP.DT dizileri birleştirilerek çözümlenir."], ["Özel SPN açıklaması eklenebilir mi?", "Evet. Yerel sözlük ile kuruma veya makineye özgü açıklamalar eklenebilir."]],
-    guide: "/learn/can-log-analizi/",
-    guideLabel: "CAN kayıtlarını analiz etme rehberi",
+    guide: "/learn/j1939-dm1-spn-fmi-cozumleme/",
+    guideLabel: "DM1, SPN ve FMI çözümleme rehberi",
   },
 } as const;
 

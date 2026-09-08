@@ -19,7 +19,7 @@ const content = {
     available: "Yayında",
     planned: "Hazırlanıyor",
     categories: [
-      { code: "01", title: "CAN & J1939", text: "Fiziksel katmandan DBC, log analizi, ECU simülasyonu ve DM1 teşhisine uzanan uygulamalı öğrenme yolu.", state: "8 içerik yayında", href: "/learn/dbc-dosyasi-nedir/" },
+      { code: "01", title: "CAN & J1939", text: "Fiziksel katmandan DBC, log analizi, ECU simülasyonu ve DM1 teşhisine uzanan uygulamalı öğrenme yolu.", state: "4 rehber yayında", href: "#can-j1939-rehberleri" },
       { code: "02", title: "Elektrik", text: "24 V sistemler, kablo kesiti, gerilim düşümü, sigorta seçimi ve saha ölçümleri.", state: "Hazırlanıyor" },
       { code: "03", title: "Hidrolik", text: "Basınç, debi, silindir kuvveti, valf davranışı ve devre doğrulama temelleri.", state: "Hazırlanıyor" },
       { code: "04", title: "Makine", text: "ISO 286 yaklaşımı, tolerans bölgeleri, geçmeler, cıvata bağlantıları ve imalat kararları.", state: "Hazırlanıyor" },
@@ -30,7 +30,8 @@ const content = {
       { code: "DBC / 01", title: "DBC dosyası nedir?", text: "Mesaj, sinyal, factor, offset, byte order ve Standard/Extended CAN alanlarını uygulamalı öğrenin.", href: "/learn/dbc-dosyasi-nedir/" },
       { code: "CAN LOG / 02", title: "CAN log analizi nasıl yapılır?", text: "TRC, ASC, CSV ve candump kayıtlarında periyot, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.", href: "/learn/can-log-analizi/" },
       { code: "ECU SIM / 03", title: "DBC ile ECU simülasyonu", text: "Fiziksel sinyal değerlerinden Standard veya Extended CAN payload üretin ve güvenli test akışını kurun.", href: "/learn/dbc-ile-ecu-simulasyonu/" },
-      { code: "FIELD / 03", title: "Hesap doğruysa makine neden farklı davranır?", text: "Komut, ham değer, ölçekli değer ve bağımsız ölçümü aynı zaman çizelgesinde karşılaştırma.", href: "/blog/#saha-dogrulamasi" },
+      { code: "DM1 / 04", title: "J1939 DM1 mesajı nasıl çözülür?", text: "PGN 65226 içindeki lamba, SPN, FMI, OC ve CM alanlarını ham CAN verisinden çözümleyin.", href: "/learn/j1939-dm1-spn-fmi-cozumleme/" },
+      { code: "FIELD / 05", title: "Hesap doğruysa makine neden farklı davranır?", text: "Komut, ham değer, ölçekli değer ve bağımsız ölçümü aynı zaman çizelgesinde karşılaştırma.", href: "/blog/#saha-dogrulamasi" },
     ],
     policyTitle: "Yayın ilkesi",
     policyText: "Standart metinleri ve lisanslı tabloları kopyalamıyoruz. Kamuya açık kaynakları referans gösteriyor, özgün açıklamalar ve örnekler kullanıyor; müşteri, proje ve saha verilerini yayımlamıyoruz.",
@@ -49,7 +50,7 @@ const content = {
     available: "Published",
     planned: "In preparation",
     categories: [
-      { code: "01", title: "CAN & J1939", text: "A practical path from the physical layer through DBC, log analysis, ECU simulation, and DM1 diagnosis.", state: "8 articles published", href: "/learn/dbc-dosyasi-nedir/" },
+      { code: "01", title: "CAN & J1939", text: "A practical path from the physical layer through DBC, log analysis, ECU simulation, and DM1 diagnosis.", state: "4 guides published", href: "#can-j1939-rehberleri" },
       { code: "02", title: "Electrical", text: "24 V systems, cable sizing, voltage drop, fuse selection, and field measurements.", state: "In preparation" },
       { code: "03", title: "Hydraulics", text: "Pressure, flow, cylinder force, valve behavior, and circuit-validation fundamentals.", state: "In preparation" },
       { code: "04", title: "Mechanical", text: "ISO 286 concepts, tolerance zones, fits, bolted joints, and manufacturing decisions.", state: "In preparation" },
@@ -60,7 +61,8 @@ const content = {
       { code: "DBC / 01", title: "What is a DBC file?", text: "Learn messages, signals, factor, offset, byte order, and Standard/Extended CAN fields through examples.", href: "/learn/dbc-dosyasi-nedir/" },
       { code: "CAN LOG / 02", title: "How to analyze a CAN log", text: "Inspect period, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and candump logs.", href: "/learn/can-log-analizi/" },
       { code: "ECU SIM / 03", title: "ECU simulation with a DBC", text: "Build Standard or Extended CAN payloads from physical signal values and follow a safe test workflow.", href: "/learn/dbc-ile-ecu-simulasyonu/" },
-      { code: "FIELD / 03", title: "Why does the machine behave differently when the math is right?", text: "Compare command, raw value, scaled value, and independent measurement on one timeline.", href: "/blog/#saha-dogrulamasi" },
+      { code: "DM1 / 04", title: "How to decode a J1939 DM1 message", text: "Decode lamp states, SPN, FMI, OC, and CM fields from a raw PGN 65226 message.", href: "/learn/j1939-dm1-spn-fmi-cozumleme/" },
+      { code: "FIELD / 05", title: "Why does the machine behave differently when the math is right?", text: "Compare command, raw value, scaled value, and independent measurement on one timeline.", href: "/blog/#saha-dogrulamasi" },
     ],
     policyTitle: "Editorial policy",
     policyText: "We do not reproduce standards text or licensed tables. Public sources are referenced through original explanations and examples, while customer, project, and field data remain unpublished.",
@@ -120,7 +122,7 @@ export default function LearnPage() {
         </div>
       </section>
 
-      <section className="hub-section hub-section--dark">
+      <section className="hub-section hub-section--dark" id="can-j1939-rehberleri">
         <div className="hub-section-head">
           <span>02</span>
           <div><h2>{t.featuredTitle}</h2><p>{t.featuredIntro}</p></div>
