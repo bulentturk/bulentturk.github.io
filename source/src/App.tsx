@@ -72,6 +72,16 @@ const copy = {
         {
           kind: "tool",
           no: "04",
+          code: "PGN / CAN ID",
+          discipline: "CAN / J1939",
+          title: "J1939 PGN Hesaplayıcı",
+          text: "29-bit CAN kimliğini PGN ve adres alanlarına ayırın veya PGN'den gönderilecek CAN ID'yi oluşturun.",
+          features: ["CAN ID ↔ PGN", "PDU1 / PDU2", "Toplu çözümleme"],
+          href: "/j1939-pgn-calculator/",
+        },
+        {
+          kind: "tool",
+          no: "05",
           code: "J1939",
           discipline: "CAN / J1939",
           title: "DM1 / DTC Analyzer",
@@ -81,7 +91,7 @@ const copy = {
         },
         {
           kind: "simulator",
-          no: "05",
+          no: "06",
           code: "DBC ECU",
           discipline: "CAN / J1939",
           title: "DBC ECU Simülatörü",
@@ -91,7 +101,7 @@ const copy = {
         },
         {
           kind: "simulator",
-          no: "06",
+          no: "07",
           code: "HYDRAULICS",
           discipline: "Hidrolik",
           title: "Hidrolik Devre Simülatörü",
@@ -119,12 +129,6 @@ const copy = {
           discipline: "CAN / J1939",
           title: "Bit Yerleşim Hesaplayıcı",
           text: "Intel ve Motorola sinyaller için start bit, uzunluk, ölçek ve byte görünümü.",
-        },
-        {
-          code: "J1939",
-          discipline: "CAN / J1939",
-          title: "PGN Explorer",
-          text: "PGN, source address, priority ve veri alanlarını açıklayan etkileşimli gezgin.",
         },
         {
           code: "LOG",
@@ -304,6 +308,16 @@ const copy = {
         {
           kind: "tool",
           no: "04",
+          code: "PGN / CAN ID",
+          discipline: "CAN / J1939",
+          title: "J1939 PGN Calculator",
+          text: "Decode a 29-bit CAN identifier into PGN and address fields, or build a transmit CAN ID from a PGN.",
+          features: ["CAN ID ↔ PGN", "PDU1 / PDU2", "Batch decode"],
+          href: "/j1939-pgn-calculator/",
+        },
+        {
+          kind: "tool",
+          no: "05",
           code: "J1939",
           discipline: "CAN / J1939",
           title: "DM1 / DTC Analyzer",
@@ -313,7 +327,7 @@ const copy = {
         },
         {
           kind: "simulator",
-          no: "05",
+          no: "06",
           code: "DBC ECU",
           discipline: "CAN / J1939",
           title: "DBC ECU Simulator",
@@ -323,7 +337,7 @@ const copy = {
         },
         {
           kind: "simulator",
-          no: "06",
+          no: "07",
           code: "HYDRAULICS",
           discipline: "Hydraulics",
           title: "Hydraulic Circuit Simulator",
@@ -351,12 +365,6 @@ const copy = {
           discipline: "CAN / J1939",
           title: "Bit Layout Calculator",
           text: "Start bit, length, scale, and byte views for Intel and Motorola signals.",
-        },
-        {
-          code: "J1939",
-          discipline: "CAN / J1939",
-          title: "PGN Explorer",
-          text: "An interactive guide to PGNs, source addresses, priority, and data fields.",
         },
         {
           code: "LOG",

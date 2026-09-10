@@ -1,20 +1,11 @@
 import type { LogFrame, ParsedLog } from "../can-log/log";
+import { decodeJ1939CanId, type J1939Identifier } from "./pgn";
+
+export type { J1939Identifier } from "./pgn";
 
 export const DM1_PGN = 0xfeca;
 export const TP_CM_PGN = 0xec00;
 export const TP_DT_PGN = 0xeb00;
-
-export type J1939Identifier = {
-  priority: number;
-  extendedDataPage: number;
-  dataPage: number;
-  pduFormat: number;
-  pduSpecific: number;
-  sourceAddress: number;
-  destinationAddress: number | null;
-  pduType: "PDU1" | "PDU2";
-  pgn: number;
-};
 
 export type LampCommand = 0 | 1 | 2 | 3;
 export type LampFlash = 0 | 1 | 2 | 3;
@@ -168,31 +159,7 @@ export function sourceAddressName(address: number): string {
 }
 
 export function parseJ1939Identifier(id: number): J1939Identifier | null {
-  if (!Number.isInteger(id) || id < 0 || id > 0x1fffffff) return null;
-  const priority = (id >>> 26) & 0x7;
-  const extendedDataPage = (id >>> 25) & 0x1;
-  const dataPage = (id >>> 24) & 0x1;
-  const pduFormat = (id >>> 16) & 0xff;
-  const pduSpecific = (id >>> 8) & 0xff;
-  const sourceAddress = id & 0xff;
-  const pduType = pduFormat < 240 ? "PDU1" : "PDU2";
-  const destinationAddress = pduType === "PDU1" ? pduSpecific : null;
-  const pgn =
-    (extendedDataPage << 17)
-    | (dataPage << 16)
-    | (pduFormat << 8)
-    | (pduType === "PDU2" ? pduSpecific : 0);
-  return {
-    priority,
-    extendedDataPage,
-    dataPage,
-    pduFormat,
-    pduSpecific,
-    sourceAddress,
-    destinationAddress,
-    pduType,
-    pgn,
-  };
+  return decodeJ1939CanId(id);
 }
 
 export function pgnHex(pgn: number): string {

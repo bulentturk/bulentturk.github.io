@@ -48,6 +48,10 @@ const staticPages = [
     route: "/j1939-dtc-decoder/",
     path: resolve(clientOutDir, "j1939-dtc-decoder/index.html"),
   },
+  {
+    route: "/j1939-pgn-calculator/",
+    path: resolve(clientOutDir, "j1939-pgn-calculator/index.html"),
+  },
 ];
 
 process.chdir(projectRoot);

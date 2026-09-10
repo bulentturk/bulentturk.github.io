@@ -158,9 +158,10 @@ const guides = {
     description: "J1939 DM1 (PGN 65226) mesajında lamba durumlarını, SPN, FMI, OC ve CM alanlarını ham CAN verisinden adım adım çözümleyin.",
     readTime: "10 dakika",
     datePublished: "2026-09-08",
-    dateModified: "2026-09-08",
-    updatedLabel: "8 Eylül 2026",
+    dateModified: "2026-09-10",
+    updatedLabel: "10 Eylül 2026",
     tool: { href: "/j1939-dtc-decoder/", label: "J1939 DTC Decoder'ı aç" },
+    relatedTool: { href: "/j1939-pgn-calculator/", label: "PGN / CAN ID Hesaplayıcıyı aç" },
     sections: [
       { title: "DM1 nedir?", paragraphs: ["DM1, J1939 ağındaki kontrol ünitelerinin o anda aktif olan teşhis arıza kodlarını ve ikaz lambası durumlarını yayımladığı mesajdır. PGN değeri 65226, hexadecimal karşılığı 0xFECA'dır. Bir DM1 kaydını doğru yorumlamak için yalnız SPN ve FMI'ye değil; mesajı gönderen source address'e, lamba durumlarına, occurrence count değerine ve zaman içindeki tekrarına birlikte bakın.", "DM1 aktif arızaları taşır. Geçmişte oluşmuş fakat artık aktif olmayan arızalar için farklı teşhis mesajları kullanılabilir. Bu nedenle kayıtta bir DM1 görememek, ECU'da hiçbir geçmiş arıza olmadığı anlamına gelmez."] },
       { title: "29-bit CAN kimliğinden PGN ve kaynak adresi", paragraphs: ["J1939, 29-bit Extended CAN kimliği içinde priority, data page, PDU format, PDU specific ve source address alanlarını taşır. Örneğin 0x18FECA00 kimliğinde 0xFECA, DM1 PGN'sini; son byte olan 0x00 ise mesajı gönderen ECU'nun source address değerini gösterir.", "Aynı PGN farklı ECU'lardan gelebilir. Motor ECU'su ve başka bir kontrol ünitesi aynı teşhis PGN'sini yayımlıyorsa yalnız PGN'ye göre filtre uygulamak kayıtları birbirine karıştırır. CAN ID ile birlikte source address'i de saklayın."] },
