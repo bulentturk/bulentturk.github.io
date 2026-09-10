@@ -18,6 +18,7 @@ const routes = [
   ["/dbc-ecu-simulator/", ["dbc-ecu-simulator/index.html", "src/DbcEcuSimulator.tsx", "src/ToolSeoContent.tsx"]],
   ["/can-log-analyzer/", ["can-log-analyzer/index.html", "src/CanLogAnalyzer.tsx", "src/ToolSeoContent.tsx"]],
   ["/j1939-dtc-decoder/", ["j1939-dtc-decoder/index.html", "src/J1939DtcAnalyzer.tsx", "src/ToolSeoContent.tsx"]],
+  ["/j1939-pgn-calculator/", ["j1939-pgn-calculator/index.html", "src/J1939PgnCalculator.tsx", "src/j1939/pgn.ts", "src/ToolSeoContent.tsx"]],
   ["/hydraulic-simulator/", ["hydraulic-simulator/index.html"]],
   ["/blog/", ["blog/index.html", "src/EngineeringBlog.tsx"]],
   ["/news/", ["news/index.html", "src/NewsPage.tsx"]],

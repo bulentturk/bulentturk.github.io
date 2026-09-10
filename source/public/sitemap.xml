@@ -2,55 +2,59 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://algo-team.com/</loc>
-    <lastmod>2026-08-23</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/learn/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/learn/dbc-dosyasi-nedir/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/learn/can-bus-ariza-tespiti/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/learn/can-log-analizi/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/learn/j1939-dm1-spn-fmi-cozumleme/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/learn/dbc-ile-ecu-simulasyonu/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/tools/</loc>
-    <lastmod>2026-08-23</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/dbc-editor/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/can-viewer/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/dbc-ecu-simulator/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/can-log-analyzer/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/j1939-dtc-decoder/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
+  </url>
+  <url>
+    <loc>https://algo-team.com/j1939-pgn-calculator/</loc>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://algo-team.com/hydraulic-simulator/</loc>

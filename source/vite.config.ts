@@ -20,6 +20,7 @@ export default defineConfig({
         "dbc-ecu-simulator": resolve(__dirname, "dbc-ecu-simulator/index.html"),
         "can-log-analyzer": resolve(__dirname, "can-log-analyzer/index.html"),
         "j1939-dtc-decoder": resolve(__dirname, "j1939-dtc-decoder/index.html"),
+        "j1939-pgn-calculator": resolve(__dirname, "j1939-pgn-calculator/index.html"),
         "hydraulic-simulator": resolve(__dirname, "hydraulic-simulator/index.html"),
         learn: resolve(__dirname, "learn/index.html"),
         "learn-dbc-dosyasi-nedir": resolve(__dirname, "learn/dbc-dosyasi-nedir/index.html"),

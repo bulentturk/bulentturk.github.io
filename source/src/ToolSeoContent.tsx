@@ -1,6 +1,6 @@
 import "./tool-seo.css";
 
-type ToolKey = "dbc-editor" | "can-viewer" | "dbc-ecu-simulator" | "can-log-analyzer" | "j1939-dtc-decoder";
+type ToolKey = "dbc-editor" | "can-viewer" | "dbc-ecu-simulator" | "can-log-analyzer" | "j1939-dtc-decoder" | "j1939-pgn-calculator";
 type Language = "tr" | "en";
 
 const tools = {
@@ -54,10 +54,24 @@ const tools = {
     guide: "/learn/j1939-dm1-spn-fmi-cozumleme/",
     guideLabel: "DM1, SPN ve FMI çözümleme rehberi",
   },
+  "j1939-pgn-calculator": {
+    name: "J1939 PGN / CAN ID Hesaplayıcı",
+    nameEn: "J1939 PGN / CAN ID Calculator",
+    path: "/j1939-pgn-calculator/",
+    description: "29-bit J1939 CAN kimliklerini priority, EDP/R, data page, PDU format, PDU specific, source address ve PGN alanlarına ayıran ücretsiz çevrimiçi hesaplayıcı.",
+    descriptionEn: "A free online calculator that breaks 29-bit J1939 CAN identifiers into priority, EDP/R, data page, PDU format, PDU specific, source address, and PGN fields.",
+    uses: ["29-bit CAN ID içinden PGN ve kaynak adresini bulma", "PDU1 mesajında hedef adresini, PDU2 mesajında group extension alanını ayırma", "PGN, priority ve adreslerden gönderilecek CAN kimliğini oluşturma", "Birden fazla CAN ID'yi toplu çözümleyip CSV olarak indirme"],
+    steps: ["CAN ID → PGN sekmesinde kimliği HEX veya decimal biçimde girin.", "Priority, PF, PS, source address, PDU tipi ve hesaplanan PGN sonucunu kontrol edin.", "Ters işlem için PGN → CAN ID sekmesinde PGN, priority ve adres alanlarını doldurun."],
+    faq: [["PGN ile SPN arasındaki fark nedir?", "PGN bir J1939 mesaj grubunu tanımlar; SPN ise o mesajın payload'ı içindeki tek bir parametredir."], ["PDU1 ve PDU2 hesaplaması neden farklıdır?", "PDU1'de PS byte'ı hedef adrestir ve PGN'nin son byte'ı 00 kabul edilir. PDU2'de PS, PGN'nin group extension alanına katılır."], ["Araç bütün PGN ve SPN adlarını içeriyor mu?", "Hayır. Araç 29-bit kimliğin matematiksel yapısını çözer. Resmî parametre adları ve sinyal tanımları için lisanslı SAE J1939DA veya size ait DBC dosyası gerekir."]],
+    guide: "/learn/j1939-dm1-spn-fmi-cozumleme/",
+    guideLabel: "J1939 DM1, SPN ve FMI rehberi",
+  },
 } as const;
 
 export default function ToolSeoContent({ tool, language }: { tool: ToolKey; language: Language }) {
   const item = tools[tool];
+  const displayName = language === "en" && "nameEn" in item ? item.nameEn : item.name;
+  const displayDescription = language === "en" && "descriptionEn" in item ? item.descriptionEn : item.description;
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -68,7 +82,9 @@ export default function ToolSeoContent({ tool, language }: { tool: ToolKey; lang
         description: item.description,
         applicationCategory: "DeveloperApplication",
         operatingSystem: "Windows, macOS, Linux",
-        browserRequirements: "Modern desktop web browser; hardware access features may require WebUSB support.",
+        browserRequirements: tool === "j1939-pgn-calculator"
+          ? "Modern web browser with JavaScript enabled."
+          : "Modern desktop web browser; hardware access features may require WebUSB support.",
         isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
         publisher: { "@type": "Organization", name: "ALGO TEAM", url: "https://algo-team.com/" },
@@ -88,8 +104,8 @@ export default function ToolSeoContent({ tool, language }: { tool: ToolKey; lang
     return (
       <section className="tool-seo" aria-labelledby={`${tool}-about`}>
         <p className="tool-seo-kicker">ALGO TEAM / ENGINEERING TOOL</p>
-        <h2 id={`${tool}-about`}>How to use {item.name}</h2>
-        <p>{item.description}</p>
+        <h2 id={`${tool}-about`}>How to use {displayName}</h2>
+        <p>{displayDescription}</p>
         <p>Switch to TR for the detailed workflow, use cases, and frequently asked questions.</p>
         <a className="tool-seo-link" href={item.guide}>Open related guide →</a>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
