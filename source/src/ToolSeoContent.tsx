@@ -63,8 +63,8 @@ const tools = {
     uses: ["29-bit CAN ID içinden PGN ve kaynak adresini bulma", "PDU1 mesajında hedef adresini, PDU2 mesajında group extension alanını ayırma", "PGN, priority ve adreslerden gönderilecek CAN kimliğini oluşturma", "Birden fazla CAN ID'yi toplu çözümleyip CSV olarak indirme"],
     steps: ["CAN ID → PGN sekmesinde kimliği HEX veya decimal biçimde girin.", "Priority, PF, PS, source address, PDU tipi ve hesaplanan PGN sonucunu kontrol edin.", "Ters işlem için PGN → CAN ID sekmesinde PGN, priority ve adres alanlarını doldurun."],
     faq: [["PGN ile SPN arasındaki fark nedir?", "PGN bir J1939 mesaj grubunu tanımlar; SPN ise o mesajın payload'ı içindeki tek bir parametredir."], ["PDU1 ve PDU2 hesaplaması neden farklıdır?", "PDU1'de PS byte'ı hedef adrestir ve PGN'nin son byte'ı 00 kabul edilir. PDU2'de PS, PGN'nin group extension alanına katılır."], ["Araç bütün PGN ve SPN adlarını içeriyor mu?", "Hayır. Araç 29-bit kimliğin matematiksel yapısını çözer. Resmî parametre adları ve sinyal tanımları için lisanslı SAE J1939DA veya size ait DBC dosyası gerekir."]],
-    guide: "/learn/j1939-dm1-spn-fmi-cozumleme/",
-    guideLabel: "J1939 DM1, SPN ve FMI rehberi",
+    guide: "/learn/j1939-pgn-nedir/",
+    guideLabel: "J1939 PGN ve 29-bit CAN ID rehberi",
   },
 } as const;
 

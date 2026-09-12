@@ -57,6 +57,10 @@
 .guide-table-wrap tr:last-child td { border-bottom: 0; }
 .guide-code-list { display: grid; gap: 10px; }
 .guide-code-list pre { overflow-x: auto; margin: 0; padding: 14px 16px; border-radius: 9px; background: #17251f; color: #d9eee4; font-size: .88rem; }
+.guide-sources > div { grid-column: 2; }
+.guide-sources > div > p,
+.guide-sources > div > ul { grid-column: auto; }
+.guide-sources a { color: #0b6d47; font-weight: 700; }
 .guide-body aside { margin-top: 46px; padding: 34px; border-radius: 15px; background: #e3ece7; }
 .guide-body aside h2 { margin: 0 0 10px; }
 .guide-body aside p { max-width: 650px; color: #46564e; line-height: 1.7; }

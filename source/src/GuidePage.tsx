@@ -4,6 +4,7 @@ export type GuideSlug =
   | "dbc-dosyasi-nedir"
   | "can-bus-ariza-tespiti"
   | "can-log-analizi"
+  | "j1939-pgn-nedir"
   | "j1939-dm1-spn-fmi-cozumleme"
   | "dbc-ile-ecu-simulasyonu";
 
@@ -173,6 +174,146 @@ const guides = {
       { title: "Sık yapılan hatalar", paragraphs: ["29-bit kimliği Standard CAN gibi yorumlamak, PGN ile source address'i ayırmamak, FMI'yi parça adı sanmak ve OC değerini arızanın süresi gibi okumak en sık görülen hatalardır. Bir başka hata, çok paketli DM1 tamamlanmadan DTC byte'larını çözmeye çalışmaktır.", "SPN adları ve üreticiye özgü servis açıklamaları her zaman kamuya açık değildir. J1939 DTC Decoder ham DM1 yapısını DBC olmadan çözebilir; fakat arıza anındaki motor değerleri ve üreticiye özgü açıklamalar için doğru sürümde lisanslı DBC veya servis dokümanı kullanın."] },
     ],
   },
+  "j1939-pgn-nedir": {
+    title: "J1939 PGN nedir? 29-bit CAN ID, PDU1 ve PDU2 hesaplama",
+    description: "J1939 29-bit CAN kimliğinden PGN, priority, source address ve destination address alanlarını çıkarın; PDU1 ve PDU2 farkını gerçek örneklerle öğrenin.",
+    readTime: "11 dakika",
+    datePublished: "2026-09-12",
+    dateModified: "2026-09-12",
+    updatedLabel: "12 Eylül 2026",
+    tool: { href: "/j1939-pgn-calculator/", label: "PGN / CAN ID Hesaplayıcıyı aç" },
+    relatedTool: { href: "/j1939-dtc-decoder/", label: "J1939 DTC Decoder'ı aç" },
+    sections: [
+      {
+        title: "PGN nedir?",
+        paragraphs: [
+          "PGN (Parameter Group Number), bir J1939 mesaj grubunun anlamını ve payload düzenini tanımlayan 18 bitlik numaradır. PGN mesajın hangi parametre grubunu taşıdığını söyler; SPN ise bu payload içindeki tek bir parametreyi tanımlar. Örneğin DM1 mesajının PGN değeri 65226'dır; DM1 içindeki arıza parametreleri SPN ve FMI alanlarıyla ayrılır.",
+          "PGN, 29-bit Extended CAN kimliğinin tamamı değildir. Priority ve source address CAN ID içinde bulunur ancak PGN'ye dahil değildir. PDU1 mesajlarında destination address de PGN'nin parçası değildir; PDU2 mesajlarında aynı byte group extension olarak yorumlanır ve PGN'ye katılır.",
+        ],
+      },
+      {
+        title: "29-bit J1939 CAN ID alanları",
+        paragraphs: [
+          "J1939 kimliği soldan sağa priority, EDP/R, data page, PDU format, PDU specific ve source address alanlarına ayrılır. Priority değeri CAN arbitration sırasında önceliği etkiler; sayısal değer küçüldükçe öncelik yükselir. PF alanı mesajın PDU1 mi PDU2 mi olduğunu, PS alanının ise hedef adres mi yoksa group extension mı olduğunu belirler.",
+        ],
+        table: {
+          columns: ["Alan", "Bitler", "Görevi"],
+          rows: [
+            ["Priority", "28–26 / 3 bit", "Arbitration önceliği; PGN'ye dahil değildir"],
+            ["EDP/R", "25 / 1 bit", "Extended data page veya reserved alanı; PGN'nin en yüksek bitidir"],
+            ["DP", "24 / 1 bit", "Data page seçimi; PGN'ye dahildir"],
+            ["PF", "23–16 / 8 bit", "PDU format; PDU1/PDU2 ayrımını belirler"],
+            ["PS", "15–8 / 8 bit", "PDU1'de destination address, PDU2'de group extension"],
+            ["SA", "7–0 / 8 bit", "Mesajı gönderen ECU'nun source address değeri"],
+          ],
+        },
+      },
+      {
+        title: "PDU1 ve PDU2 farkı",
+        paragraphs: [
+          "PF değeri 0–239 arasındaysa mesaj PDU1'dir. PS byte'ı destination address olarak kullanılır; belirli bir ECU hedeflenebilir veya 0xFF global adresi seçilebilir. Hedef adres PGN'ye katılmadığı için PDU1 PGN'sinin en düşük byte'ı her zaman 0x00 kabul edilir.",
+          "PF değeri 240–255 arasındaysa mesaj PDU2'dir. Bu biçim yayın mesajları içindir ve PS byte'ı group extension olur. Group extension PGN'nin en düşük byte'ıdır; bu nedenle PDU2'de PS değeri PGN hesabına katılır.",
+        ],
+        table: {
+          columns: ["Özellik", "PDU1", "PDU2"],
+          rows: [
+            ["PF aralığı", "0–239 / 0x00–0xEF", "240–255 / 0xF0–0xFF"],
+            ["PS anlamı", "Destination address", "Group extension"],
+            ["İletim", "Hedefe özel veya global", "Broadcast"],
+            ["PGN'nin düşük byte'ı", "0x00", "PS değeri"],
+          ],
+        },
+      },
+      {
+        title: "CAN ID'den PGN nasıl hesaplanır?",
+        paragraphs: [
+          "Önce 29-bit kimlikten EDP/R, DP, PF, PS ve SA alanlarını ayırın. Ardından PF değerini kontrol edin. PF 240'tan küçükse PGN hesabında PS yerine 0 kullanın; PF 240 veya daha büyükse PS değerini group extension olarak ekleyin.",
+          "Genel formül aşağıdaki gibidir. GE değeri PDU1 için 0, PDU2 için PS değeridir. Kimliği yazılımda işlerken signed 32-bit kaydırmaların işaret üretmemesine dikkat edin; sonucu unsigned olarak ele alın ve 0x1FFFFFFF maskesiyle 29 bit içinde doğrulayın.",
+        ],
+        code: [
+          "PGN = (EDP/R × 0x20000) + (DP × 0x10000) + (PF × 0x100) + GE",
+          "GE = PF < 240 ? 0 : PS",
+          "SA = CAN_ID & 0xFF",
+        ],
+      },
+      {
+        title: "PDU2 örneği: 0x18FECA00",
+        paragraphs: [
+          "0x18FECA00 kimliğinde priority 6, EDP/R 0, DP 0, PF 0xFE, PS 0xCA ve source address 0x00'dır. PF değeri 254 olduğu için mesaj PDU2'dir; PS byte'ı group extension olarak PGN'ye katılır. Sonuç PGN 0xFECA, yani decimal 65226'dır. Bu PGN DM1 aktif arıza mesajını tanımlar.",
+          "Aynı 0xFECA PGN'si 0x18FECA03 kimliğiyle gelirse mesaj grubu yine DM1'dir fakat source address 0x03 olur. Kayıt analizinde yalnız PGN'ye göre gruplamak, farklı ECU'ların mesajlarını birleştirebilir; PGN ile source address'i birlikte saklayın.",
+        ],
+        code: [
+          "0x18FECA00 → priority 6 | PF 0xFE | GE 0xCA | SA 0x00",
+          "PGN = 0xFECA = 65226",
+        ],
+      },
+      {
+        title: "PDU1 örneği: 0x18ECFF00",
+        paragraphs: [
+          "0x18ECFF00 kimliğinde priority 6, PF 0xEC, PS 0xFF ve source address 0x00'dır. PF değeri 236 olduğu için mesaj PDU1'dir. PS alanı global destination address'tir ve PGN hesabına katılmaz; bu nedenle sonuç 0xEC00, yani decimal 60416'dır. Bu PGN J1939 Transport Protocol Connection Management mesajını tanımlar.",
+          "Buradaki 0xFF değerini PGN'nin son byte'ı sanıp 0xECFF sonucuna ulaşmak yaygın bir hatadır. PDU1'de hedef adres değişse bile PGN değişmez: 0x18EC0300 kimliği de destination address 0x03 olan PGN 0xEC00 mesajıdır.",
+        ],
+        code: [
+          "0x18ECFF00 → priority 6 | PF 0xEC | DA 0xFF | SA 0x00",
+          "PGN = 0xEC00 = 60416",
+        ],
+      },
+      {
+        title: "PGN'den CAN ID oluşturma",
+        paragraphs: [
+          "Ters işlemde önce PGN'nin PF alanına bakın. PDU2 için PGN'nin düşük byte'ı group extension olarak doğrudan PS alanına yazılır. Örneğin PGN 0xFECA, priority 6 ve source address 0x00 seçildiğinde CAN ID 0x18FECA00 olur.",
+          "PDU1 için PGN'nin düşük byte'ı 0x00 olmalıdır ve destination address ayrıca seçilir. PGN 0xEC00, priority 6, destination 0xFF ve source address 0x00 değerleri 0x18ECFF00 kimliğini oluşturur. Priority, hedef ve kaynak adresi mesaj tanımıyla doğrulamadan gerçek bir ağa çerçeve göndermeyin.",
+        ],
+        code: [
+          "PDU2: 0xFECA + priority 6 + SA 0x00 → 0x18FECA00",
+          "PDU1: 0xEC00 + priority 6 + DA 0xFF + SA 0x00 → 0x18ECFF00",
+        ],
+      },
+      {
+        title: "Sık görülen J1939 PGN örnekleri",
+        paragraphs: [
+          "Aşağıdaki kısa liste hesaplama kontrolü içindir. PGN adı, payload yerleşimi, yayın periyodu ve SPN tanımları için projenizde geçerli lisanslı SAE J1939DA sürümünü, DBC dosyasını ve üretici dokümanını kullanın.",
+        ],
+        table: {
+          columns: ["PGN", "Hex", "Yaygın ad", "PDU tipi"],
+          rows: [
+            ["59904", "0xEA00", "Request", "PDU1"],
+            ["60160", "0xEB00", "Transport Protocol Data Transfer (TP.DT)", "PDU1"],
+            ["60416", "0xEC00", "Transport Protocol Connection Management (TP.CM)", "PDU1"],
+            ["60928", "0xEE00", "Address Claimed", "PDU1"],
+            ["61444", "0xF004", "Electronic Engine Controller 1 (EEC1)", "PDU2"],
+            ["65226", "0xFECA", "Active Diagnostic Trouble Codes (DM1)", "PDU2"],
+          ],
+        },
+      },
+      {
+        title: "Sık yapılan hatalar",
+        list: [
+          "29-bit J1939 kimliğini 11-bit Standard CAN kimliği gibi yorumlamak.",
+          "PDU1 mesajında PS byte'ını PGN'nin düşük byte'ı sanmak.",
+          "Hexadecimal ve decimal değerleri birbirine karıştırmak; örneğin 0xFECA ile 65226'nın aynı PGN olduğunu gözden kaçırmak.",
+          "Priority veya source address değiştiğinde PGN'nin de değiştiğini varsaymak.",
+          "Farklı source address'lerden gelen aynı PGN'yi tek ECU verisi gibi birleştirmek.",
+          "PGN numarasını bulduktan sonra payload'ın otomatik olarak çözüldüğünü sanmak; SPN yerleşimi için doğru J1939DA/DBC sürümü gerekir.",
+        ],
+      },
+      {
+        title: "CAN log analizinde pratik iş akışı",
+        list: [
+          "Kayıtta Extended frame bilgisini, tam 29-bit CAN ID'yi, zaman damgasını, DLC'yi ve payload'ı koruyun.",
+          "CAN ID'yi PGN / CAN ID Hesaplayıcıda çözerek priority, PF, PS, source address ve PDU tipini doğrulayın.",
+          "PDU1 ise destination address'i; PDU2 ise group extension değerini ayrı kaydedin.",
+          "PGN ve source address çiftine göre mesaj periyodunu, kayıpları ve payload değişimini inceleyin.",
+          "Sinyal çözümlemesini doğru sürümde J1939DA, DBC veya üretici dokümanıyla yapın; sonucu gerçek sistem davranışıyla doğrulayın.",
+        ],
+      },
+    ],
+    sources: [
+      { href: "https://www.sae.org/standards/content/j1939_202412", label: "SAE J1939 üst seviye standart dokümanı" },
+      { href: "https://www.sae.org/standards/content/J1939DA_202606", label: "SAE J1939 Digital Annex" },
+      { href: "https://kvaser.com/about-can/higher-layer-protocols/j1939-introduction/", label: "Kvaser SAE J1939 Introduction" },
+    ],
+  },
   "dbc-ile-ecu-simulasyonu": {
     title: "DBC ile ECU simülasyonu: CAN ve J1939 mesajı gönderme",
     description: "DBC dosyasından mesaj seçip sinyal değerlerini fiziksel birimlerle değiştirerek Standard veya Extended CAN çerçevesi üretme rehberi.",
@@ -204,7 +345,7 @@ export default function GuidePage({ slug }: { slug: GuideSlug }) {
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Article", headline: guide.title, description: guide.description, url, mainEntityOfPage: url, image: "https://algo-team.com/assets/og-cover.png", inLanguage: "tr-TR", datePublished: guide.datePublished, dateModified: guide.dateModified, author: { "@type": "Organization", name: "ALGO TEAM" }, publisher: { "@type": "Organization", name: "ALGO TEAM", url: "https://algo-team.com/", logo: { "@type": "ImageObject", url: "https://algo-team.com/assets/algo-team-logo.png" } } },
+      { "@type": "Article", headline: guide.title, description: guide.description, url, mainEntityOfPage: url, image: "https://algo-team.com/assets/og-cover.png", inLanguage: "tr-TR", datePublished: guide.datePublished, dateModified: guide.dateModified, citation: "sources" in guide ? guide.sources.map((source) => source.href) : undefined, author: { "@type": "Organization", name: "ALGO TEAM" }, publisher: { "@type": "Organization", name: "ALGO TEAM", url: "https://algo-team.com/", logo: { "@type": "ImageObject", url: "https://algo-team.com/assets/algo-team-logo.png" } } },
       { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "ALGO TEAM", item: "https://algo-team.com/" }, { "@type": "ListItem", position: 2, name: "Learn", item: "https://algo-team.com/learn/" }, { "@type": "ListItem", position: 3, name: guide.title, item: url }] },
     ],
   };
@@ -225,6 +366,7 @@ export default function GuidePage({ slug }: { slug: GuideSlug }) {
             {"table" in section ? <div className="guide-table-wrap"><table><thead><tr>{section.table.columns.map((column) => <th scope="col" key={column}>{column}</th>)}</tr></thead><tbody>{section.table.rows.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div> : null}
             {"code" in section ? <div className="guide-code-list">{section.code.map((line) => <pre key={line}><code>{line}</code></pre>)}</div> : null}
           </section>)}
+          {"sources" in guide ? <section className="guide-sources"><h2>Kaynaklar ve kapsam</h2><div><p>Bu rehber kamuya açık teknik açıklamalar temel alınarak özgün biçimde hazırlanmıştır. Resmî PGN/SPN tanımları ve proje kararları için lisanslı standardın güncel sürümünü esas alın.</p><ul>{guide.sources.map((source) => <li key={source.href}><a href={source.href} target="_blank" rel="noreferrer">{source.label}</a></li>)}</ul></div></section> : null}
           <aside><h2>Uygulamaya geçin</h2><p>Örneklerinizi güvenli bir test ortamında deneyin; sonucu her zaman ham veri ve bağımsız ölçümle doğrulayın.</p><div className="guide-actions"><a href={guide.tool.href}>{guide.tool.label} →</a>{"relatedTool" in guide ? <a className="secondary" href={guide.relatedTool.href}>{guide.relatedTool.label} →</a> : null}</div></aside>
           <nav className="guide-related" aria-label="İlgili rehberler">
             <h2>İlgili CAN ve J1939 rehberleri</h2>
