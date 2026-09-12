@@ -23,6 +23,7 @@ export type RenderRoute =
   | "/learn/dbc-dosyasi-nedir/"
   | "/learn/can-bus-ariza-tespiti/"
   | "/learn/can-log-analizi/"
+  | "/learn/j1939-pgn-nedir/"
   | "/learn/j1939-dm1-spn-fmi-cozumleme/"
   | "/learn/dbc-ile-ecu-simulasyonu/"
   | "/dbc-editor/"
@@ -43,6 +44,7 @@ function pageForRoute(route: RenderRoute) {
     case "/learn/dbc-dosyasi-nedir/": return <GuidePage slug="dbc-dosyasi-nedir" />;
     case "/learn/can-bus-ariza-tespiti/": return <GuidePage slug="can-bus-ariza-tespiti" />;
     case "/learn/can-log-analizi/": return <GuidePage slug="can-log-analizi" />;
+    case "/learn/j1939-pgn-nedir/": return <GuidePage slug="j1939-pgn-nedir" />;
     case "/learn/j1939-dm1-spn-fmi-cozumleme/": return <GuidePage slug="j1939-dm1-spn-fmi-cozumleme" />;
     case "/learn/dbc-ile-ecu-simulasyonu/": return <GuidePage slug="dbc-ile-ecu-simulasyonu" />;
     case "/learn/": return <LearnPage />;
