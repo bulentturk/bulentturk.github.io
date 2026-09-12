@@ -1,43 +1,14 @@
 <!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f3f1ea">
-<meta name="description" content="Bosch Rexroth A10VO Series 32 LA power controller: test constant-torque control, pressure cut-off, LA.D/LA.DG/LA.S/LA.DS variants, flow, displacement and shaft power interactively.">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ALGO TEAM Engineering Tools">
-<meta property="og:title" content="A10VO LA Power Controller Lab | ALGO TEAM">
-<meta property="og:description" content="Interactive A10VO LA power-control laboratory with pressure, flow, displacement, torque and power visualization.">
-<meta property="og:url" content="https://algo-team.com/hydraulic-simulator/la-power-controller/">
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f3f1ea"><title>A10VO LA Pump Lab | ALGO TEAM</title>
+<meta name="description" content="A10VO LA pump test bench: live pressure, speed, flow, torque, displacement and p-Q map. Detailed Rev B guide selected by site language.">
 <link rel="canonical" href="https://algo-team.com/hydraulic-simulator/la-power-controller/">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<script src="/analytics.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"A10VO LA Power Controller Lab","url":"https://algo-team.com/hydraulic-simulator/la-power-controller/","applicationCategory":"EducationalApplication","operatingSystem":"Web","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"ALGO TEAM","url":"https://algo-team.com/"}}</script>
-<title>A10VO LA Power Controller Lab | ALGO TEAM</title>
-<link rel="stylesheet" href="./lab.css">
-</head>
-<body>
-<header class="top"><div class="wrap"><span class="mark"></span><a class="brand" href="/">ALGO TEAM</a><nav class="topnav"><a href="/hydraulic-simulator/">Hidrolik Simülatör</a><a href="/docs/a10vo-la-guide-pdf.html?lang=tr">TR Kılavuz PDF</a><a href="/docs/a10vo-la-guide-pdf.html?lang=en">EN Guide PDF</a></nav><span class="tag">Hydraulic Lab / A10VO LA</span></div></header>
-<section class="hero wrap"><div class="kicker">Bosch Rexroth A10VO Series 32 · LA controller</div><h1>LA Güç Kontrolü - Etkileşimli Test Tezgahı</h1><p>Basıncı artırın ve pompanın tam deplasmandan sabit tork bölgesine, ardından basınç kesmeye nasıl geçtiğini izleyin. Model, veri sayfasındaki LA mantığını ve A10VO pompa denklemlerini birleştiren eğitim amaçlı yarı-statik bir simülasyondur.</p></section>
-<div class="wrap layout">
-<aside class="panel controls">
-<div class="sect">01 · Pompa ve kontrol</div>
-<label>Pompa boyutu <b id="vgVal"></b><select id="size"><option value="45">NG45 · 45 cm³</option><option value="71.1" selected>NG71 · 71.1 cm³</option><option value="100">NG100 · 100 cm³</option><option value="140">NG140 · 140 cm³</option><option value="180">NG180 · 180 cm³</option></select></label>
-<label>LA varyantı <b id="variantTag"></b><select id="variant"><option value="LAD" selected>LA.D · güç + basınç kesme</option><option value="LADG">LA.DG · uzaktan basınç kesme</option><option value="LAS">LA.S · ayrı debi kontrolü</option><option value="LADS">LA.DS · basınç + debi kontrolü</option></select><small id="variantDesc"></small></label>
-<label>Çalışma basıncı <b id="pVal"></b><input id="p" type="range" min="5" max="300" value="80" step="1"></label>
-<label>Pompa devri <b id="nVal"></b><input id="n" type="range" min="500" max="2500" value="1500" step="10"></label>
-<label>Fabrika güç ayarı <b id="prefVal"></b><input id="pref" type="range" min="5" max="120" value="20" step="0.5"><small>Örnek: 20 kW @ 1500 d/dak ≈ 127.3 Nm.</small></label>
-<label id="pcField">Basınç kesme <b id="pcVal"></b><input id="pc" type="range" min="20" max="280" value="280" step="1"></label>
-<label id="flowField" hidden>Debi talebi / orifis <b id="flowVal"></b><input id="flow" type="range" min="5" max="100" value="70" step="1"><small>S varyantlarında debi kontrolü güç eğrisinin altında çalışır.</small></label>
-<details><summary>Model verimleri</summary><label>Volumetrik verim ηv <b id="evVal"></b><input id="ev" type="range" min="0.80" max="1" value="0.95" step="0.01"></label><label>Hid.-mek. verim ηhm <b id="emVal"></b><input id="em" type="range" min="0.80" max="1" value="0.92" step="0.01"></label></details>
-</aside>
-<main class="main">
-<section class="panel lab"><div class="statusbar"><span>Kontrol başlangıcı: <b id="pStart"></b></span><span>Tork ayarı: <b id="mSet"></b></span><span>Tip sınıfı: <b id="laClass"></b></span></div>
-<div class="viz"><div class="card"><h2>Pompa + regülatör davranışı</h2><svg class="schematic" viewBox="0 0 620 410"><path class="pipe hot" d="M225 82H540V188"/><path class="pipe" d="M182 250V344H74"/><path class="pipe hot" d="M214 198V82"/><path id="flowAnim" class="pipe flow" d="M214 198V82H540V188"/><text x="548" y="80" class="subtxt">B · yüksek basınç</text><text x="52" y="364" class="subtxt">S · emiş</text><circle cx="182" cy="198" r="54" class="sym"/><polygon points="182,151 164,182 200,182" class="fill"/><g id="rotor" class="rotor"><circle cx="182" cy="198" r="23" class="sym"/><path d="M182 175V221M159 198H205M166 182L198 214M198 182L166 214" class="piston"/></g><line id="swash" x1="140" y1="238" x2="222" y2="158" class="swash"/><text x="182" y="276" class="ctrltxt">A10VO</text><text x="182" y="292" class="subtxt">değişken deplasman</text><g id="powerCtrl"><rect x="292" y="116" width="120" height="70" rx="5" class="ctrl"/><text x="352" y="144" text-anchor="middle" class="ctrltxt">LA power</text><text x="352" y="163" text-anchor="middle" class="subtxt">sabit tork</text><path d="M292 151H250V198" class="pilot"/></g><g id="pressCtrl"><rect x="438" y="214" width="130" height="70" rx="5" class="ctrl"/><text x="503" y="241" text-anchor="middle" class="ctrltxt" id="pressTxt">DR cut-off</text><text x="503" y="260" text-anchor="middle" class="subtxt" id="pressSub">yerel ayar</text><path d="M503 214V188" class="pilot"/></g><g id="flowCtrl"><rect x="292" y="306" width="120" height="60" rx="5" class="ctrl"/><text x="352" y="332" text-anchor="middle" class="ctrltxt">FR flow</text><text x="352" y="350" text-anchor="middle" class="subtxt">ayrı orifis</text><path d="M352 306V270H250" class="pilot"/></g><text x="468" y="118" class="meter" id="svgP"></text><text x="468" y="143" class="subtxt" id="svgQ"></text></svg>
-<div class="metrics"><div><span>Debi</span><b id="qOut"></b><small>L/dak</small></div><div><span>Efektif Vg</span><b id="vgOut"></b><small>cm³/dev</small></div><div><span>Deplasman</span><b id="dispOut"></b><small>%</small></div><div><span>Mil torku</span><b id="mOut"></b><small>Nm</small></div><div><span>Mil gücü</span><b id="pwOut"></b><small>kW</small></div><div><span>Hidrolik güç</span><b id="phOut"></b><small>kW</small></div></div><div class="modebox"><b id="modeTitle"></b><p id="modeText"></p></div></div><div class="card"><h2>p-Q çalışma haritası</h2><svg id="chart" class="chart" viewBox="0 0 500 410"></svg></div></div>
-<div class="eqs"><div><b>Debi</b><code>q = Vg · n · ηv / 1000</code></div><div><b>Pompa torku</b><code>M = Vg · Δp / (20π · ηhm)</code></div><div><b>Mil gücü</b><code>P = 2π · M · n / 60000</code></div></div></section>
-<section class="panel steps"><div class="sect">03 · Üç temel çalışma bölgesi</div><div class="steprow"><article id="st1"><b>01 · Tam deplasman</b><p>Basınç düşükken LA müdahale etmez; Vg max.</p></article><article id="st2"><b>02 · Sabit tork / güç</b><p>Basınç artarken Vg ve debi düşer; tork ayarda kalır.</p></article><article id="st3"><b>03 · Basınç kesme</b><p>D varyantında DR/DRG pompayı minimum deplasmana götürür.</p></article></div></section>
-</main></div>
-<div class="wrap source"><p><b>Kılavuzlar:</b> <a href="/docs/a10vo-la-guide-pdf.html?lang=tr">Türkçe PDF</a> · <a href="/docs/a10vo-la-guide-pdf.html?lang=en">English PDF</a> · <a href="/hydraulic-simulator/">Tam hidrolik devre simülatörü</a></p><b>Model sınırı:</b> Bu eğitim modeli gerçek spool geçici rejimini, toleransları ve üretici verim haritalarını birebir çözmez. Nihai makine seçimi güncel üretici verisiyle doğrulanmalıdır.</div>
-<script src="./lab.js" defer></script></body></html>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./lab.css">
+<script src="/site-language.js" defer></script><script src="/analytics.js" defer></script>
+</head><body>
+<div id="app"><h1>A10VO LA Pump Lab</h1><p id="startup">Loading laboratory...</p></div>
+<noscript>This laboratory requires JavaScript.</noscript>
+<!-- A module entry is required for Vite to emit the JavaScript bundle. -->
+<script type="module" src="./lab.js"></script>
+</body></html>

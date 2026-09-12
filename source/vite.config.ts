@@ -4,11 +4,14 @@ import { resolve } from "node:path";
 
 export default defineConfig({
   base: "/",
-  plugins: [react()],
-  server: {
-    host: "0.0.0.0",
-    allowedHosts: ["terminal.local"],
-  },
+  plugins: [react(), {
+    name: "shared-site-language",
+    transformIndexHtml(html) {
+      if (html.includes('src="/site-language.js"')) return html;
+      return [{ tag: "script", attrs: { src: "/site-language.js", defer: true }, injectTo: "head" as const }];
+    },
+  }],
+  server: { host: "0.0.0.0", allowedHosts: ["terminal.local"] },
   build: {
     outDir: "dist",
     emptyOutDir: true,
@@ -22,10 +25,7 @@ export default defineConfig({
         "j1939-dtc-decoder": resolve(__dirname, "j1939-dtc-decoder/index.html"),
         "j1939-pgn-calculator": resolve(__dirname, "j1939-pgn-calculator/index.html"),
         "hydraulic-simulator": resolve(__dirname, "hydraulic-simulator/index.html"),
-        "hydraulic-la-power-controller": resolve(
-          __dirname,
-          "hydraulic-simulator/la-power-controller/index.html",
-        ),
+        "hydraulic-la-power-controller": resolve(__dirname, "hydraulic-simulator/la-power-controller/index.html"),
         learn: resolve(__dirname, "learn/index.html"),
         "learn-dbc-dosyasi-nedir": resolve(__dirname, "learn/dbc-dosyasi-nedir/index.html"),
         "learn-can-bus-ariza-tespiti": resolve(__dirname, "learn/can-bus-ariza-tespiti/index.html"),
