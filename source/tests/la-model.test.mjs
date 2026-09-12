@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {calculate,SIZES} from '../hydraulic-simulator/la-power-controller/model.js';
+const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-6,`${a} != ${b}`);
+test('full displacement',()=>{const r=calculate({pressure:80});near(r.q,101.3175);near(r.V,71.1);assert.equal(r.mode,'full');});
+test('constant torque / reference power',()=>{for(const p of [150,200,250]){const r=calculate({pressure:p});near(r.shaft,20);near(r.M,20*60000/(2*Math.PI*1500));}near(calculate({pressure:200}).q,52.44);near(calculate({pressure:250}).q,41.952);});
+test('speed changes power, not torque setting',()=>{const r=calculate({pressure:200,speed:1000});near(r.shaft,20*2/3);near(r.q,34.96);});
+test('pressure cut-off and remote differential',()=>{near(calculate({pressure:280}).q,0);const r=calculate({variant:'LADG',remote:120,pressure:200});near(r.p,140);near(r.q,0);});
+test('LS requested flow below envelope',()=>{const r=calculate({variant:'LADS',pressure:100,demand:35});near(r.p,114);near(r.q,35);assert.equal(r.mode,'flow');});
+test('LS margin decreases under torque saturation',()=>{const r=calculate({variant:'LADS',pressure:200,demand:100});assert.ok(r.actualMargin<14);near(r.q,100*Math.sqrt(r.actualMargin/14));near(r.shaft,20);});
+test('zero speed, standby, bounded size and invalid inputs',()=>{near(calculate({speed:0}).q,0);near(calculate({variant:'LADS',demand:0}).p,14);near(calculate({size:180,speed:3000}).n,SIZES[180]);assert.throws(()=>calculate({pressure:NaN}));});

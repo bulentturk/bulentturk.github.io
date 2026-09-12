@@ -35,10 +35,20 @@ jobs:
           cache-dependency-path: source/package-lock.json
       - name: Install dependencies
         run: npm ci
+      - name: Install documentation and browser test dependencies
+        run: |
+          python3 -m pip install PyMuPDF==1.26.7 playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
       - name: Type-check
         run: npm run typecheck
+      - name: Test LA equations
+        run: node --test tests/la-model.test.mjs
+      - name: Build full Rev B guides and manufacturer schematics
+        run: python3 scripts/build_la_assets.py
       - name: Build
         run: npm run build
+      - name: Test built laboratory and language-selected PDF downloads
+        run: python3 tests/la-browser.py
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
