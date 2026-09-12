@@ -1,6 +1,18 @@
 (function () {
   "use strict";
 
+  var normalizedPath = window.location.pathname.replace(/\/+$/, "") || "/";
+
+  // Page-specific engineering extensions are loaded here because analytics.js
+  // is already present on every engineering tool page. The extension itself
+  // only runs on the main hydraulic simulator route.
+  if (normalizedPath === "/hydraulic-simulator") {
+    var hydraulicLaExtension = document.createElement("script");
+    hydraulicLaExtension.src = "/hydraulic-la-extension.js";
+    hydraulicLaExtension.async = false;
+    document.head.appendChild(hydraulicLaExtension);
+  }
+
   var measurementId = "G-46MHTW1W3D";
   var productionHosts = ["algo-team.com", "www.algo-team.com"];
 
@@ -26,7 +38,6 @@
   googleTag.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(measurementId);
   document.head.appendChild(googleTag);
 
-  var normalizedPath = window.location.pathname.replace(/\/+$/, "") || "/";
   var toolNames = {
     "/can-viewer": "can_viewer",
     "/can-log-analyzer": "can_log_analyzer",
@@ -34,6 +45,7 @@
     "/dbc-ecu-simulator": "dbc_ecu_simulator",
     "/j1939-dtc-decoder": "j1939_dtc_decoder",
     "/hydraulic-simulator": "hydraulic_simulator",
+    "/hydraulic-simulator/la-power-controller": "hydraulic_la_power_controller",
   };
 
   if (toolNames[normalizedPath]) {
