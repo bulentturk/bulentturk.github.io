@@ -12,6 +12,7 @@ import DbcEditor from "./DbcEditor";
 import J1939DtcAnalyzer from "./J1939DtcAnalyzer";
 import J1939PgnCalculator from "./J1939PgnCalculator";
 import GuidePage from "./GuidePage";
+import A10voLaGuidePage from "./A10voLaGuidePage";
 import "./styles.css";
 
 export type RenderRoute =
@@ -26,6 +27,8 @@ export type RenderRoute =
   | "/learn/j1939-pgn-nedir/"
   | "/learn/j1939-dm1-spn-fmi-cozumleme/"
   | "/learn/dbc-ile-ecu-simulasyonu/"
+  | "/learn/a10vo-la-guc-kontrolu/"
+  | "/learn/a10vo-la-power-control/"
   | "/dbc-editor/"
   | "/can-viewer/"
   | "/dbc-ecu-simulator/"
@@ -47,6 +50,8 @@ function pageForRoute(route: RenderRoute) {
     case "/learn/j1939-pgn-nedir/": return <GuidePage slug="j1939-pgn-nedir" />;
     case "/learn/j1939-dm1-spn-fmi-cozumleme/": return <GuidePage slug="j1939-dm1-spn-fmi-cozumleme" />;
     case "/learn/dbc-ile-ecu-simulasyonu/": return <GuidePage slug="dbc-ile-ecu-simulasyonu" />;
+    case "/learn/a10vo-la-guc-kontrolu/": return <A10voLaGuidePage language="tr" />;
+    case "/learn/a10vo-la-power-control/": return <A10voLaGuidePage language="en" />;
     case "/learn/": return <LearnPage />;
     case "/tools/": return <ToolsPage />;
     case "/blog/": return <EngineeringBlog />;
@@ -56,7 +61,5 @@ function pageForRoute(route: RenderRoute) {
 }
 
 export function renderPage(route: RenderRoute) {
-  return renderToString(
-    <StrictMode>{pageForRoute(route)}</StrictMode>,
-  );
+  return renderToString(<StrictMode>{pageForRoute(route)}</StrictMode>);
 }

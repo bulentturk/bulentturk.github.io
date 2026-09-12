@@ -1,7 +1,5 @@
 "use client";
-
 import { useEffect, useState } from "react";
-
 type Language = "tr" | "en";
 
 const content = {
@@ -12,16 +10,13 @@ const content = {
     intro: "CAN Bus, J1939, elektrik, hidrolik, makine ve kontrol konularını; çalışma mantığı, ölçüm sırası, örnek ve sık hatalarla açıklayan kalıcı teknik içerikler.",
     categoriesTitle: "Öğrenme alanları",
     categoriesIntro: "İçerikler tekil yazılar olarak değil, temelden teşhise ilerleyen konu kümeleri olarak düzenlenir.",
-    featuredTitle: "Yayımdaki teknik içerikler",
-    featuredIntro: "İlk içerik kümesi CAN ve J1939 çevresinde büyüyor. Yeni yazılar yayımlandıkça ilgili araçlara karşılıklı bağlantı verilecek.",
-    openCategory: "İçeriği aç",
-    read: "Yazıyı oku",
-    available: "Yayında",
-    planned: "Hazırlanıyor",
+    featuredTitle: "CAN ve J1939 teknik içerikleri",
+    featuredIntro: "Fiziksel katmandan mesaj çözümlemeye uzanan rehberleri ilgili araçlarla birlikte kullanın.",
+    openCategory: "İçeriği aç", read: "Yazıyı oku", available: "Yayında", planned: "Hazırlanıyor",
     categories: [
       { code: "01", title: "CAN & J1939", text: "Fiziksel katmandan DBC, log analizi, ECU simülasyonu ve DM1 teşhisine uzanan uygulamalı öğrenme yolu.", state: "6 rehber yayında", href: "#can-j1939-rehberleri" },
       { code: "02", title: "Elektrik", text: "24 V sistemler, kablo kesiti, gerilim düşümü, sigorta seçimi ve saha ölçümleri.", state: "Hazırlanıyor" },
-      { code: "03", title: "Hidrolik", text: "Basınç, debi, silindir kuvveti, valf davranışı ve devre doğrulama temelleri.", state: "Hazırlanıyor" },
+      { code: "03", title: "Hidrolik", text: "A10VO LA güç kontrolünü; eğik plaka, basınç, debi ve tork ilişkisiyle öğrenin, laboratuvarda deneyin.", state: "1 rehber ve LA laboratuvarı yayında", href: "#hidrolik-rehberleri" },
       { code: "04", title: "Makine", text: "ISO 286 yaklaşımı, tolerans bölgeleri, geçmeler, cıvata bağlantıları ve imalat kararları.", state: "Hazırlanıyor" },
       { code: "05", title: "Kontrol", text: "PID, filtreleme, histerezis, durum makineleri ve güvenli kilitleme mantıkları.", state: "Hazırlanıyor" },
       { code: "06", title: "Mühendislik Temelleri", text: "Ölçüm, belirsizlik, saha doğrulaması, teknik çizim ve tekrar edilebilir test yaklaşımı.", state: "1 içerik yayında", href: "/blog/#saha-dogrulamasi" },
@@ -35,6 +30,11 @@ const content = {
       { code: "DM1 / 06", title: "J1939 DM1 mesajı nasıl çözülür?", text: "PGN 65226 içindeki lamba, SPN, FMI, OC ve CM alanlarını ham CAN verisinden çözümleyin.", href: "/learn/j1939-dm1-spn-fmi-cozumleme/" },
       { code: "FIELD / 07", title: "Hesap doğruysa makine neden farklı davranır?", text: "Komut, ham değer, ölçekli değer ve bağımsız ölçümü aynı zaman çizelgesinde karşılaştırma.", href: "/blog/#saha-dogrulamasi" },
     ],
+    hydraulicsTitle: "Hidrolik: çalışma mantığından deneye",
+    hydraulicsIntro: "Üretici şemalarıyla okuyun, hesap örneğini takip edin ve aynı ayarları laboratuvarda değiştirin.",
+    hydraulicsArticle: "Bosch Rexroth A10VO LA güç kontrolü nasıl çalışır?",
+    hydraulicsText: "Eğik plaka, servo piston, LA tork sınırı, DR basınç kesme ve LA.D / DG / S / DS farkları. NG71 örneği ve ayrıntılı Rev B PDF kılavuzu.",
+    hydraulicsHref: "/learn/a10vo-la-guc-kontrolu/", lab: "A10VO LA laboratuvarında dene",
     policyTitle: "Yayın ilkesi",
     policyText: "Standart metinleri ve lisanslı tabloları kopyalamıyoruz. Kamuya açık kaynakları referans gösteriyor, özgün açıklamalar ve örnekler kullanıyor; müşteri, proje ve saha verilerini yayımlamıyoruz.",
   },
@@ -45,16 +45,13 @@ const content = {
     intro: "Evergreen technical content for CAN Bus, J1939, electrical, hydraulics, mechanical, and controls—built around principles, measurement sequences, examples, and common mistakes.",
     categoriesTitle: "Learning areas",
     categoriesIntro: "Content is organized as learning paths that progress from fundamentals to diagnosis, not as isolated posts.",
-    featuredTitle: "Published technical content",
-    featuredIntro: "The first cluster is growing around CAN and J1939. Each new article will link to the relevant engineering tool.",
-    openCategory: "Open content",
-    read: "Read article",
-    available: "Published",
-    planned: "In preparation",
+    featuredTitle: "CAN and J1939 technical content",
+    featuredIntro: "Use the guides alongside their tools, from physical-layer checks to message decoding.",
+    openCategory: "Open content", read: "Read article", available: "Published", planned: "In preparation",
     categories: [
       { code: "01", title: "CAN & J1939", text: "A practical path from the physical layer through DBC, log analysis, ECU simulation, and DM1 diagnosis.", state: "6 guides published", href: "#can-j1939-rehberleri" },
       { code: "02", title: "Electrical", text: "24 V systems, cable sizing, voltage drop, fuse selection, and field measurements.", state: "In preparation" },
-      { code: "03", title: "Hydraulics", text: "Pressure, flow, cylinder force, valve behavior, and circuit-validation fundamentals.", state: "In preparation" },
+      { code: "03", title: "Hydraulics", text: "Learn A10VO LA power control through swashplate, pressure, flow and torque, then try the laboratory.", state: "1 guide and LA laboratory published", href: "#hidrolik-rehberleri" },
       { code: "04", title: "Mechanical", text: "ISO 286 concepts, tolerance zones, fits, bolted joints, and manufacturing decisions.", state: "In preparation" },
       { code: "05", title: "Controls", text: "PID, filtering, hysteresis, state machines, and safe interlock logic.", state: "In preparation" },
       { code: "06", title: "Engineering Fundamentals", text: "Measurement, uncertainty, field validation, technical drawings, and repeatable testing.", state: "1 article published", href: "/blog/#saha-dogrulamasi" },
@@ -68,6 +65,11 @@ const content = {
       { code: "DM1 / 06", title: "How to decode a J1939 DM1 message", text: "Decode lamp states, SPN, FMI, OC, and CM fields from a raw PGN 65226 message.", href: "/learn/j1939-dm1-spn-fmi-cozumleme/" },
       { code: "FIELD / 07", title: "Why does the machine behave differently when the math is right?", text: "Compare command, raw value, scaled value, and independent measurement on one timeline.", href: "/blog/#saha-dogrulamasi" },
     ],
+    hydraulicsTitle: "Hydraulics: from operating principle to experiment",
+    hydraulicsIntro: "Read the manufacturer schematics, follow the worked example and change the same settings in the laboratory.",
+    hydraulicsArticle: "How does Bosch Rexroth A10VO LA power control work?",
+    hydraulicsText: "Swashplate, servo piston, LA torque limit, DR pressure cut-off and LA.D / DG / S / DS variants. NG71 worked example and detailed Rev B PDF guide.",
+    hydraulicsHref: "/learn/a10vo-la-power-control/", lab: "Try the A10VO LA laboratory",
     policyTitle: "Editorial policy",
     policyText: "We do not reproduce standards text or licensed tables. Public sources are referenced through original explanations and examples, while customer, project, and field data remain unpublished.",
   },
@@ -76,83 +78,31 @@ const content = {
 export default function LearnPage() {
   const [language, setLanguage] = useState<Language>("tr");
   const t = content[language];
-
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = language === "tr"
-      ? "Mühendislik Rehberleri ve Teknik Yazılar | ALGO TEAM Learn"
-      : "Engineering Guides and Technical Articles | ALGO TEAM Learn";
+    document.title = language === "tr" ? "Mühendislik Rehberleri ve Teknik Yazılar | ALGO TEAM Learn" : "Engineering Guides and Technical Articles | ALGO TEAM Learn";
   }, [language]);
-
-  return (
-    <main className="hub-page">
-      <header className="site-header hub-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">
-          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
-        </a>
-        <nav className="hub-nav" aria-label="Ana menü">
-          <a href="/">{t.nav.home}</a>
-          <a className="active" href="/learn/">{t.nav.learn}</a>
-          <a href="/tools/">{t.nav.tools}</a>
-          <a href="/news/">{t.nav.news}</a>
-        </nav>
-        <div className="language-switch" aria-label="Dil seçimi">
-          <button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button>
-          <span>/</span>
-          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">EN</button>
-        </div>
-      </header>
-
-      <section className="hub-hero">
-        <p className="overline">{t.overline}</p>
-        <h1>{t.title}</h1>
-        <p>{t.intro}</p>
-      </section>
-
-      <section className="hub-section">
-        <div className="hub-section-head">
-          <span>01</span>
-          <div><h2>{t.categoriesTitle}</h2><p>{t.categoriesIntro}</p></div>
-        </div>
-        <div className="hub-category-grid">
-          {t.categories.map((item) => (
-            <article key={item.code}>
-              <div className="hub-card-meta"><span>{item.code}</span><small>{item.state}</small></div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-              {"href" in item && item.href ? <a href={item.href}>{t.openCategory} →</a> : <span className="hub-planned">{t.planned}</span>}
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="hub-section hub-section--dark" id="can-j1939-rehberleri">
-        <div className="hub-section-head">
-          <span>02</span>
-          <div><h2>{t.featuredTitle}</h2><p>{t.featuredIntro}</p></div>
-        </div>
-        <div className="hub-article-list">
-          {t.featured.map((item) => (
-            <a href={item.href} key={item.code}>
-              <span>{item.code}</span>
-              <div><h3>{item.title}</h3><p>{item.text}</p></div>
-              <strong>{t.read} →</strong>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <section className="hub-policy">
-        <p className="section-kicker">03 / {t.policyTitle}</p>
-        <h2>{t.policyTitle}</h2>
-        <p>{t.policyText}</p>
-      </section>
-
-      <footer>
-        <p>ALGO TEAM · LEARN</p>
-        <p>CAN · J1939 · HYDRAULICS · MECHANICAL</p>
-        <p>© {new Date().getFullYear()}</p>
-      </footer>
-    </main>
-  );
+  return <main className="hub-page">
+    <header className="site-header hub-header">
+      <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa"><img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" /></a>
+      <nav className="hub-nav" aria-label="Ana menü"><a href="/">{t.nav.home}</a><a className="active" href="/learn/">{t.nav.learn}</a><a href="/tools/">{t.nav.tools}</a><a href="/news/">{t.nav.news}</a></nav>
+      <div className="language-switch" aria-label="Dil seçimi"><button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button><span>/</span><button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">EN</button></div>
+    </header>
+    <section className="hub-hero"><p className="overline">{t.overline}</p><h1>{t.title}</h1><p>{t.intro}</p></section>
+    <section className="hub-section">
+      <div className="hub-section-head"><span>01</span><div><h2>{t.categoriesTitle}</h2><p>{t.categoriesIntro}</p></div></div>
+      <div className="hub-category-grid">{t.categories.map(item => <article key={item.code}><div className="hub-card-meta"><span>{item.code}</span><small>{item.state}</small></div><h3>{item.title}</h3><p>{item.text}</p>{"href" in item && item.href ? <a href={item.href}>{t.openCategory} →</a> : <span className="hub-planned">{t.planned}</span>}</article>)}</div>
+    </section>
+    <section className="hub-section hub-section--dark" id="can-j1939-rehberleri">
+      <div className="hub-section-head"><span>02</span><div><h2>{t.featuredTitle}</h2><p>{t.featuredIntro}</p></div></div>
+      <div className="hub-article-list">{t.featured.map(item => <a href={item.href} key={item.code}><span>{item.code}</span><div><h3>{item.title}</h3><p>{item.text}</p></div><strong>{t.read} →</strong></a>)}</div>
+    </section>
+    <section className="hub-section" id="hidrolik-rehberleri">
+      <div className="hub-section-head"><span>03</span><div><h2>{t.hydraulicsTitle}</h2><p>{t.hydraulicsIntro}</p></div></div>
+      <div className="hub-category-grid"><article><div className="hub-card-meta"><span>A10VO LA / TR · EN</span><small>{t.available}</small></div><h3>{t.hydraulicsArticle}</h3><p>{t.hydraulicsText}</p><a data-la-learn href={t.hydraulicsHref}>{t.read} →</a></article></div>
+      <p><a href="/hydraulic-simulator/la-power-controller/">{t.lab} →</a></p>
+    </section>
+    <section className="hub-policy"><p className="section-kicker">04 / {t.policyTitle}</p><h2>{t.policyTitle}</h2><p>{t.policyText}</p></section>
+    <footer><p>ALGO TEAM · LEARN</p><p>CAN · J1939 · HYDRAULICS · MECHANICAL</p><p>© {new Date().getFullYear()}</p></footer>
+  </main>;
 }

@@ -4,13 +4,7 @@ import { resolve } from "node:path";
 
 export default defineConfig({
   base: "/",
-  plugins: [react(), {
-    name: "shared-site-language",
-    transformIndexHtml(html) {
-      if (html.includes('src="/site-language.js"')) return html;
-      return [{ tag: "script", attrs: { src: "/site-language.js", defer: true }, injectTo: "head" as const }];
-    },
-  }],
+  plugins: [react()],
   server: { host: "0.0.0.0", allowedHosts: ["terminal.local"] },
   build: {
     outDir: "dist",
@@ -33,6 +27,8 @@ export default defineConfig({
         "learn-j1939-pgn-nedir": resolve(__dirname, "learn/j1939-pgn-nedir/index.html"),
         "learn-j1939-dm1-spn-fmi-cozumleme": resolve(__dirname, "learn/j1939-dm1-spn-fmi-cozumleme/index.html"),
         "learn-dbc-ile-ecu-simulasyonu": resolve(__dirname, "learn/dbc-ile-ecu-simulasyonu/index.html"),
+        "learn-a10vo-la-tr": resolve(__dirname, "learn/a10vo-la-guc-kontrolu/index.html"),
+        "learn-a10vo-la-en": resolve(__dirname, "learn/a10vo-la-power-control/index.html"),
         tools: resolve(__dirname, "tools/index.html"),
         blog: resolve(__dirname, "blog/index.html"),
         news: resolve(__dirname, "news/index.html"),

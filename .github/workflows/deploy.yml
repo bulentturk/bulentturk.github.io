@@ -49,6 +49,16 @@ jobs:
         run: npm run build
       - name: Test built laboratory and language-selected PDF downloads
         run: python3 tests/la-browser.py
+      - name: Test full bilingual Learn articles and navigation
+        run: python3 tests/la-guide-browser.py
+      - name: Save Learn visual QA
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        with:
+          name: la-learn-qa
+          path: source/.test-artifacts/la-guide/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6

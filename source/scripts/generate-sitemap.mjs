@@ -13,6 +13,8 @@ const routes = [
   ["/learn/j1939-pgn-nedir/", ["learn/j1939-pgn-nedir/index.html", "src/GuidePage.tsx"]],
   ["/learn/j1939-dm1-spn-fmi-cozumleme/", ["learn/j1939-dm1-spn-fmi-cozumleme/index.html", "src/GuidePage.tsx"]],
   ["/learn/dbc-ile-ecu-simulasyonu/", ["learn/dbc-ile-ecu-simulasyonu/index.html", "src/GuidePage.tsx"]],
+  ["/learn/a10vo-la-guc-kontrolu/", ["learn/a10vo-la-guc-kontrolu/index.html", "src/A10voLaGuidePage.tsx", "src/a10vo-la-guide-content.ts", "src/a10vo-la-guide.css"]],
+  ["/learn/a10vo-la-power-control/", ["learn/a10vo-la-power-control/index.html", "src/A10voLaGuidePage.tsx", "src/a10vo-la-guide-content.ts", "src/a10vo-la-guide.css"]],
   ["/tools/", ["tools/index.html", "src/ToolsPage.tsx"]],
   ["/dbc-editor/", ["dbc-editor/index.html", "src/DbcEditor.tsx", "src/ToolSeoContent.tsx"]],
   ["/can-viewer/", ["can-viewer/index.html", "src/CanViewer.tsx", "src/ToolSeoContent.tsx"]],
@@ -21,36 +23,18 @@ const routes = [
   ["/j1939-dtc-decoder/", ["j1939-dtc-decoder/index.html", "src/J1939DtcAnalyzer.tsx", "src/ToolSeoContent.tsx"]],
   ["/j1939-pgn-calculator/", ["j1939-pgn-calculator/index.html", "src/J1939PgnCalculator.tsx", "src/j1939/pgn.ts", "src/ToolSeoContent.tsx"]],
   ["/hydraulic-simulator/", ["hydraulic-simulator/index.html"]],
-  [
-    "/hydraulic-simulator/la-power-controller/",
-    [
-      "hydraulic-simulator/la-power-controller/index.html",
-      "hydraulic-simulator/la-power-controller/lab.css",
-      "hydraulic-simulator/la-power-controller/lab.js",
-    ],
-  ],
+  ["/hydraulic-simulator/la-power-controller/", ["hydraulic-simulator/la-power-controller/index.html", "hydraulic-simulator/la-power-controller/lab.css", "hydraulic-simulator/la-power-controller/lab.js"]],
   ["/blog/", ["blog/index.html", "src/EngineeringBlog.tsx"]],
   ["/news/", ["news/index.html", "src/NewsPage.tsx"]],
 ];
 
 function lastModified(paths) {
   try {
-    const changed = execFileSync("git", ["status", "--porcelain", "--", ...paths], {
-      cwd: projectRoot,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
+    const changed = execFileSync("git", ["status", "--porcelain", "--", ...paths], { cwd: projectRoot, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
     if (changed) return new Date().toISOString().slice(0, 10);
-
-    const value = execFileSync("git", ["log", "-1", "--format=%cs", "--", ...paths], {
-      cwd: projectRoot,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
+    const value = execFileSync("git", ["log", "-1", "--format=%cs", "--", ...paths], { cwd: projectRoot, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
     if (value) return value;
-  } catch {
-    // A source archive may not contain Git history; use the build date below.
-  }
+  } catch { /* Source archives may not contain Git history. */ }
   return new Date().toISOString().slice(0, 10);
 }
 
@@ -59,7 +43,4 @@ export async function generateSitemap() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items.join("\n")}\n</urlset>\n`;
   await writeFile(resolve(projectRoot, "public/sitemap.xml"), xml, "utf8");
 }
-
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await generateSitemap();
-}
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await generateSitemap();
