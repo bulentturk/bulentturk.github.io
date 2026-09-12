@@ -22,6 +22,10 @@ export default defineConfig({
         "j1939-dtc-decoder": resolve(__dirname, "j1939-dtc-decoder/index.html"),
         "j1939-pgn-calculator": resolve(__dirname, "j1939-pgn-calculator/index.html"),
         "hydraulic-simulator": resolve(__dirname, "hydraulic-simulator/index.html"),
+        "hydraulic-la-power-controller": resolve(
+          __dirname,
+          "hydraulic-simulator/la-power-controller/index.html",
+        ),
         learn: resolve(__dirname, "learn/index.html"),
         "learn-dbc-dosyasi-nedir": resolve(__dirname, "learn/dbc-dosyasi-nedir/index.html"),
         "learn-can-bus-ariza-tespiti": resolve(__dirname, "learn/can-bus-ariza-tespiti/index.html"),

@@ -21,6 +21,14 @@ const routes = [
   ["/j1939-dtc-decoder/", ["j1939-dtc-decoder/index.html", "src/J1939DtcAnalyzer.tsx", "src/ToolSeoContent.tsx"]],
   ["/j1939-pgn-calculator/", ["j1939-pgn-calculator/index.html", "src/J1939PgnCalculator.tsx", "src/j1939/pgn.ts", "src/ToolSeoContent.tsx"]],
   ["/hydraulic-simulator/", ["hydraulic-simulator/index.html"]],
+  [
+    "/hydraulic-simulator/la-power-controller/",
+    [
+      "hydraulic-simulator/la-power-controller/index.html",
+      "hydraulic-simulator/la-power-controller/lab.css",
+      "hydraulic-simulator/la-power-controller/lab.js",
+    ],
+  ],
   ["/blog/", ["blog/index.html", "src/EngineeringBlog.tsx"]],
   ["/news/", ["news/index.html", "src/NewsPage.tsx"]],
 ];
