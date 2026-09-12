@@ -33,6 +33,8 @@ export default defineConfig({
         "learn-j1939-pgn-nedir": resolve(__dirname, "learn/j1939-pgn-nedir/index.html"),
         "learn-j1939-dm1-spn-fmi-cozumleme": resolve(__dirname, "learn/j1939-dm1-spn-fmi-cozumleme/index.html"),
         "learn-dbc-ile-ecu-simulasyonu": resolve(__dirname, "learn/dbc-ile-ecu-simulasyonu/index.html"),
+        "learn-a10vo-la-tr": resolve(__dirname, "learn/a10vo-la-guc-kontrolu/index.html"),
+        "learn-a10vo-la-en": resolve(__dirname, "learn/a10vo-la-power-control/index.html"),
         tools: resolve(__dirname, "tools/index.html"),
         blog: resolve(__dirname, "blog/index.html"),
         news: resolve(__dirname, "news/index.html"),
