@@ -4,7 +4,13 @@ import { resolve } from "node:path";
 
 export default defineConfig({
   base: "/",
-  plugins: [react()],
+  plugins: [react(), {
+    name: "shared-site-language",
+    transformIndexHtml(html) {
+      if (html.includes('src="/site-language.js"')) return html;
+      return [{ tag: "script", attrs: { src: "/site-language.js", defer: true }, injectTo: "head" as const }];
+    },
+  }],
   server: { host: "0.0.0.0", allowedHosts: ["terminal.local"] },
   build: {
     outDir: "dist",
