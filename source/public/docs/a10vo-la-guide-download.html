@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ALGO TEAM · A10VO LA Guide Download</title>
+<style>body{margin:0;background:#f3f1ea;color:#102232;font-family:system-ui,-apple-system,sans-serif}.box{max-width:620px;margin:14vh auto;padding:34px;background:#fff;border:1px solid #dcd8cb;border-radius:8px}.mark{color:#087f8c;font-weight:700;letter-spacing:.08em}.msg{margin:18px 0;color:#5b6871;line-height:1.55}.btn{display:inline-block;border:0;border-radius:4px;background:#102232;color:#fff;padding:10px 16px;cursor:pointer;font:inherit}</style>
+</head><body><main class="box"><div class="mark">ALGO TEAM · ENGINEERING GUIDES</div><h1 id="title">Preparing PDF…</h1><p class="msg" id="msg">The guide is being assembled in your browser. Nothing is uploaded from your device.</p><button class="btn" id="retry" hidden>Try again</button></main>
+<script>
+(async function(){
+  const p=new URLSearchParams(location.search), lang=p.get('lang')==='en'?'en':'tr';
+  const spec=lang==='en'?{dir:'a10vo-la-en',name:'a10vo-la-power-controller-guide-en.pdf',title:'A10VO LA Power Controller Guide'}:{dir:'a10vo-la-tr',name:'a10vo-la-guc-kontrolu-kilavuzu-tr.pdf',title:'A10VO LA Güç Kontrolü Kılavuzu'};
+  document.documentElement.lang=lang; document.getElementById('title').textContent=spec.title;
+  const msg=document.getElementById('msg'), retry=document.getElementById('retry');
+  async function go(){
+    retry.hidden=true; msg.textContent=lang==='tr'?'PDF hazırlanıyor…':'Preparing PDF…';
+    try{
+      const parts=[];
+      for(let i=1;i<=6;i++){
+        const n=String(i).padStart(2,'0');
+        const r=await fetch('/docs/'+spec.dir+'/part-'+n+'.txt',{cache:'force-cache'});
+        if(!r.ok) throw new Error('part '+n);
+        parts.push((await r.text()).trim());
+      }
+      const bin=atob(parts.join('')); const bytes=new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      const url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+      const a=document.createElement('a'); a.href=url; a.download=spec.name; document.body.appendChild(a); a.click(); a.remove();
+      msg.textContent=lang==='tr'?'İndirme başlamadıysa aşağıdaki düğmeye tekrar basın.':'If the download did not start, use the button below.';
+      retry.textContent=lang==='tr'?'PDF’yi tekrar indir':'Download PDF again'; retry.hidden=false; retry.onclick=()=>{const a=document.createElement('a');a.href=url;a.download=spec.name;a.click();};
+    }catch(e){msg.textContent=lang==='tr'?'PDF hazırlanamadı. Lütfen tekrar deneyin.':'Could not prepare the PDF. Please try again.';retry.textContent=lang==='tr'?'Tekrar dene':'Try again';retry.hidden=false;retry.onclick=go;}
+  }
+  go();
+})();
+</script></body></html>
