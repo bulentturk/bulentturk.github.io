@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "job_id": "pilot01-paid-v2",
+  "approved_for_generation": true,
+  "commercial_plan_confirmed_by_user": true,
+  "retry_of": "pilot01-paid-v1",
+  "retry_reason": "Owner requested retry after GitHub access update. Previous run 34759359566 stopped before provider call because the Actions secret was empty.",
+  "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+  "voice_name": "Roger - Laid-Back, Casual, Resonant",
+  "model_id": "eleven_multilingual_v2",
+  "text": "Bu dev maden kamyonu mazot yakıyor. Ama tekerleklerini elektrik motorları döndürüyor!\n\nCat 798 AC’de dizel motor, önce bir jeneratörü çeviriyor.\n\nÜretilen elektrik, elektronik sürücüler üzerinden arka tekerlek motorlarına gidiyor. Enerji dizelden, hareket elektrikten.\n\nAsıl ilginç kısım ise yokuş aşağıda.\n\nElektrikli yavaşlatma sırasında tekerlekler bu motorları çeviriyor. Motorlar bu kez jeneratör gibi çalışarak elektrik üretiyor.\n\nPeki, bu elektrik bataryaya mı gidiyor?\n\nBu dizel-elektrik düzende hayır. Frenleme enerjisi dirençlerde ısıya çevriliyor, fanlarla uzaklaştırılıyor.\n\nKamyonu yavaşlatan şey, burada enerjinin kontrollü biçimde ısıya dönüştürülmesi.\n\nDemek ki elektrikle yürümek, bataryalı olmak demek değil!"
+}
