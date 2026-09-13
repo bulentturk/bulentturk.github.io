@@ -12,6 +12,7 @@ import DbcEditor from "./DbcEditor";
 import J1939DtcAnalyzer from "./J1939DtcAnalyzer";
 import J1939PgnCalculator from "./J1939PgnCalculator";
 import GuidePage from "./GuidePage";
+import DbcGuidePage from "./DbcGuidePage";
 import A10voLaGuidePage from "./A10voLaGuidePage";
 import "./styles.css";
 
@@ -44,7 +45,7 @@ function pageForRoute(route: RenderRoute) {
     case "/can-log-analyzer/": return <CanLogAnalyzer />;
     case "/j1939-dtc-decoder/": return <J1939DtcAnalyzer />;
     case "/j1939-pgn-calculator/": return <J1939PgnCalculator />;
-    case "/learn/dbc-dosyasi-nedir/": return <GuidePage slug="dbc-dosyasi-nedir" />;
+    case "/learn/dbc-dosyasi-nedir/": return <DbcGuidePage />;
     case "/learn/can-bus-ariza-tespiti/": return <GuidePage slug="can-bus-ariza-tespiti" />;
     case "/learn/can-log-analizi/": return <GuidePage slug="can-log-analizi" />;
     case "/learn/j1939-pgn-nedir/": return <GuidePage slug="j1939-pgn-nedir" />;
