@@ -51,6 +51,16 @@ jobs:
         run: python3 tests/la-browser.py
       - name: Test full bilingual Learn articles and navigation
         run: python3 tests/la-guide-browser.py
+      - name: Test DBC guide SEO and content preservation
+        run: python3 tests/dbc-guide-browser.py
+      - name: Save DBC guide visual QA
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        with:
+          name: dbc-guide-qa
+          path: source/.test-artifacts/dbc-guide/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Save Learn visual QA
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
