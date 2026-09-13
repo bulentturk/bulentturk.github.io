@@ -7,7 +7,7 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const routes = [
   ["/", ["index.html", "src/App.tsx"]],
   ["/learn/", ["learn/index.html", "src/LearnPage.tsx"]],
-  ["/learn/dbc-dosyasi-nedir/", ["learn/dbc-dosyasi-nedir/index.html", "src/GuidePage.tsx"]],
+  ["/learn/dbc-dosyasi-nedir/", ["learn/dbc-dosyasi-nedir/index.html", "src/DbcGuidePage.tsx"]],
   ["/learn/can-bus-ariza-tespiti/", ["learn/can-bus-ariza-tespiti/index.html", "src/GuidePage.tsx"]],
   ["/learn/can-log-analizi/", ["learn/can-log-analizi/index.html", "src/GuidePage.tsx"]],
   ["/learn/j1939-pgn-nedir/", ["learn/j1939-pgn-nedir/index.html", "src/GuidePage.tsx"]],
