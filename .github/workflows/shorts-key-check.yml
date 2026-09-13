@@ -1,0 +1,40 @@
+name: Algo Team - Credential Check (no synthesis)
+
+on:
+  push:
+    branches: [automation/shorts-voice]
+    paths:
+      - '.github/workflows/shorts-key-check.yml'
+      - 'automation/shorts/diagnostics/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: algoteam-credential-check
+  cancel-in-progress: false
+
+jobs:
+  credential-check:
+    if: github.repository == 'bulentturk/bulentturk.github.io'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout diagnostic code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Offline diagnostic safety tests
+        run: python3 automation/shorts/diagnostics/check_key.py --self-test
+      - name: Check copy format and authentication without speech generation
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: python3 automation/shorts/diagnostics/check_key.py
+      - name: Preserve safe result only
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        with:
+          name: algoteam-key-check-${{ github.run_id }}
+          path: credential-check-output/status.json
+          if-no-files-found: warn
+          retention-days: 7
