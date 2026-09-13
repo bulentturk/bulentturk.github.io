@@ -1,0 +1,24 @@
+{
+  "checked_at_utc": "2026-09-13T13:31:30.739640+00:00",
+  "synthesis_run_id": 34759984650,
+  "synthesis_result": "blocked_provider",
+  "synthesis_http_status": 400,
+  "synthesis_provider_code": "invalid_api_key",
+  "new_audio_created": false,
+  "credential_diagnostic_run_id": 34760073177,
+  "diagnostic": {
+    "synthesis_requests": 0,
+    "authentication_requests": 1,
+    "credential_shape": "no_obvious_copy_format_error",
+    "http_status": 400,
+    "provider_code": "invalid_api_key",
+    "state": "authentication_rejected",
+    "secret_value_logged": false,
+    "automatic_retry": false
+  },
+  "interpretation": "Repository secret is available. Both synthesis and the separate read-only authentication request were rejected. No known label, quote, mask or internal-whitespace copying error was detected; this does not prove that the value is a complete, active API key. Check the ElevenLabs key record and expiry without exposing its value. No further synthesis attempted.",
+  "diagnostic_artifact_id": 10318413154,
+  "diagnostic_artifact_sha256": "9740565f9918a53eb33589c7846bcd8680818afb77f5853cf6a14c3ceb6ce9dd",
+  "website_main_changed": false,
+  "youtube_published": false
+}
