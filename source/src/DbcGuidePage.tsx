@@ -1,7 +1,7 @@
 import "./guide-page.css";
 
-const title = "DBC nedir? CAN Bus DBC dosyası nasıl okunur?";
-const description = "DBC nedir? CAN mesajlarını sinyallere dönüştüren DBC dosyasını; CAN ID, factor, offset, Intel/Motorola byte order ve örneklerle öğrenin.";
+const title = "DBC nedir? CAN Bus mesajlarını örnekle okuyun";
+const description = "DBC dosyası ne işe yarar, nasıl okunur? CAN verisini devir ve sıcaklık gibi değerlere çeviren sinyal tanımlarını örneklerle öğrenin; editörde deneyin.";
 const url = "https://algo-team.com/learn/dbc-dosyasi-nedir/";
 
 export default function DbcGuidePage() {
@@ -56,9 +56,9 @@ export default function DbcGuidePage() {
 
         <div className="guide-body">
           <section>
-            <h2>DBC nedir?</h2>
-            <p><strong>DBC (CAN Database)</strong>, CAN hattındaki ham CAN ID ve veri baytlarını anlamlı mühendislik değerlerine çevirmek için mesaj ve sinyal tanımlarını taşıyan metin tabanlı bir dosyadır. Bir DBC dosyası; mesaj kimliği, DLC, gönderici düğüm, başlangıç biti, bit uzunluğu, Intel/Motorola byte order, signed/unsigned bilgisi, factor, offset, birim ve sınır gibi alanları tanımlar.</p>
-            <p>Örneğin CAN kaydında yalnızca <strong>0x18FF50E5</strong> kimliği ve <strong>E0 2E 00 00</strong> gibi ham baytlar görebilirsiniz. Doğru DBC tanımı eklendiğinde bu ham veri motor devri, sıcaklık, basınç veya tork gibi fiziksel değerlere dönüşür. Kısacası DBC, CAN trafiğinin insanlar ve yazılım araçları tarafından okunabilir hale gelmesini sağlayan sözlüktür.</p>
+            <h2>DBC nedir, ne işe yarar?</h2>
+            <p><strong>DBC</strong>, CAN Bus mesajlarındaki ham verinin motor devri, sıcaklık veya basınç gibi fiziksel değerlere nasıl dönüştürüleceğini tanımlayan metin tabanlı bir dosyadır. Mesajın CAN kimliği (CAN ID), uzunluğu ve gönderici düğümü ile sinyallerin başlangıç biti, uzunluğu, byte order, işaret bilgisi, factor, offset, birim ve sınırlarını içerir.</p>
+            <p>CAN kaydında gördüğünüz 18 FF 50 E5 gibi bir kimlik ve E0 2E 00 00 gibi baytlar tek başına yalnızca ham veridir. DBC eklendiğinde aynı veri motor devri, sıcaklık veya basınç gibi anlaşılır değerlere dönüşür.</p>
           </section>
 
           <section>
@@ -105,15 +105,16 @@ export default function DbcGuidePage() {
             </div>
           </aside>
 
-          <section className="guide-related">
+          <div className="guide-related">
             <h2>İlgili rehberler</h2>
             <div>
               <a href="/learn/dbc-ile-ecu-simulasyonu/">DBC ile ECU simülasyonu</a>
               <a href="/learn/can-log-analizi/">CAN log analizi nasıl yapılır?</a>
               <a href="/learn/j1939-pgn-nedir/">J1939 PGN nedir?</a>
               <a href="/learn/can-bus-ariza-tespiti/">CAN Bus arıza tespiti</a>
+              <a href="/learn/j1939-dm1-spn-fmi-cozumleme/">J1939 DM1 mesajı nasıl çözülür?</a>
             </div>
-          </section>
+          </div>
         </div>
       </article>
 
