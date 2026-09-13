@@ -1,0 +1,47 @@
+name: Algo Team - Approved Shorts Voice
+
+on:
+  push:
+    branches: [automation/shorts-voice]
+    paths: ['automation/shorts/requests/*.json']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: algoteam-paid-voice
+  cancel-in-progress: false
+
+jobs:
+  voice:
+    if: github.repository == 'bulentturk/bulentturk.github.io' && github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout approved content
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Offline safety and subtitle tests
+        run: python3 -m unittest discover -s automation/shorts -p 'test_*.py' -v
+      - name: Resolve one newly approved request
+        id: plan
+        env:
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_AFTER: ${{ github.sha }}
+        run: python3 automation/shorts/generate_voice.py plan
+      - name: Generate ONE narration with timing
+        if: steps.plan.outputs.generate == 'true'
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          REQUEST_FILE: ${{ steps.plan.outputs.request_file }}
+        run: python3 automation/shorts/generate_voice.py generate
+      - name: Preserve audio, captions and provenance
+        if: always() && steps.plan.outputs.generate == 'true'
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        with:
+          name: algoteam-voice-${{ github.run_id }}
+          path: voice-output/
+          if-no-files-found: warn
+          retention-days: 30
