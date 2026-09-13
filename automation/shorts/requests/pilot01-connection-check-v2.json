@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "job_id": "pilot01-connection-check-v2",
+  "approved_for_generation": true,
+  "commercial_plan_confirmed_by_user": true,
+  "retry_of": "pilot01-connection-check-v1",
+  "retry_reason": "Owner confirmed replacing the Actions secret value after invalid_api_key. One bounded connection test; do not retry automatically.",
+  "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+  "voice_name": "Roger - Laid-Back, Casual, Resonant",
+  "model_id": "eleven_multilingual_v2",
+  "text": "Bu dev maden kamyonu mazot yakıyor. Ama tekerleklerini elektrik motorları döndürüyor!"
+}
