@@ -45,14 +45,20 @@ const tools = {
     guideLabel: "Adım adım CAN log analizi",
   },
   "j1939-dtc-decoder": {
-    name: "J1939 SPN/FMI Arıza Kodu Çözücü",
+    name: "J1939 DM1 Decoder: SPN/FMI Arıza Kodu Çözücü",
+    nameEn: "J1939 DM1 Decoder: SPN/FMI Fault Codes",
     path: "/j1939-dtc-decoder/",
-    description: "J1939 DM1 mesajlarını ve CAN kayıtlarındaki SPN/FMI arıza bilgilerini tarayıcıda çözümleyen teşhis aracı.",
-    uses: ["DM1 çerçevelerinden SPN, FMI ve occurrence count çıkarma", "Kaynak adresine göre ECU arızalarını ayırma", "BAM ve TP.DT ile taşınan çok paketli DM1 trafiğini birleştirme"],
-    steps: ["Ham DM1 verisini girin veya bir CAN kayıt dosyası yükleyin.", "Kaynak adresi ve zaman aralığını seçerek arızaları ayırın.", "SPN/FMI sonucunu üretici dokümanı ve fiziksel ölçümle doğrulayın."],
-    faq: [["SPN/FMI sonucu tek başına arızalı parçayı gösterir mi?", "Hayır. Kod, arıza türü ve ilgili parametre hakkında yön verir; servis dokümanı ve ölçümle doğrulanmalıdır."], ["Çok paketli DM1 destekleniyor mu?", "Evet. Uyumlu BAM ve TP.DT dizileri birleştirilerek çözümlenir."], ["Özel SPN açıklaması eklenebilir mi?", "Evet. Yerel sözlük ile kuruma veya makineye özgü açıklamalar eklenebilir."]],
+    description: "J1939 DM1 (PGN 65226) kayıtlarından SPN, FMI, oluşum sayısı (OC), lamba durumları ve kaynak ECU bilgisini çözümleyin. CAN kaydınızı seçin veya örnek kayıtla deneyin; BAM/TP.DT paketlerini ve arıza zaman çizelgesini birlikte inceleyin.",
+    descriptionEn: "Decode SPN, FMI, occurrence count (OC), lamp states and source ECU information from J1939 DM1 (PGN 65226). Select a CAN capture or try the sample; inspect BAM/TP.DT packets alongside the fault timeline.",
+    uses: ["DM1 çerçevelerinden SPN, FMI, OC ve lamba durumlarını çıkarma", "Kaynak ECU adresine göre arızaları ve aktiflik zaman çizelgesini ayırma", "BAM ve TP.DT ile taşınan çok paketli DM1 kayıtlarını birleştirme"],
+    usesEn: ["Extract SPN, FMI, OC and lamp states from DM1 frames", "Separate faults and active-state timelines by source ECU address", "Reassemble multi-packet DM1 captures transported with BAM and TP.DT"],
+    steps: ["TRC, ASC, CSV veya SocketCAN kaydınızı seçin. Dosyanız yoksa ‘Örnek J1939 kaydını aç’ düğmesiyle başlayın.", "Tek bir DM1 mesajı için kayıt açıldıktan sonra ‘Tek Mesaj’ sekmesine geçin; 29-bit CAN ID ve HEX veri baytlarını girin.", "SPN, FMI, OC, lamba ve kaynak ECU sonuçlarını inceleyin. Kodları üretici servis dokümanı ve fiziksel ölçümle doğrulayın."],
+    stepsEn: ["Select a TRC, ASC, CSV or SocketCAN capture. Without a file, start with ‘Open sample J1939 capture’.", "For an individual DM1 frame, open a capture first, then choose ‘Single Message’ and enter the 29-bit CAN ID and HEX data bytes.", "Inspect SPN, FMI, OC, lamp states and source ECU results. Validate codes against manufacturer service information and physical measurements."],
+    faq: [["DM1 çözümlemek için DBC dosyası gerekir mi?", "Temel DM1 arıza alanlarını çözmek için DBC gerekmez. Arıza anındaki devir, tork, sıcaklık gibi çalışma sinyallerini eklemek için doğru sürümde kendi J1939 DBC dosyanızı yükleyin."], ["SPN/FMI sonucu tek başına arızalı parçayı gösterir mi?", "Hayır. Kod, ilgili parametre ve arıza biçimi hakkında yön verir; parça değişimi kararı servis dokümanı ve ölçümle doğrulanmalıdır."], ["Çok paketli DM1 destekleniyor mu?", "Evet. Uyumlu BAM ve TP.DT dizileri birleştirilerek çözümlenir. Eksik paketler ve kaynak ECU bilgisi de değerlendirilmelidir."], ["Bütün SPN açıklamaları ve üretici kodları hazır mı?", "Hayır. Sayısal kodun çözülmesi, her üreticiye ait açıklamanın bulunduğu anlamına gelmez. CSV/Excel SPN sözlüğünüzle özel ad ve servis notları ekleyebilirsiniz."], ["Bu araç ECU'daki arızayı siler mi?", "Hayır. Bu bir kayıt ve mesaj çözümleme aracıdır; ECU'ya arıza silme veya kontrol komutu göndermez."]],
+    faqEn: [["Do I need a DBC file to decode DM1?", "A DBC is not required for the basic DM1 fault fields. Load the correct version of your own J1939 DBC to add operating signals such as speed, torque and temperature at fault onset."], ["Does an SPN/FMI result identify the failed part on its own?", "No. A code points to a parameter and failure mode; confirm replacement decisions using service documentation and measurements."], ["Are multi-packet DM1 messages supported?", "Yes. Compatible BAM and TP.DT sequences are reassembled for decoding. Missing packets and the source ECU must also be considered."], ["Are all SPN descriptions and manufacturer codes included?", "No. Decoding a numeric code does not provide every manufacturer's description. Add specific names and service notes using your CSV/Excel SPN dictionary."], ["Can this tool clear faults in an ECU?", "No. It analyzes captures and messages; it does not transmit fault-clear or control commands to an ECU."]],
     guide: "/learn/j1939-dm1-spn-fmi-cozumleme/",
     guideLabel: "DM1, SPN ve FMI çözümleme rehberi",
+    guideLabelEn: "Read the DM1, SPN and FMI guide (Turkish)",
   },
   "j1939-pgn-calculator": {
     name: "J1939 PGN / CAN ID Hesaplayıcı",
@@ -61,7 +67,7 @@ const tools = {
     description: "29-bit J1939 CAN kimliklerini priority, EDP/R, data page, PDU format, PDU specific, source address ve PGN alanlarına ayıran ücretsiz çevrimiçi hesaplayıcı.",
     descriptionEn: "A free online calculator that breaks 29-bit J1939 CAN identifiers into priority, EDP/R, data page, PDU format, PDU specific, source address, and PGN fields.",
     uses: ["29-bit CAN ID içinden PGN ve kaynak adresini bulma", "PDU1 mesajında hedef adresini, PDU2 mesajında group extension alanını ayırma", "PGN, priority ve adreslerden gönderilecek CAN kimliğini oluşturma", "Birden fazla CAN ID'yi toplu çözümleyip CSV olarak indirme"],
-    steps: ["CAN ID → PGN sekmesinde kimliği HEX veya decimal biçimde girin.", "Priority, PF, PS, source address, PDU tipi ve hesaplanan PGN sonucunu kontrol edin.", "Ters işlem için PGN → CAN ID sekmesinde PGN, priority ve adres alanlarını doldurun."],
+    steps: ["CAN ID → PGN sekmesinde kimliği HEX veya decimal biçimde girin.", "Priority, PF, PS, source address ve hesaplanan PGN sonucunu kontrol edin.", "Ters işlem için PGN → CAN ID sekmesinde PGN, priority ve adres alanlarını doldurun."],
     faq: [["PGN ile SPN arasındaki fark nedir?", "PGN bir J1939 mesaj grubunu tanımlar; SPN ise o mesajın payload'ı içindeki tek bir parametredir."], ["PDU1 ve PDU2 hesaplaması neden farklıdır?", "PDU1'de PS byte'ı hedef adrestir ve PGN'nin son byte'ı 00 kabul edilir. PDU2'de PS, PGN'nin group extension alanına katılır."], ["Araç bütün PGN ve SPN adlarını içeriyor mu?", "Hayır. Araç 29-bit kimliğin matematiksel yapısını çözer. Resmî parametre adları ve sinyal tanımları için lisanslı SAE J1939DA veya size ait DBC dosyası gerekir."]],
     guide: "/learn/j1939-pgn-nedir/",
     guideLabel: "J1939 PGN ve 29-bit CAN ID rehberi",
@@ -72,17 +78,19 @@ export default function ToolSeoContent({ tool, language }: { tool: ToolKey; lang
   const item = tools[tool];
   const displayName = language === "en" && "nameEn" in item ? item.nameEn : item.name;
   const displayDescription = language === "en" && "descriptionEn" in item ? item.descriptionEn : item.description;
+  const isDtc = tool === "j1939-dtc-decoder";
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "SoftwareApplication",
-        name: item.name,
+        name: isDtc ? displayName : item.name,
         url: `https://algo-team.com${item.path}`,
-        description: item.description,
+        description: isDtc ? displayDescription : item.description,
+        ...(isDtc ? { inLanguage: language } : {}),
         applicationCategory: "DeveloperApplication",
         operatingSystem: "Windows, macOS, Linux",
-        browserRequirements: tool === "j1939-pgn-calculator"
+        browserRequirements: tool === "j1939-pgn-calculator" || isDtc
           ? "Modern web browser with JavaScript enabled."
           : "Modern desktop web browser; hardware access features may require WebUSB support.",
         isAccessibleForFree: true,
@@ -94,13 +102,13 @@ export default function ToolSeoContent({ tool, language }: { tool: ToolKey; lang
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "ALGO TEAM", item: "https://algo-team.com/" },
           { "@type": "ListItem", position: 2, name: "Engineering Tools", item: "https://algo-team.com/tools/" },
-          { "@type": "ListItem", position: 3, name: item.name, item: `https://algo-team.com${item.path}` },
+          { "@type": "ListItem", position: 3, name: isDtc ? displayName : item.name, item: `https://algo-team.com${item.path}` },
         ],
       },
     ],
   };
 
-  if (language === "en") {
+  if (language === "en" && !isDtc) {
     return (
       <section className="tool-seo" aria-labelledby={`${tool}-about`}>
         <p className="tool-seo-kicker">ALGO TEAM / ENGINEERING TOOL</p>
@@ -113,20 +121,27 @@ export default function ToolSeoContent({ tool, language }: { tool: ToolKey; lang
     );
   }
 
+  const english = language === "en";
+  const uses = english && "usesEn" in item ? item.usesEn : item.uses;
+  const steps = english && "stepsEn" in item ? item.stepsEn : item.steps;
+  const faq = english && "faqEn" in item ? item.faqEn : item.faq;
+  const guideLabel = english && "guideLabelEn" in item ? item.guideLabelEn : item.guideLabel;
+
   return (
     <section className="tool-seo" aria-labelledby={`${tool}-about`}>
-      <p className="tool-seo-kicker">ALGO TEAM / ÜCRETSİZ MÜHENDİSLİK ARACI</p>
-      <h2 id={`${tool}-about`}>{item.name} ne işe yarar?</h2>
-      <p className="tool-seo-lead">{item.description} İşlem içeriği tarayıcıda kalır; araç ücretsizdir ve hesap gerektirmez.</p>
+      <p className="tool-seo-kicker">{english ? "ALGO TEAM / FREE ENGINEERING TOOL" : "ALGO TEAM / ÜCRETSİZ MÜHENDİSLİK ARACI"}</p>
+      <h2 id={`${tool}-about`}>{english ? `How to use ${displayName}` : `${item.name} ne işe yarar?`}</h2>
+      <p className="tool-seo-lead">{displayDescription} {english ? "File contents stay in your browser; the tool is free and requires no account." : "İşlem içeriği tarayıcıda kalır; araç ücretsizdir ve hesap gerektirmez."}</p>
       <div className="tool-seo-grid">
-        <article><h3>Hangi işlerde kullanılır?</h3><ul>{item.uses.map((value) => <li key={value}>{value}</li>)}</ul></article>
-        <article><h3>Nasıl kullanılır?</h3><ol>{item.steps.map((value) => <li key={value}>{value}</li>)}</ol></article>
+        <article><h3>{english ? "What can I use it for?" : "Hangi işlerde kullanılır?"}</h3><ul>{uses.map((value) => <li key={value}>{value}</li>)}</ul></article>
+        <article><h3>{english ? "How do I start?" : "Nasıl kullanılır?"}</h3><ol>{steps.map((value) => <li key={value}>{value}</li>)}</ol></article>
       </div>
       <div className="tool-seo-faq">
-        <h3>Sık sorulan sorular</h3>
-        {item.faq.map(([question, answer]) => <article key={question}><h4>{question}</h4><p>{answer}</p></article>)}
+        <h3>{english ? "Frequently asked questions" : "Sık sorulan sorular"}</h3>
+        {faq.map(([question, answer]) => <article key={question}><h4>{question}</h4><p>{answer}</p></article>)}
       </div>
-      <a className="tool-seo-link" href={item.guide}>{item.guideLabel} →</a>
+      <a className="tool-seo-link" href={item.guide}>{guideLabel} →</a>
+      {isDtc ? <p><a className="tool-seo-link" href="/j1939-pgn-calculator/">{english ? "Check the PGN and source address from a CAN ID" : "CAN ID'den PGN ve kaynak adresini kontrol edin"} →</a></p> : null}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </section>
   );
