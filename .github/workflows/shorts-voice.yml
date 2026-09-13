@@ -3,7 +3,10 @@ name: Algo Team - Approved Shorts Voice
 on:
   push:
     branches: [automation/shorts-voice]
-    paths: ['automation/shorts/requests/*.json']
+    paths:
+      - 'automation/shorts/requests/*.json'
+      - 'automation/shorts/*.py'
+      - '.github/workflows/shorts-voice.yml'
 
 permissions:
   contents: read
@@ -31,17 +34,19 @@ jobs:
           PUSH_BEFORE: ${{ github.event.before }}
           PUSH_AFTER: ${{ github.sha }}
         run: python3 automation/shorts/generate_voice.py plan
-      - name: Generate ONE narration with timing
+      - name: Run approved voice agent once
         if: steps.plan.outputs.generate == 'true'
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           REQUEST_FILE: ${{ steps.plan.outputs.request_file }}
-        run: python3 automation/shorts/generate_voice.py generate
-      - name: Preserve audio, captions and provenance
+        run: python3 automation/shorts/agent.py
+      - name: Preserve audio, captions and agent status
         if: always() && steps.plan.outputs.generate == 'true'
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         with:
-          name: algoteam-voice-${{ github.run_id }}
-          path: voice-output/
+          name: algoteam-agent-${{ github.run_id }}
+          path: |
+            voice-output/
+            agent-output/
           if-no-files-found: warn
           retention-days: 30
