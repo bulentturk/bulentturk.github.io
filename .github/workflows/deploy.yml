@@ -89,3 +89,53 @@ jobs:
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
+      - name: Verify published DBC guide
+        timeout-minutes: 3
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          import json
+          import os
+          import time
+          from urllib.request import Request, urlopen
+
+          class Head(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.in_title = False
+                  self.title = ''
+                  self.description = ''
+                  self.canonical = ''
+              def handle_starttag(self, tag, attrs):
+                  a = dict(attrs)
+                  if tag == 'title': self.in_title = True
+                  if tag == 'meta' and a.get('name') == 'description': self.description = a.get('content', '')
+                  if tag == 'link' and a.get('rel') == 'canonical': self.canonical = a.get('href', '')
+              def handle_endtag(self, tag):
+                  if tag == 'title': self.in_title = False
+              def handle_data(self, data):
+                  if self.in_title: self.title += data
+
+          canonical = 'https://algo-team.com/learn/dbc-dosyasi-nedir/'
+          expected = 'DBC Nedir? CAN Bus Mesajlarını Örnekle Okuyun | ALGO TEAM'
+          description = 'DBC dosyası ne işe yarar, nasıl okunur? CAN verisini devir ve sıcaklık gibi değerlere çeviren sinyal tanımlarını örneklerle öğrenin; editörde deneyin.'
+          address = canonical + '?deploy_check=' + os.environ['GITHUB_SHA']
+          for attempt in range(12):
+              try:
+                  request = Request(address, headers={'Cache-Control': 'no-cache', 'User-Agent': 'ALGO-TEAM-Publication-Check/1.0'})
+                  with urlopen(request, timeout=10) as response:
+                      assert response.status == 200
+                      html = response.read().decode('utf-8')
+                  head = Head()
+                  head.feed(html)
+                  assert head.title == expected, 'Waiting for updated title'
+                  assert head.description == description, 'Waiting for updated description'
+                  assert head.canonical == canonical, 'Incorrect canonical'
+                  assert 'CAN Bus mesajlarındaki ham verinin motor devri' in html, 'Missing prerendered introduction'
+                  print('LIVE PASS: ' + json.dumps({'url': canonical, 'status': 200, 'title': head.title, 'description': head.description, 'prerendered_intro': True}, ensure_ascii=False))
+                  break
+              except Exception as error:
+                  if attempt == 11: raise
+                  print(f'Publication check {attempt + 1}/12: {error}')
+                  time.sleep(4)
+          PY
