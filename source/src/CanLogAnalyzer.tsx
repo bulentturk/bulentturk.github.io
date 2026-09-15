@@ -35,7 +35,7 @@ type ReportSignalAnalysis = ReportSignalCandidate & {
   summary: SignalSummary;
 };
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024;
+const MAX_FILE_SIZE = 200 * 1024 * 1024;
 const MAX_REPORT_SIGNALS = 12;
 const DEFAULT_REPORT_SIGNALS = 6;
 const CHART_COLORS = ["#087f8c", "#e08b36", "#446aa3", "#9a5877"];
@@ -114,7 +114,7 @@ const copy = {
     shownFrames: "Son 400 eşleşen frame gösteriliyor",
     invalidLog: "Dosyada desteklenen CAN frame’i bulunamadı.",
     invalidDbc: "DBC dosyası okunamadı.",
-    tooLarge: "Dosya 100 MB sınırını aşıyor.",
+    tooLarge: "Dosya 200 MB sınırını aşıyor.",
     loaded: "Kayıt analiz edildi.",
     dbcLoaded: "DBC yüklendi.",
     csvSaved: "Filtreli CAN verisi CSV olarak indirildi.",
@@ -235,7 +235,7 @@ const copy = {
     shownFrames: "Latest 400 matching frames are shown",
     invalidLog: "No supported CAN data frames were found in the file.",
     invalidDbc: "The DBC file could not be parsed.",
-    tooLarge: "The file exceeds the 100 MB limit.",
+    tooLarge: "The file exceeds the 200 MB limit.",
     loaded: "Capture analyzed.",
     dbcLoaded: "DBC loaded.",
     csvSaved: "Filtered CAN data downloaded as CSV.",
