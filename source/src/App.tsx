@@ -239,6 +239,36 @@ const copy = {
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
       note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
+      columns: [
+        {
+          title: "Araçlar",
+          links: [
+            { label: "DBC Editörü", href: "/dbc-editor/" },
+            { label: "CAN İzleyici", href: "/can-viewer/" },
+            { label: "CAN Log Analiz", href: "/can-log-analyzer/" },
+            { label: "DBC ECU Simülatörü", href: "/dbc-ecu-simulator/" },
+            { label: "J1939 DM1 Decoder", href: "/j1939-dtc-decoder/" },
+            { label: "PGN / CAN ID Hesaplayıcı", href: "/j1939-pgn-calculator/" },
+            { label: "Hidrolik Simülatör", href: "/hydraulic-simulator/" },
+          ],
+        },
+        {
+          title: "İçerik",
+          links: [
+            { label: "Learn", href: "/learn/" },
+            { label: "Teknik Yazılar", href: "/blog/" },
+            { label: "Haberler", href: "/news/" },
+            { label: "Tüm Araçlar", href: "/tools/" },
+          ],
+        },
+        {
+          title: "Site",
+          links: [
+            { label: "LA Laboratuvarı", href: "/hydraulic-simulator/la-power-controller/" },
+            { label: "info@algo-team.com", href: "mailto:info@algo-team.com" },
+          ],
+        },
+      ],
     },
   },
   en: {
@@ -475,6 +505,36 @@ const copy = {
     footer: {
       label: "ALGO TEAM · ENGINEERING TOOLS",
       note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
+      columns: [
+        {
+          title: "Tools",
+          links: [
+            { label: "DBC Editor", href: "/dbc-editor/" },
+            { label: "CAN Viewer", href: "/can-viewer/" },
+            { label: "CAN Log Analyzer", href: "/can-log-analyzer/" },
+            { label: "DBC ECU Simulator", href: "/dbc-ecu-simulator/" },
+            { label: "J1939 DM1 Decoder", href: "/j1939-dtc-decoder/" },
+            { label: "PGN / CAN ID Calculator", href: "/j1939-pgn-calculator/" },
+            { label: "Hydraulic Simulator", href: "/hydraulic-simulator/" },
+          ],
+        },
+        {
+          title: "Content",
+          links: [
+            { label: "Learn", href: "/learn/" },
+            { label: "Technical Articles", href: "/blog/" },
+            { label: "News", href: "/news/" },
+            { label: "All Tools", href: "/tools/" },
+          ],
+        },
+        {
+          title: "Site",
+          links: [
+            { label: "LA Laboratory", href: "/hydraulic-simulator/la-power-controller/" },
+            { label: "info@algo-team.com", href: "mailto:info@algo-team.com" },
+          ],
+        },
+      ],
     },
   },
 } as const;
@@ -760,9 +820,25 @@ export default function Home() {
       </section>
 
       <footer>
-        <p>{t.footer.label}</p>
-        <p>{t.footer.note}</p>
-        <p>© {new Date().getFullYear()}</p>
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <p className="footer-brand-label">{t.footer.label}</p>
+            <p className="footer-brand-note">{t.footer.note}</p>
+          </div>
+          {t.footer.columns.map((col) => (
+            <nav className="footer-column" key={col.title} aria-label={col.title}>
+              <h3>{col.title}</h3>
+              <ul>
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <a href={link.href}>{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
+        <p className="footer-bottom">© {new Date().getFullYear()} ALGO TEAM</p>
       </footer>
     </main>
   );
