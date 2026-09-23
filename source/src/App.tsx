@@ -268,6 +268,14 @@ const copy = {
             { label: "info@algo-team.com", href: "mailto:info@algo-team.com" },
           ],
         },
+        {
+          title: "Yasal",
+          links: [
+            { label: "Gizlilik Politikası", href: "/gizlilik-politikasi/" },
+            { label: "Çerez Politikası", href: "/cerez-politikasi/" },
+            { label: "KVKK Aydınlatma Metni", href: "/kvkk-aydinlatma-metni/" },
+          ],
+        },
       ],
     },
   },
@@ -532,6 +540,14 @@ const copy = {
           links: [
             { label: "LA Laboratory", href: "/hydraulic-simulator/la-power-controller/" },
             { label: "info@algo-team.com", href: "mailto:info@algo-team.com" },
+          ],
+        },
+        {
+          title: "Legal",
+          links: [
+            { label: "Privacy Policy", href: "/gizlilik-politikasi/" },
+            { label: "Cookie Policy", href: "/cerez-politikasi/" },
+            { label: "KVKK Disclosure", href: "/kvkk-aydinlatma-metni/" },
           ],
         },
       ],

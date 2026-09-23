@@ -3955,3 +3955,125 @@ section.contact-section .contact-submit .button--primary:hover {
     grid-column: 1 / -1;
   }
 }
+
+/* Legal pages (Gizlilik / Çerez / KVKK) */
+.legal-header {
+  align-items: center;
+  background: var(--ink);
+  color: #8ca0a5;
+  display: flex;
+  justify-content: space-between;
+  padding: 18px max(48px, calc((100vw - 1384px) / 2));
+}
+
+.legal-brand {
+  color: #e8eef0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+}
+
+.legal-back {
+  color: #8ca0a5;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.legal-back:hover,
+.legal-back:focus-visible {
+  color: #e8eef0;
+}
+
+.legal-page {
+  background: #f5f2eb;
+  margin: 0 auto;
+  max-width: 760px;
+  padding: 56px 24px 80px;
+}
+
+.legal-kicker {
+  color: #087f8c;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.legal-page h1 {
+  font-size: clamp(26px, 4vw, 34px);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 14px 0 12px;
+}
+
+.legal-intro {
+  color: #4d5c60;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 34px;
+  max-width: 620px;
+}
+
+.legal-page section {
+  border-top: 1px solid rgba(16, 34, 50, 0.1);
+  margin-top: 30px;
+  padding-top: 26px;
+}
+
+.legal-page h2 {
+  font-size: 17px;
+  margin: 0 0 12px;
+}
+
+.legal-page p,
+.legal-page li {
+  color: #37474c;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.legal-page ul {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.legal-table {
+  border: 1px solid rgba(16, 34, 50, 0.14);
+  border-radius: 8px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.legal-table table {
+  border-collapse: collapse;
+  min-width: 520px;
+  width: 100%;
+}
+
+.legal-table th,
+.legal-table td {
+  font-size: 13px;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.legal-table th {
+  background: rgba(8, 127, 140, 0.08);
+  color: #102232;
+}
+
+@media (max-width: 640px) {
+  .legal-header {
+    padding: 16px 22px;
+  }
+
+  .legal-page {
+    padding: 40px 18px 60px;
+  }
+}

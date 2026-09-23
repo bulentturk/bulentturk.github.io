@@ -14,6 +14,7 @@ import J1939PgnCalculator from "./J1939PgnCalculator";
 import GuidePage from "./GuidePage";
 import DbcGuidePage from "./DbcGuidePage";
 import A10voLaGuidePage from "./A10voLaGuidePage";
+import LegalPage from "./LegalPage";
 import "./styles.css";
 
 export type RenderRoute =
@@ -35,7 +36,10 @@ export type RenderRoute =
   | "/dbc-ecu-simulator/"
   | "/can-log-analyzer/"
   | "/j1939-dtc-decoder/"
-  | "/j1939-pgn-calculator/";
+  | "/j1939-pgn-calculator/"
+  | "/gizlilik-politikasi/"
+  | "/cerez-politikasi/"
+  | "/kvkk-aydinlatma-metni/";
 
 function pageForRoute(route: RenderRoute) {
   switch (route) {
@@ -57,6 +61,9 @@ function pageForRoute(route: RenderRoute) {
     case "/tools/": return <ToolsPage />;
     case "/blog/": return <EngineeringBlog />;
     case "/news/": return <NewsPage />;
+    case "/gizlilik-politikasi/": return <LegalPage slug="gizlilik-politikasi" />;
+    case "/cerez-politikasi/": return <LegalPage slug="cerez-politikasi" />;
+    case "/kvkk-aydinlatma-metni/": return <LegalPage slug="kvkk-aydinlatma-metni" />;
     default: return <App />;
   }
 }

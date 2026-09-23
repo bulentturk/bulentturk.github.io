@@ -26,6 +26,9 @@ const routes = [
   ["/hydraulic-simulator/la-power-controller/", ["hydraulic-simulator/la-power-controller/index.html", "hydraulic-simulator/la-power-controller/lab.css", "hydraulic-simulator/la-power-controller/lab.js"]],
   ["/blog/", ["blog/index.html", "src/EngineeringBlog.tsx"]],
   ["/news/", ["news/index.html", "src/NewsPage.tsx"]],
+  ["/gizlilik-politikasi/", ["gizlilik-politikasi/index.html", "src/LegalPage.tsx"]],
+  ["/cerez-politikasi/", ["cerez-politikasi/index.html", "src/LegalPage.tsx"]],
+  ["/kvkk-aydinlatma-metni/", ["kvkk-aydinlatma-metni/index.html", "src/LegalPage.tsx"]],
 ];
 
 /**
