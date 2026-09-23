@@ -28,6 +28,24 @@ const routes = [
   ["/news/", ["news/index.html", "src/NewsPage.tsx"]],
 ];
 
+/**
+ * Dil çiftleri: rota -> hreflang haritası. Yeni bir TR/EN çifti eklendiğinde
+ * yalnızca bu haritaya iki satır eklemek yeterlidir; alternates otomatik
+ * üretilir. hreflang="x-default" Türkçe sürümü gösterir.
+ */
+const languageAlternates = {
+  "/learn/a10vo-la-guc-kontrolu/": {
+    tr: "/learn/a10vo-la-guc-kontrolu/",
+    en: "/learn/a10vo-la-power-control/",
+    "x-default": "/learn/a10vo-la-guc-kontrolu/",
+  },
+  "/learn/a10vo-la-power-control/": {
+    tr: "/learn/a10vo-la-guc-kontrolu/",
+    en: "/learn/a10vo-la-power-control/",
+    "x-default": "/learn/a10vo-la-guc-kontrolu/",
+  },
+};
+
 function lastModified(paths) {
   try {
     const changed = execFileSync("git", ["status", "--porcelain", "--", ...paths], { cwd: projectRoot, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
@@ -39,8 +57,19 @@ function lastModified(paths) {
 }
 
 export async function generateSitemap() {
-  const items = routes.map(([route, paths]) => `  <url>\n    <loc>https://algo-team.com${route}</loc>\n    <lastmod>${lastModified(paths)}</lastmod>\n  </url>`);
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items.join("\n")}\n</urlset>\n`;
+  const items = routes.map(([route, paths]) => {
+    const alternates = languageAlternates[route];
+    const links = alternates
+      ? Object.entries(alternates)
+          .map(
+            ([lang, href]) =>
+              `    <xhtml:link rel="alternate" hreflang="${lang}" href="https://algo-team.com${href}" />`,
+          )
+          .join("\n")
+      : "";
+    return `  <url>\n    <loc>https://algo-team.com${route}</loc>\n    <lastmod>${lastModified(paths)}</lastmod>\n${links ? `${links}\n` : ""}  </url>`;
+  });
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${items.join("\n")}\n</urlset>\n`;
   await writeFile(resolve(projectRoot, "public/sitemap.xml"), xml, "utf8");
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await generateSitemap();
