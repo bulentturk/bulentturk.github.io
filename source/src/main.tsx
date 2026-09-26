@@ -7,6 +7,7 @@ import LearnPage from "./LearnPage";
 import ToolsPage from "./ToolsPage";
 import LegalPage from "./LegalPage";
 import "./styles.css";
+import "./home.css";
 
 const route = window.location.pathname.replace(/\/+$/, "");
 const isEngineeringBlog = route === "/blog";

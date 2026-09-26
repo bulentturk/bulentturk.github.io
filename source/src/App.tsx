@@ -8,11 +8,11 @@ type Language = "tr" | "en";
  * Yenilenmiş ana sayfa — Modern tema.
  * Önceki sürümde numaralı bölüm tasarımı ve iki dilli içerik vardı; bu
  * sürüm tasarımı tamamen yeniler ve TR/EN metin eşliğini korur.
- * Canlı repodaki diğer sayfalara dokunulmaz; yalnızca "/" rotası etkilenir.
+ * Yeni stiller "rv-" önekli sınıflarla home.css'te tanımlıdır; diğer
+ * sayfaların (blog, news, learn, tools, legal) stilleri etkilenmez.
  */
 const copy = {
   tr: {
-    brandSub: "algo-team.com",
     nav: {
       tools: "Araçlar",
       learn: "Learn",
@@ -54,9 +54,6 @@ const copy = {
       allTools: "Tüm araçlar sayfası",
       open: "aracını aç",
       filters: ["Tümü", "CAN Bus", "J1939", "Hidrolik"] as const,
-      category: "CAN Bus" as const,
-      categoryJ: "J1939" as const,
-      categoryH: "Hidrolik" as const,
       items: [
         {
           code: "DBC",
@@ -65,6 +62,7 @@ const copy = {
           text: "Mesaj ve sinyalleri oluşturun, bit yerleşimini doğrulayın ve standart DBC çıktısı alın.",
           features: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"],
           href: "/dbc-editor/",
+          kind: "tool",
         },
         {
           code: "LIVE CAN",
@@ -73,6 +71,7 @@ const copy = {
           text: "PCAN-USB ile canlı trafiği izleyin, kontrollü mesaj gönderin ve TRC/CSV kaydı alın.",
           features: ["PCAN-USB", "RX / TX", "TRC / CSV kayıt"],
           href: "/can-viewer/",
+          kind: "tool",
         },
         {
           code: "LOG ANALYSIS",
@@ -81,6 +80,7 @@ const copy = {
           text: "TRC, ASC, CSV ve SocketCAN kayıtlarında çevrim zamanı, jitter, kayıp mesaj ve DBC sinyallerini inceleyin.",
           features: ["Çoklu log formatı", "Periyot ve jitter", "Sinyal grafikleri"],
           href: "/can-log-analyzer/",
+          kind: "tool",
         },
         {
           code: "PGN / CAN ID",
@@ -89,6 +89,7 @@ const copy = {
           text: "29-bit CAN kimliğini PGN ve adres alanlarına ayırın veya PGN'den gönderilecek CAN ID'yi oluşturun.",
           features: ["CAN ID ↔ PGN", "PDU1 / PDU2", "Toplu çözümleme"],
           href: "/j1939-pgn-calculator/",
+          kind: "tool",
         },
         {
           code: "J1939",
@@ -97,6 +98,7 @@ const copy = {
           text: "DM1 arızalarını, BAM/TP.DT mesajlarını ve arıza anındaki motor çalışma koşullarını çözümleyin.",
           features: ["SPN / FMI", "BAM / TP.DT", "Arıza anı raporu"],
           href: "/j1939-dtc-decoder/",
+          kind: "tool",
         },
         {
           code: "DBC ECU",
@@ -123,7 +125,7 @@ const copy = {
         text: string;
         features: string[];
         href: string;
-        kind?: string;
+        kind: string;
       }>,
     },
     workflow: {
@@ -269,7 +271,6 @@ const copy = {
     },
   },
   en: {
-    brandSub: "algo-team.com",
     nav: {
       tools: "Tools",
       learn: "Learn",
@@ -311,9 +312,6 @@ const copy = {
       allTools: "All tools page",
       open: "open",
       filters: ["All", "CAN Bus", "J1939", "Hydraulics"] as const,
-      category: "CAN Bus" as const,
-      categoryJ: "J1939" as const,
-      categoryH: "Hydraulics" as const,
       items: [
         {
           code: "DBC",
@@ -322,6 +320,7 @@ const copy = {
           text: "Create messages and signals, verify the bit layout, and export a standards-compatible DBC.",
           features: ["CAN / CAN FD", "Intel / Motorola", "DBC export"],
           href: "/dbc-editor/",
+          kind: "tool",
         },
         {
           code: "LIVE CAN",
@@ -330,6 +329,7 @@ const copy = {
           text: "Monitor live traffic with PCAN-USB, transmit controlled frames, and record TRC/CSV logs.",
           features: ["PCAN-USB", "RX / TX", "TRC / CSV recording"],
           href: "/can-viewer/",
+          kind: "tool",
         },
         {
           code: "LOG ANALYSIS",
@@ -338,6 +338,7 @@ const copy = {
           text: "Inspect cycle time, jitter, missing messages, and DBC signals in TRC, ASC, CSV, and SocketCAN logs.",
           features: ["Multiple log formats", "Period and jitter", "Signal charts"],
           href: "/can-log-analyzer/",
+          kind: "tool",
         },
         {
           code: "PGN / CAN ID",
@@ -346,6 +347,7 @@ const copy = {
           text: "Decode a 29-bit CAN identifier into PGN and address fields, or build a transmit CAN ID from a PGN.",
           features: ["CAN ID ↔ PGN", "PDU1 / PDU2", "Batch decode"],
           href: "/j1939-pgn-calculator/",
+          kind: "tool",
         },
         {
           code: "J1939",
@@ -354,6 +356,7 @@ const copy = {
           text: "Decode DM1 faults, BAM/TP.DT messages, and engine operating conditions at fault onset.",
           features: ["SPN / FMI", "BAM / TP.DT", "Fault-context report"],
           href: "/j1939-dtc-decoder/",
+          kind: "tool",
         },
         {
           code: "DBC ECU",
@@ -380,7 +383,7 @@ const copy = {
         text: string;
         features: string[];
         href: string;
-        kind?: string;
+        kind: string;
       }>,
     },
     workflow: {
@@ -529,7 +532,7 @@ const copy = {
 
 function Arrow({ direction = "right" }: { direction?: "right" | "down" }) {
   return (
-    <span aria-hidden="true" className={`arrow arrow--${direction}`}>
+    <span aria-hidden="true" className={`rv-arrow rv-arrow--${direction}`}>
       <span />
     </span>
   );
@@ -574,7 +577,7 @@ export default function Home() {
   const visibleTools = t.tools.items.filter((item) => {
     if (!activeFilter) return true;
     if (activeFilter === toolFilters[language][0]) {
-      return item.discipline.includes("CAN / J1939") && item.kind !== "simulator";
+      return item.discipline.includes("CAN / J1939") && item.kind === "tool";
     }
     if (activeFilter === toolFilters[language][1]) {
       return item.discipline.includes("J1939");
@@ -633,99 +636,97 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="hero hero--revamp">
-        <div className="hero-grid" aria-hidden="true" />
-        <div className="hero-glow" aria-hidden="true" />
-        <div className="hero-inner">
-          <div className="hero-copy">
-            <p className="hero-badge">
-              <span className="pulse" aria-hidden="true" />
+      <section className="rv-hero">
+        <div className="rv-hero-grid" aria-hidden="true" />
+        <div className="rv-hero-glow" aria-hidden="true" />
+        <div className="rv-hero-inner">
+          <div className="rv-hero-copy">
+            <p className="rv-hero-badge">
+              <span className="rv-pulse" aria-hidden="true" />
               {t.hero.badge}
             </p>
             <h1 id="hero-title">
               {t.hero.titleLead}{" "}
-              <span className="accent">{t.hero.titleAccent}</span>{" "}
+              <span className="rv-accent">{t.hero.titleAccent}</span>{" "}
               {t.hero.titleTail}
             </h1>
-            <p className="hero-text">{t.hero.text}</p>
-            <div className="hero-actions">
-              <a className="btn btn--primary" href="#tools">
+            <p className="rv-hero-text">{t.hero.text}</p>
+            <div className="rv-hero-actions">
+              <a className="rv-btn rv-btn--primary" href="#tools">
                 {t.hero.ctaPrimary}
                 <Arrow />
               </a>
-              <a className="btn btn--ghost" href="/news/">
+              <a className="rv-btn rv-btn--ghost" href="/news/">
                 {t.hero.ctaSecondary}
               </a>
             </div>
-            <dl className="hero-stats">
+            <dl className="rv-hero-stats">
               {t.hero.stats.map((s) => (
                 <div key={s.label}>
-                  <dt className="sr-only">{s.label}</dt>
-                  <dd className="stat-value">{s.value}</dd>
-                  <dd className="stat-label">{s.label}</dd>
+                  <dt className="rv-sr-only">{s.label}</dt>
+                  <dd className="rv-stat-value">{s.value}</dd>
+                  <dd className="rv-stat-label">{s.label}</dd>
                 </div>
               ))}
             </dl>
           </div>
-          <div className="hero-panel" role="presentation">
-            <div className="panel-head">
-              <span className="panel-title">
-                <span aria-hidden="true">▮</span> {t.panel.title}
-              </span>
-              <span className="panel-live">
-                <span className="pulse" aria-hidden="true" />
+          <div className="rv-hero-panel" role="presentation">
+            <div className="rv-panel-head">
+              <span className="rv-panel-title">▮ {t.panel.title}</span>
+              <span className="rv-panel-live">
+                <span className="rv-pulse" aria-hidden="true" />
                 {t.panel.link}
               </span>
             </div>
-            <div className="panel-body">
-              <div className="panel-line">
-                <span className="muted">{t.panel.canId}</span>{" "}
-                <span className="accent">0x18FECA03</span>{" "}
-                <span className="muted">· {t.panel.bytes}</span>
+            <div className="rv-panel-body">
+              <div className="rv-panel-line">
+                <span className="rv-muted">{t.panel.canId}</span>{" "}
+                <span className="rv-accent">0x18FECA03</span>{" "}
+                <span className="rv-muted">· {t.panel.bytes}</span>
               </div>
-              <div className="panel-chips">
-                <div className="chip">
-                  <span className="chip-k">PGN</span>
-                  <span className="chip-v">65226</span>
+              <div className="rv-panel-chips">
+                <div className="rv-chip">
+                  <span className="rv-chip-k">PGN</span>
+                  <span className="rv-chip-v">65226</span>
                 </div>
-                <div className="chip">
-                  <span className="chip-k">SPN</span>
-                  <span className="chip-v">3362</span>
+                <div className="rv-chip">
+                  <span className="rv-chip-k">SPN</span>
+                  <span className="rv-chip-v">3362</span>
                 </div>
-                <div className="chip">
-                  <span className="chip-k">FMI</span>
-                  <span className="chip-v">31</span>
+                <div className="rv-chip">
+                  <span className="rv-chip-k">FMI</span>
+                  <span className="rv-chip-v">31</span>
                 </div>
               </div>
-              <div className="panel-result">
-                <span className="muted">{t.panel.result} </span>
+              <div className="rv-panel-result">
+                <span className="rv-muted">{t.panel.result} </span>
                 {t.panel.resultValue}{" "}
-                <strong className="accent">{t.panel.resultStatus}</strong>
+                <strong className="rv-accent">{t.panel.resultStatus}</strong>
               </div>
-              <p className="panel-note">🔒 {t.panel.note}</p>
+              <p className="rv-panel-note">🔒 {t.panel.note}</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="tools" className="section">
-        <div className="section-head">
+      <section id="tools" className="rv-section">
+        <div className="rv-section-head">
           <div>
-            <p className="kicker">{t.tools.kicker}</p>
+            <p className="rv-kicker">{t.tools.kicker}</p>
             <h2>{t.tools.title}</h2>
-            <p className="section-intro">{t.tools.intro}</p>
+            <p className="rv-section-intro">{t.tools.intro}</p>
           </div>
-          <a className="text-link" href="/tools/">
+          <a className="rv-text-link" href="/tools/">
             {t.tools.allTools}
             <Arrow />
           </a>
         </div>
-        <div className="chip-row" role="group" aria-label={t.tools.kicker}>
+        <div className="rv-chip-row" role="group" aria-label={t.tools.kicker}>
           {[t.tools.filters[0], ...toolFilters[language]].map((f) => (
             <button
               key={f}
               type="button"
-              className={`chip-btn${filter === (f === t.tools.filters[0] ? "all" : f) ? " active" : ""}`}
+              className={`rv-chip-btn${filter === (f === t.tools.filters[0] ? "all" : f) ? " active" : ""}`}
               aria-pressed={filter === (f === t.tools.filters[0] ? "all" : f)}
               onClick={() => setFilter(f === t.tools.filters[0] ? "all" : f)}
             >
@@ -733,23 +734,23 @@ export default function Home() {
             </button>
           ))}
         </div>
-        <div className="card-grid">
+        <div className="rv-card-grid">
           {visibleTools.map((tool) => (
-            <a className="card" key={tool.href + tool.title} href={tool.href}>
-              <div className="card-top">
-                <span className="card-code">{tool.code}</span>
-                <span className="card-disc">{tool.discipline}</span>
+            <a className="rv-card" key={tool.href + tool.title} href={tool.href}>
+              <div className="rv-card-top">
+                <span className="rv-card-code">{tool.code}</span>
+                <span className="rv-card-disc">{tool.discipline}</span>
               </div>
               <h3>{tool.title}</h3>
               <p>{tool.text}</p>
-              <ul className="feature-list">
+              <ul className="rv-feature-list">
                 {tool.features.map((f) => (
                   <li key={f}>
                     <span aria-hidden="true">✓</span> {f}
                   </li>
                 ))}
               </ul>
-              <span className="card-open">
+              <span className="rv-card-open">
                 {tool.title} {t.tools.open}
                 <Arrow />
               </span>
@@ -758,17 +759,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section--tinted">
-        <div className="section-head section-head--center">
+      <section className="rv-section rv-section--tinted">
+        <div className="rv-section-head rv-section-head--center">
           <div>
-            <p className="kicker">{t.workflow.kicker}</p>
+            <p className="rv-kicker">{t.workflow.kicker}</p>
             <h2>{t.workflow.title}</h2>
           </div>
         </div>
-        <div className="grid-3">
+        <div className="rv-grid-3">
           {t.workflow.steps.map((s) => (
-            <div className="card card--flat" key={s.step}>
-              <span className="step-no">{s.step}</span>
+            <div className="rv-card rv-card--flat" key={s.step}>
+              <span className="rv-step-no">{s.step}</span>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
             </div>
@@ -776,26 +777,26 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="guides" className="section">
-        <div className="section-head">
+      <section id="guides" className="rv-section">
+        <div className="rv-section-head">
           <div>
-            <p className="kicker">{t.guides.kicker}</p>
+            <p className="rv-kicker">{t.guides.kicker}</p>
             <h2>{t.guides.title}</h2>
-            <p className="section-intro">{t.guides.intro}</p>
+            <p className="rv-section-intro">{t.guides.intro}</p>
           </div>
-          <a className="text-link" href="/learn/">
+          <a className="rv-text-link" href="/learn/">
             {t.guides.all}
             <Arrow />
           </a>
         </div>
-        <div className="grid-3">
+        <div className="rv-grid-3">
           {t.guides.items.map((g) => (
-            <a className="card" key={g.href + g.title} href={g.href}>
-              <div className="card-top">
-                <span className="card-disc">{g.category}</span>
+            <a className="rv-card" key={g.href + g.title} href={g.href}>
+              <div className="rv-card-top">
+                <span className="rv-card-disc">{g.category}</span>
               </div>
               <h3>{g.title}</h3>
-              <span className="card-open">
+              <span className="rv-card-open">
                 {t.guides.read}
                 <Arrow />
               </span>
@@ -804,23 +805,23 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="news" className="section section--tinted">
-        <div className="section-head">
+      <section id="news" className="rv-section rv-section--tinted">
+        <div className="rv-section-head">
           <div>
-            <p className="kicker">{t.news.kicker}</p>
+            <p className="rv-kicker">{t.news.kicker}</p>
             <h2>{t.news.title}</h2>
-            <p className="section-intro">{t.news.intro}</p>
+            <p className="rv-section-intro">{t.news.intro}</p>
           </div>
-          <a className="text-link" href="/news/">
+          <a className="rv-text-link" href="/news/">
             {t.news.all}
             <Arrow />
           </a>
         </div>
-        <div className="grid-2">
+        <div className="rv-grid-2">
           {t.news.items.map((n) => (
-            <a className="card" key={n.href + n.title} href={n.href}>
-              <div className="card-top">
-                <span className="card-disc">{n.date}</span>
+            <a className="rv-card" key={n.href + n.title} href={n.href}>
+              <div className="rv-card-top">
+                <span className="rv-card-disc">{n.date}</span>
               </div>
               <h3>{n.title}</h3>
               <p>{n.text}</p>
@@ -829,20 +830,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="roadmap" className="section">
-        <div className="section-head">
+      <section id="roadmap" className="rv-section">
+        <div className="rv-section-head">
           <div>
-            <p className="kicker">{t.roadmap.kicker}</p>
+            <p className="rv-kicker">{t.roadmap.kicker}</p>
             <h2>{t.roadmap.title}</h2>
-            <p className="section-intro">{t.roadmap.intro}</p>
+            <p className="rv-section-intro">{t.roadmap.intro}</p>
           </div>
         </div>
-        <div className="grid-3">
+        <div className="rv-grid-3">
           {t.roadmap.items.map((r) => (
-            <div className="card card--flat" key={r.code + r.title}>
-              <div className="card-top">
-                <span className="card-code">{r.code}</span>
-                <span className="status-badge">{t.roadmap.status}</span>
+            <div className="rv-card rv-card--flat" key={r.code + r.title}>
+              <div className="rv-card-top">
+                <span className="rv-card-code">{r.code}</span>
+                <span className="rv-status-badge">{t.roadmap.status}</span>
               </div>
               <h3>{r.title}</h3>
               <p>{r.text}</p>
@@ -851,17 +852,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="platform" className="section section--tinted">
-        <div className="section-head section-head--center">
+      <section id="platform" className="rv-section rv-section--tinted">
+        <div className="rv-section-head rv-section-head--center">
           <div>
-            <p className="kicker">{t.platform.kicker}</p>
+            <p className="rv-kicker">{t.platform.kicker}</p>
             <h2>{t.platform.title}</h2>
-            <p className="section-intro">{t.platform.intro}</p>
+            <p className="rv-section-intro">{t.platform.intro}</p>
           </div>
         </div>
-        <div className="grid-3">
+        <div className="rv-grid-3">
           {t.platform.items.map((p) => (
-            <div className="card card--flat" key={p.title}>
+            <div className="rv-card rv-card--flat" key={p.title}>
               <h3>{p.title}</h3>
               <p>{p.text}</p>
             </div>
@@ -869,19 +870,19 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contact" className="section">
-        <div className="contact-wrap">
+      <section id="contact" className="rv-section">
+        <div className="rv-contact-wrap">
           <div>
-            <p className="kicker">{t.contact.kicker}</p>
+            <p className="rv-kicker">{t.contact.kicker}</p>
             <h2>{t.contact.title}</h2>
-            <p className="section-intro">{t.contact.intro}</p>
-            <p className="contact-direct">
-              <span className="muted">{t.contact.direct}:</span>{" "}
+            <p className="rv-section-intro">{t.contact.intro}</p>
+            <p className="rv-contact-direct">
+              <span className="rv-muted">{t.contact.direct}:</span>{" "}
               <a href="mailto:info@algo-team.com">info@algo-team.com</a>
             </p>
           </div>
           <form
-            className="contact-form"
+            className="rv-contact-form"
             onSubmit={prepareEmail}
             action="mailto:info@algo-team.com"
             method="post"
@@ -909,17 +910,17 @@ export default function Home() {
                 required
               />
             </label>
-            <button className="btn btn--primary" type="submit">
+            <button className="rv-btn rv-btn--primary" type="submit">
               {t.contact.send}
             </button>
-            <p className="form-note">{t.contact.note}</p>
+            <p className="rv-form-note">{t.contact.note}</p>
           </form>
         </div>
       </section>
 
-      <footer className="site-footer">
-        <p className="footer-label">{t.footer.label}</p>
-        <p className="footer-note">{t.footer.note}</p>
+      <footer className="rv-footer">
+        <p className="rv-footer-label">{t.footer.label}</p>
+        <p className="rv-footer-note">{t.footer.note}</p>
       </footer>
     </main>
   );
