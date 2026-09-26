@@ -4,54 +4,69 @@ import { useEffect, useState } from "react";
 
 type Language = "tr" | "en";
 
+/**
+ * Yenilenmiş ana sayfa — Modern tema.
+ * Önceki sürümde numaralı bölüm tasarımı ve iki dilli içerik vardı; bu
+ * sürüm tasarımı tamamen yeniler ve TR/EN metin eşliğini korur.
+ * Canlı repodaki diğer sayfalara dokunulmaz; yalnızca "/" rotası etkilenir.
+ */
 const copy = {
   tr: {
+    brandSub: "algo-team.com",
     nav: {
-      home: "Ana Sayfa",
+      tools: "Araçlar",
       learn: "Learn",
-      engineering: "Mühendislik",
-      tools: "Mevcut Araçlar",
-      simulators: "Simülatörler",
       roadmap: "Yol Haritası",
-      content: "İçerikler",
-      blog: "Teknik Yazılar",
       news: "Haberler",
-      principles: "Platform",
       contact: "İletişim",
       menu: "Site Menüsü",
     },
     hero: {
-      title: "CAN Bus, J1939 ve Hidrolik Mühendislik Araçları",
-      fields: ["Mobil İş Makineleri", "CAN Bus", "J1939"],
-      fieldLabel: "Mühendislik alanları",
-      scroll: "Araçlar",
+      badge: "7 ücretsiz araç · kurulum gerektirmez",
+      titleLead: "CAN Bus ve J1939 analizini",
+      titleAccent: "tarayıcında",
+      titleTail: "yap.",
+      text: "CAN Bus ve J1939 analizi, DBC düzenleme, CAN log inceleme ve hidrolik devre simülasyonu için ücretsiz çevrimiçi mühendislik araçları. Kurulum yok, lisans yok — DBC düzenle, CAN log çözümle, ECU simüle et, arıza kodlarını oku.",
+      ctaPrimary: "Araçları İncele",
+      ctaSecondary: "Yeniliklere göz at",
+      stats: [
+        { value: "7", label: "ücretsiz araç" },
+        { value: "8", label: "rehber makalesi" },
+        { value: "0", label: "kurulum gerekir" },
+        { value: "4", label: "log formatı" },
+      ],
+    },
+    panel: {
+      title: "DM1 çözümleme · J1939",
+      link: "CAN 250 kbit/s",
+      canId: "CAN ID",
+      bytes: "8 bayt",
+      result: "Sonuç →",
+      resultValue: "Aftertreatment 1 DEF Pump · oturum durumu:",
+      resultStatus: "aktif",
+      note: "Tüm çözümleme tarayıcıda çalışır; veri sunucuya gitmez.",
     },
     tools: {
-      kicker: "01 / Kullanıma Açık",
-      title: "Gerçek mühendislik işi için çalışan araçlar.",
+      kicker: "Araçlar",
+      title: "Kategoriye göre seç",
       intro:
-        "Dosyalar ve CAN verileri tarayıcıda işlenir. Mevcut araçlar doğrudan kullanılabilir; hesap açma veya kurulum gerekmez.",
-      open: "Aracı aç",
-      guide: "PDF kılavuzu",
-      availableTitle: "Mevcut mühendislik araçları",
-      availableIntro: "CAN, J1939 ve veri analizi için doğrudan kullanabileceğiniz araçlar.",
-      simulatorTitle: "Simülatörler",
-      simulatorIntro: "Sistem davranışını tarayıcıda kurup gözlemleyebileceğiniz etkileşimli çalışma alanları.",
+        "Yedi araç, tek çatı altında: CAN Bus analizi, J1939 çözümleme ve hidrolik devre simülasyonu.",
+      allTools: "Tüm araçlar sayfası",
+      open: "aracını aç",
+      filters: ["Tümü", "CAN Bus", "J1939", "Hidrolik"] as const,
+      category: "CAN Bus" as const,
+      categoryJ: "J1939" as const,
+      categoryH: "Hidrolik" as const,
       items: [
         {
-          kind: "tool",
-          no: "01",
           code: "DBC",
           discipline: "CAN / J1939",
           title: "DBC Editörü",
           text: "Mesaj ve sinyalleri oluşturun, bit yerleşimini doğrulayın ve standart DBC çıktısı alın.",
           features: ["CAN / CAN FD", "Intel / Motorola", "DBC dışa aktarma"],
           href: "/dbc-editor/",
-          guide: "/docs/dbc-editor-kullanim-kilavuzu-tr.pdf",
         },
         {
-          kind: "tool",
-          no: "02",
           code: "LIVE CAN",
           discipline: "CAN / J1939",
           title: "CAN Viewer",
@@ -60,8 +75,6 @@ const copy = {
           href: "/can-viewer/",
         },
         {
-          kind: "tool",
-          no: "03",
           code: "LOG ANALYSIS",
           discipline: "Veri Analizi",
           title: "CAN Log Analyzer",
@@ -70,8 +83,6 @@ const copy = {
           href: "/can-log-analyzer/",
         },
         {
-          kind: "tool",
-          no: "04",
           code: "PGN / CAN ID",
           discipline: "CAN / J1939",
           title: "J1939 PGN Hesaplayıcı",
@@ -80,8 +91,6 @@ const copy = {
           href: "/j1939-pgn-calculator/",
         },
         {
-          kind: "tool",
-          no: "05",
           code: "J1939",
           discipline: "CAN / J1939",
           title: "DM1 / DTC Analyzer",
@@ -90,29 +99,114 @@ const copy = {
           href: "/j1939-dtc-decoder/",
         },
         {
-          kind: "simulator",
-          no: "06",
           code: "DBC ECU",
           discipline: "CAN / J1939",
           title: "DBC ECU Simülatörü",
-          text: "DBC mesajlarını sinyal kontrollerine dönüştürün; Standard veya Extended CAN frame’lerini tek seferlik ya da periyodik gönderin.",
+          text: "DBC mesajlarını sinyal kontrollerine dönüştürün; Standard veya Extended CAN frame'lerini tek seferlik ya da periyodik gönderin.",
           features: ["Sinyal kodlama", "STD / EXT", "Periyodik TX"],
           href: "/dbc-ecu-simulator/",
+          kind: "simulator",
         },
         {
-          kind: "simulator",
-          no: "07",
           code: "HYDRAULICS",
           discipline: "Hidrolik",
           title: "Hidrolik Devre Simülatörü",
           text: "Devre elemanlarını sürükleyip bağlayın; basınç, debi ve silindir hareketini çalıştırarak bağlantıları doğrulayın.",
           features: ["Sürükle ve bırak", "Canlı akış görünümü", "Devre doğrulama"],
           href: "/hydraulic-simulator/",
+          kind: "simulator",
+        },
+      ] as Array<{
+        code: string;
+        discipline: string;
+        title: string;
+        text: string;
+        features: string[];
+        href: string;
+        kind?: string;
+      }>,
+    },
+    workflow: {
+      kicker: "İş akışı",
+      title: "Üç adımda analiz",
+      steps: [
+        {
+          step: "01",
+          title: "Bağlan veya yükle",
+          text: "PCAN-USB ile canlı CAN Bus'a bağlan ya da TRC, ASC, CSV, SocketCAN kaydını tarayıcıya sürükle.",
+        },
+        {
+          step: "02",
+          title: "DBC ile çözümle",
+          text: "Sinyalleri fiziksel değerlere çevir; periyot, jitter ve kayıp mesajları tek ekranda incele.",
+        },
+        {
+          step: "03",
+          title: "Doğrula ve raporla",
+          text: "Arıza kodlarını SPN/FMI bazında çöz, sonuçları ekran görüntüsü ve kayıt dosyasıyla paylaş.",
+        },
+      ],
+    },
+    guides: {
+      kicker: "Rehberler",
+      title: "Öğren, sonra uygula",
+      intro:
+        "Temellerden ileri seviyeye: DBC, J1939 PGN/DM1 ve hidrolik güç kontrolü üzerine uygulamalı yazılar.",
+      all: "Tüm rehberler",
+      read: "Oku",
+      items: [
+        {
+          category: "DBC",
+          title: "DBC Dosyası Nedir?",
+          href: "/learn/dbc-dosyasi-nedir/",
+        },
+        {
+          category: "Hidrolik",
+          title: "A10VO LA Güç Kontrolü",
+          href: "/learn/a10vo-la-guc-kontrolu/",
+        },
+        {
+          category: "J1939",
+          title: "DM1 / SPN-FMI Çözümleme",
+          href: "/learn/j1939-dm1-spn-fmi-cozumleme/",
+        },
+      ],
+    },
+    news: {
+      kicker: "Haberler",
+      title: "Sitede ve araçlarda yenilikler",
+      intro:
+        "Sürüm notları, yeni rehberler ve site güncellemeleri tek akışta. Eski blog ve haber sayfalarının yerini bu canlı akış alır.",
+      all: "Tüm haberler",
+      items: [
+        {
+          date: "2026-09-12",
+          title: "A10VO LA güç kontrolü rehberi ve laboratuvarı yayında",
+          text: "RE 92705 kaynaklı TR/EN rehber, p-Q eğrisi ve etkileşimli laboratuvar eklendi.",
+          href: "/learn/a10vo-la-guc-kontrolu/",
+        },
+        {
+          date: "2026-09-12",
+          title: "Hidrolik simülatöre LA Güç Kontrolü laboratuvarı geldi",
+          text: "Pompa regülatörü, yük basıncı ve p-Q haritasını canlı deneyebileceğiniz yeni sayfa.",
+          href: "/hydraulic-simulator/la-power-controller/",
+        },
+        {
+          date: "2026-08-30",
+          title: "J1939 PGN Hesaplayıcı'ya toplu çözümleme",
+          text: "Birden fazla CAN ID'yi aynı anda çözümleyip tablo hâlinde kopyalayın.",
+          href: "/j1939-pgn-calculator/",
+        },
+        {
+          date: "2026-08-18",
+          title: "CAN Log Analyzer sinyal grafikleri",
+          text: "DBC sinyallerini zaman ekseninde çizdirin; dönüm noktalarını hızlıca bulun.",
+          href: "/can-log-analyzer/",
         },
       ],
     },
     roadmap: {
-      kicker: "02 / Yol Haritası",
+      kicker: "Yol Haritası",
       title: "Sıradaki mühendislik araçları.",
       intro:
         "Hidrolik, mekanik, elektrik, kontrol, CAN/J1939 ve makine emniyeti aynı araç altyapısında adım adım büyüyecek.",
@@ -120,90 +214,23 @@ const copy = {
       items: [
         {
           code: "J1939",
-          discipline: "CAN / J1939",
           title: "SPN / FMI Sözlüğü",
           text: "SPN, FMI ve arıza açıklamalarını üretici notlarıyla birlikte hızlı arama.",
         },
         {
           code: "CAN",
-          discipline: "CAN / J1939",
           title: "Bit Yerleşim Hesaplayıcı",
           text: "Intel ve Motorola sinyaller için start bit, uzunluk, ölçek ve byte görünümü.",
         },
         {
           code: "LOG",
-          discipline: "Veri Analizi",
           title: "CAN Trace Karşılaştırıcı",
           text: "İki trace dosyası arasında yeni, kayıp veya davranışı değişen mesajları bulma.",
         },
-        {
-          code: "SAFETY",
-          discipline: "Makine Emniyeti",
-          title: "PL Hesaplama Çalışma Sayfası",
-          text: "ISO 13849 yaklaşımında kanal yapısı, MTTFd, DC ve CCF girdilerini düzenleme.",
-        },
-        {
-          code: "MECHANICAL",
-          discipline: "Mekanik",
-          title: "Pim, Mil ve Burç Geçme Asistanı",
-          text: "Yataklama tipi, tolerans, yüzey basıncı ve montaj boşluğu için kontrollü seçim.",
-        },
-        {
-          code: "HYDRAULICS",
-          discipline: "Hidrolik",
-          title: "Silindir ve Hat Boyutlandırma",
-          text: "Kuvvet, hız, debi, boru çapı ve hat hızını birlikte hesaplama.",
-        },
-        {
-          code: "ELECTRICAL",
-          discipline: "Elektrik",
-          title: "24 V Kablo ve Gerilim Düşümü",
-          text: "Akım, kablo uzunluğu, kesit, sigorta ve izin verilen gerilim düşümü kontrolü.",
-        },
-        {
-          code: "CONTROL",
-          discipline: "Kontrol Sistemleri",
-          title: "Emniyet Kilidi Mantık Oluşturucu",
-          text: "Sensör, izin, engelleme ve hata koşullarından okunabilir interlock akışı hazırlama.",
-        },
-      ],
-    },
-    blog: {
-      kicker: "03 / Mühendislik Blogu",
-      title: "Sahadan kısa, kullanılabilir teknik notlar.",
-      intro:
-        "Uzun teorik anlatımlar yerine; bir problemi anlamaya, ölçmeye veya doğrulamaya yardım eden kısa mühendislik notları.",
-      all: "Blogu aç",
-      read: "Notu oku",
-      items: [
-        {
-          type: "Teknik Makale / CAN",
-          title: "CAN hattında mesaj analizine nereden başlanır?",
-          text: "Fiziksel katman, çevrim zamanı, jitter, byte order ve ölçek doğrulaması için pratik başlangıç sırası.",
-          href: "/blog/#can-analizi",
-        },
-        {
-          type: "Araştırma Notu / Saha Doğrulaması",
-          title: "Hesap doğruysa makine neden farklı davranır?",
-          text: "Ölçeklendirme, örnekleme, tolerans ve çalışma koşullarını birlikte kontrol etme.",
-          href: "/blog/#saha-dogrulamasi",
-        },
-      ],
-    },
-    news: {
-      kicker: "04 / Haberler",
-      title: "Seçilmiş gelişmeler, kalıcı bir arşivde.",
-      intro: "Her sabah eklenen haberler eskileri silmeden büyür. Her başlık, kaynak özeti ve mühendislik açısından neden önemli olduğuyla birlikte yayımlanır.",
-      open: "Tüm haberleri aç",
-      categories: [
-        { code: "01", slug: "health", title: "Sağlık", text: "Klinik araştırmalar, biyomedikal teknoloji ve halk sağlığı." },
-        { code: "02", slug: "science-tech", title: "Bilim ve Teknoloji", text: "Yapay zekâ, uzay, enerji, robotik ve yeni araştırmalar." },
-        { code: "03", slug: "mobile-machines", title: "Mobil İş Makineleri", text: "İş, inşaat, tarım ve maden makineleri; güç aktarma ve elektrifikasyon." },
-        { code: "04", slug: "mining", title: "Madencilik Teknolojileri", text: "Maden otomasyonu, filo yönetimi, emniyet ve üretim teknolojileri." },
       ],
     },
     platform: {
-      kicker: "05 / Platform",
+      kicker: "Platform",
       title: "Mobil makineler için araçlar ve teknik notlar.",
       intro:
         "CAN, J1939, kontrol sistemleri ve saha verisi üzerine; işe yaradığı ölçüde büyüyen bir çalışma alanı.",
@@ -223,7 +250,7 @@ const copy = {
       ],
     },
     contact: {
-      kicker: "06 / İletişim",
+      kicker: "İletişim",
       title: "Bir konu varsa, yazabilirsiniz.",
       intro: "Araçlarla ilgili hata, öneri veya teknik iş birliği için.",
       name: "İsim",
@@ -237,95 +264,66 @@ const copy = {
       note: "Gönder düğmesi, mesajı e-posta uygulamanızda hazırlar.",
     },
     footer: {
+      note: "CAN Bus, J1939 ve hidrolik mühendislik araçları — tamamen ücretsiz, tarayıcıda çalışır, dosyalarınız cihazınızdan çıkmaz.",
       label: "ALGO TEAM · ENGINEERING TOOLS",
-      note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
-      columns: [
-        {
-          title: "Araçlar",
-          links: [
-            { label: "DBC Editörü", href: "/dbc-editor/" },
-            { label: "CAN İzleyici", href: "/can-viewer/" },
-            { label: "CAN Log Analiz", href: "/can-log-analyzer/" },
-            { label: "DBC ECU Simülatörü", href: "/dbc-ecu-simulator/" },
-            { label: "J1939 DM1 Decoder", href: "/j1939-dtc-decoder/" },
-            { label: "PGN / CAN ID Hesaplayıcı", href: "/j1939-pgn-calculator/" },
-            { label: "Hidrolik Simülatör", href: "/hydraulic-simulator/" },
-          ],
-        },
-        {
-          title: "İçerik",
-          links: [
-            { label: "Learn", href: "/learn/" },
-            { label: "Teknik Yazılar", href: "/blog/" },
-            { label: "Haberler", href: "/news/" },
-            { label: "Tüm Araçlar", href: "/tools/" },
-          ],
-        },
-        {
-          title: "Site",
-          links: [
-            { label: "LA Laboratuvarı", href: "/hydraulic-simulator/la-power-controller/" },
-            { label: "info@algo-team.com", href: "mailto:info@algo-team.com" },
-          ],
-        },
-        {
-          title: "Yasal",
-          links: [
-            { label: "Gizlilik Politikası", href: "/gizlilik-politikasi/" },
-            { label: "Çerez Politikası", href: "/cerez-politikasi/" },
-            { label: "KVKK Aydınlatma Metni", href: "/kvkk-aydinlatma-metni/" },
-          ],
-        },
-      ],
     },
   },
   en: {
+    brandSub: "algo-team.com",
     nav: {
-      home: "Home",
+      tools: "Tools",
       learn: "Learn",
-      engineering: "Engineering",
-      tools: "Available Tools",
-      simulators: "Simulators",
       roadmap: "Roadmap",
-      content: "Content",
-      blog: "Technical Articles",
       news: "News",
-      principles: "Platform",
       contact: "Contact",
       menu: "Site Menu",
     },
     hero: {
-      title: "CAN Bus, J1939 & Hydraulic Engineering Tools",
-      fields: ["Off-Highway Machinery", "CAN Bus", "J1939"],
-      fieldLabel: "Engineering fields",
-      scroll: "Tools",
+      badge: "7 free tools · no installation",
+      titleLead: "Analyze CAN Bus and J1939",
+      titleAccent: "in your browser",
+      titleTail: ".",
+      text: "Free online engineering tools for CAN Bus and J1939 analysis, DBC editing, CAN log inspection, and hydraulic circuit simulation. No installation, no license — edit DBC files, decode CAN logs, simulate ECUs, read fault codes.",
+      ctaPrimary: "Explore tools",
+      ctaSecondary: "See what's new",
+      stats: [
+        { value: "7", label: "free tools" },
+        { value: "8", label: "guide articles" },
+        { value: "0", label: "installations" },
+        { value: "4", label: "log formats" },
+      ],
+    },
+    panel: {
+      title: "DM1 decoding · J1939",
+      link: "CAN 250 kbit/s",
+      canId: "CAN ID",
+      bytes: "8 bytes",
+      result: "Result →",
+      resultValue: "Aftertreatment 1 DEF Pump · session state:",
+      resultStatus: "active",
+      note: "All decoding runs in the browser; data never leaves your device.",
     },
     tools: {
-      kicker: "01 / Available Now",
-      title: "Working tools for real engineering tasks.",
+      kicker: "Tools",
+      title: "Pick by category",
       intro:
-        "Files and CAN data are processed in the browser. Current tools are ready to use with no account or installation.",
-      open: "Open tool",
-      guide: "PDF guide",
-      availableTitle: "Available engineering tools",
-      availableIntro: "Tools you can use directly for CAN, J1939, and data analysis.",
-      simulatorTitle: "Simulators",
-      simulatorIntro: "Interactive workspaces for building and observing system behaviour in the browser.",
+        "Seven tools under one roof: CAN Bus analysis, J1939 decoding, and hydraulic circuit simulation.",
+      allTools: "All tools page",
+      open: "open",
+      filters: ["All", "CAN Bus", "J1939", "Hydraulics"] as const,
+      category: "CAN Bus" as const,
+      categoryJ: "J1939" as const,
+      categoryH: "Hydraulics" as const,
       items: [
         {
-          kind: "tool",
-          no: "01",
           code: "DBC",
           discipline: "CAN / J1939",
           title: "DBC Editor",
           text: "Create messages and signals, verify the bit layout, and export a standards-compatible DBC.",
           features: ["CAN / CAN FD", "Intel / Motorola", "DBC export"],
           href: "/dbc-editor/",
-          guide: "/docs/dbc-editor-user-guide-en.pdf",
         },
         {
-          kind: "tool",
-          no: "02",
           code: "LIVE CAN",
           discipline: "CAN / J1939",
           title: "CAN Viewer",
@@ -334,8 +332,6 @@ const copy = {
           href: "/can-viewer/",
         },
         {
-          kind: "tool",
-          no: "03",
           code: "LOG ANALYSIS",
           discipline: "Data Analysis",
           title: "CAN Log Analyzer",
@@ -344,8 +340,6 @@ const copy = {
           href: "/can-log-analyzer/",
         },
         {
-          kind: "tool",
-          no: "04",
           code: "PGN / CAN ID",
           discipline: "CAN / J1939",
           title: "J1939 PGN Calculator",
@@ -354,8 +348,6 @@ const copy = {
           href: "/j1939-pgn-calculator/",
         },
         {
-          kind: "tool",
-          no: "05",
           code: "J1939",
           discipline: "CAN / J1939",
           title: "DM1 / DTC Analyzer",
@@ -364,29 +356,114 @@ const copy = {
           href: "/j1939-dtc-decoder/",
         },
         {
-          kind: "simulator",
-          no: "06",
           code: "DBC ECU",
           discipline: "CAN / J1939",
           title: "DBC ECU Simulator",
           text: "Turn DBC messages into signal controls, then transmit Standard or Extended CAN frames once or cyclically.",
           features: ["Signal encoding", "STD / EXT", "Cyclic TX"],
           href: "/dbc-ecu-simulator/",
+          kind: "simulator",
         },
         {
-          kind: "simulator",
-          no: "07",
           code: "HYDRAULICS",
           discipline: "Hydraulics",
           title: "Hydraulic Circuit Simulator",
           text: "Drag and connect circuit components, then run pressure, flow, and cylinder motion to validate the design.",
           features: ["Drag and drop", "Live flow view", "Circuit validation"],
           href: "/hydraulic-simulator/",
+          kind: "simulator",
+        },
+      ] as Array<{
+        code: string;
+        discipline: string;
+        title: string;
+        text: string;
+        features: string[];
+        href: string;
+        kind?: string;
+      }>,
+    },
+    workflow: {
+      kicker: "Workflow",
+      title: "Analysis in three steps",
+      steps: [
+        {
+          step: "01",
+          title: "Connect or upload",
+          text: "Connect to the live CAN Bus with PCAN-USB or drag a TRC, ASC, CSV, or SocketCAN recording into the browser.",
+        },
+        {
+          step: "02",
+          title: "Decode with DBC",
+          text: "Convert signals to physical values; inspect period, jitter, and missing messages on one screen.",
+        },
+        {
+          step: "03",
+          title: "Verify and report",
+          text: "Decode fault codes by SPN/FMI and share results with screenshots and recording files.",
+        },
+      ],
+    },
+    guides: {
+      kicker: "Guides",
+      title: "Learn, then apply",
+      intro:
+        "From basics to advanced: hands-on articles on DBC, J1939 PGN/DM1, and hydraulic power control.",
+      all: "All guides",
+      read: "Read",
+      items: [
+        {
+          category: "DBC",
+          title: "What is a DBC file?",
+          href: "/learn/dbc-dosyasi-nedir/",
+        },
+        {
+          category: "Hydraulics",
+          title: "A10VO LA power control",
+          href: "/learn/a10vo-la-power-control/",
+        },
+        {
+          category: "J1939",
+          title: "DM1 / SPN-FMI decoding",
+          href: "/learn/j1939-dm1-spn-fmi-cozumleme/",
+        },
+      ],
+    },
+    news: {
+      kicker: "News",
+      title: "Site and tool updates",
+      intro:
+        "Release notes, new guides, and site updates in one feed. This live feed replaces the earlier blog and news pages.",
+      all: "All news",
+      items: [
+        {
+          date: "2026-09-12",
+          title: "A10VO LA power control guide and lab are live",
+          text: "TR/EN guide based on RE 92705 with p-Q curve and interactive lab.",
+          href: "/learn/a10vo-la-power-control/",
+        },
+        {
+          date: "2026-09-12",
+          title: "LA power control lab joins the hydraulic simulator",
+          text: "A new page to experiment with pump control, load pressure, and the p-Q map.",
+          href: "/hydraulic-simulator/la-power-controller/",
+        },
+        {
+          date: "2026-08-30",
+          title: "Batch decoding in the J1939 PGN Calculator",
+          text: "Decode multiple CAN IDs at once and copy the result as a table.",
+          href: "/j1939-pgn-calculator/",
+        },
+        {
+          date: "2026-08-18",
+          title: "Signal charts in CAN Log Analyzer",
+          text: "Plot DBC signals over time and find turning points quickly.",
+          href: "/can-log-analyzer/",
         },
       ],
     },
     roadmap: {
-      kicker: "02 / Roadmap",
+      kicker: "Roadmap",
       title: "Engineering tools coming next.",
       intro:
         "Hydraulics, mechanical, electrical, controls, CAN/J1939, and machine safety will grow step by step on one tool foundation.",
@@ -394,90 +471,23 @@ const copy = {
       items: [
         {
           code: "J1939",
-          discipline: "CAN / J1939",
           title: "SPN / FMI Dictionary",
           text: "Fast lookup for SPNs, FMIs, fault descriptions, and manufacturer notes.",
         },
         {
           code: "CAN",
-          discipline: "CAN / J1939",
           title: "Bit Layout Calculator",
           text: "Start bit, length, scale, and byte views for Intel and Motorola signals.",
         },
         {
           code: "LOG",
-          discipline: "Data Analysis",
           title: "CAN Trace Comparator",
           text: "Find new, missing, or behaviorally changed messages across two trace files.",
         },
-        {
-          code: "SAFETY",
-          discipline: "Machine Safety",
-          title: "PL Calculation Worksheet",
-          text: "Organize channel architecture, MTTFd, DC, and CCF inputs for ISO 13849 work.",
-        },
-        {
-          code: "MECHANICAL",
-          discipline: "Mechanical",
-          title: "Pin, Shaft & Bushing Fit Assistant",
-          text: "Controlled selection of bearing arrangement, tolerance, surface pressure, and assembly clearance.",
-        },
-        {
-          code: "HYDRAULICS",
-          discipline: "Hydraulics",
-          title: "Cylinder & Line Sizing",
-          text: "Calculate force, speed, flow, pipe diameter, and line velocity together.",
-        },
-        {
-          code: "ELECTRICAL",
-          discipline: "Electrical",
-          title: "24 V Cable & Voltage Drop",
-          text: "Check current, cable length, conductor size, fuse, and allowable voltage drop.",
-        },
-        {
-          code: "CONTROL",
-          discipline: "Control Systems",
-          title: "Safety Interlock Logic Builder",
-          text: "Build a readable interlock flow from sensors, permissions, inhibit conditions, and faults.",
-        },
-      ],
-    },
-    blog: {
-      kicker: "03 / Engineering Blog",
-      title: "Short, usable technical notes from the field.",
-      intro:
-        "Instead of long theoretical essays: concise engineering notes that help understand, measure, or validate a problem.",
-      all: "Open blog",
-      read: "Read note",
-      items: [
-        {
-          type: "Technical Article / CAN",
-          title: "Where should CAN message analysis begin?",
-          text: "A practical starting sequence for the physical layer, cycle time, jitter, byte order, and scaling.",
-          href: "/blog/#can-analizi",
-        },
-        {
-          type: "Research Note / Field Validation",
-          title: "Why does the machine behave differently when the math is right?",
-          text: "Checking scaling, sampling, tolerances, and operating conditions together.",
-          href: "/blog/#saha-dogrulamasi",
-        },
-      ],
-    },
-    news: {
-      kicker: "04 / News",
-      title: "Selected developments in a permanent archive.",
-      intro: "New stories are added every morning without deleting earlier coverage. Each item includes a source-backed summary and why it matters to engineers.",
-      open: "Open all news",
-      categories: [
-        { code: "01", slug: "health", title: "Health", text: "Clinical research, biomedical technology, and public health." },
-        { code: "02", slug: "science-tech", title: "Science & Technology", text: "AI, space, energy, robotics, and emerging research." },
-        { code: "03", slug: "mobile-machines", title: "Mobile Machinery", text: "Construction, agricultural, mining, and other off-highway equipment." },
-        { code: "04", slug: "mining", title: "Mining Technology", text: "Mine automation, fleet management, safety, and production technologies." },
       ],
     },
     platform: {
-      kicker: "05 / Platform",
+      kicker: "Platform",
       title: "Tools and technical notes for mobile machines.",
       intro:
         "A working space for CAN, J1939, control systems, and field data—growing only where it proves useful.",
@@ -497,7 +507,7 @@ const copy = {
       ],
     },
     contact: {
-      kicker: "06 / Contact",
+      kicker: "Contact",
       title: "If there is something to discuss, write.",
       intro: "For tool feedback, bug reports, or technical collaboration.",
       name: "Name",
@@ -511,46 +521,8 @@ const copy = {
       note: "The button prepares the message in your email application.",
     },
     footer: {
+      note: "CAN Bus, J1939, and hydraulic engineering tools — completely free, runs in the browser, your files never leave your device.",
       label: "ALGO TEAM · ENGINEERING TOOLS",
-      note: "CAN · J1939 · HYDRAULICS · MOBILE MACHINES",
-      columns: [
-        {
-          title: "Tools",
-          links: [
-            { label: "DBC Editor", href: "/dbc-editor/" },
-            { label: "CAN Viewer", href: "/can-viewer/" },
-            { label: "CAN Log Analyzer", href: "/can-log-analyzer/" },
-            { label: "DBC ECU Simulator", href: "/dbc-ecu-simulator/" },
-            { label: "J1939 DM1 Decoder", href: "/j1939-dtc-decoder/" },
-            { label: "PGN / CAN ID Calculator", href: "/j1939-pgn-calculator/" },
-            { label: "Hydraulic Simulator", href: "/hydraulic-simulator/" },
-          ],
-        },
-        {
-          title: "Content",
-          links: [
-            { label: "Learn", href: "/learn/" },
-            { label: "Technical Articles", href: "/blog/" },
-            { label: "News", href: "/news/" },
-            { label: "All Tools", href: "/tools/" },
-          ],
-        },
-        {
-          title: "Site",
-          links: [
-            { label: "LA Laboratory", href: "/hydraulic-simulator/la-power-controller/" },
-            { label: "info@algo-team.com", href: "mailto:info@algo-team.com" },
-          ],
-        },
-        {
-          title: "Legal",
-          links: [
-            { label: "Privacy Policy", href: "/gizlilik-politikasi/" },
-            { label: "Cookie Policy", href: "/cerez-politikasi/" },
-            { label: "KVKK Disclosure", href: "/kvkk-aydinlatma-metni/" },
-          ],
-        },
-      ],
     },
   },
 } as const;
@@ -563,8 +535,14 @@ function Arrow({ direction = "right" }: { direction?: "right" | "down" }) {
   );
 }
 
+const toolFilters: Record<Language, readonly string[]> = {
+  tr: ["CAN Bus", "J1939", "Hidrolik"],
+  en: ["CAN Bus", "J1939", "Hydraulics"],
+};
+
 export default function Home() {
   const [language, setLanguage] = useState<Language>("tr");
+  const [filter, setFilter] = useState<string>("all");
   const t = copy[language];
 
   useEffect(() => {
@@ -577,36 +555,61 @@ export default function Home() {
     const name = String(form.get("name") ?? "").trim();
     const email = String(form.get("email") ?? "").trim();
     const message = String(form.get("message") ?? "").trim();
-    const subject = language === "tr"
-      ? `ALGO TEAM iletişim — ${name}`
-      : `ALGO TEAM contact — ${name}`;
-    const body = language === "tr"
-      ? `İsim: ${name}\nE-posta: ${email}\n\n${message}`
-      : `Name: ${name}\nEmail: ${email}\n\n${message}`;
+    const subject =
+      language === "tr"
+        ? `ALGO TEAM iletişim — ${name}`
+        : `ALGO TEAM contact — ${name}`;
+    const body =
+      language === "tr"
+        ? `İsim: ${name}\nE-posta: ${email}\n\n${message}`
+        : `Name: ${name}\nEmail: ${email}\n\n${message}`;
 
-    window.location.href = `mailto:info@algo-team.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:info@algo-team.com?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(body)}`;
   }
+
+  const activeFilter = filter === "all" ? null : filter;
+
+  const visibleTools = t.tools.items.filter((item) => {
+    if (!activeFilter) return true;
+    if (activeFilter === toolFilters[language][0]) {
+      return item.discipline.includes("CAN / J1939") && item.kind !== "simulator";
+    }
+    if (activeFilter === toolFilters[language][1]) {
+      return item.discipline.includes("J1939");
+    }
+    if (activeFilter === toolFilters[language][2]) {
+      return item.discipline === "Hidrolik" || item.discipline === "Hydraulics";
+    }
+    return true;
+  });
 
   return (
     <main id="top">
       <header className="site-header">
         <a className="brand" href="#top" aria-label="ALGO TEAM ana sayfa">
-          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
+          <img
+            src="/assets/algo-team-logo.png"
+            alt="ALGO TEAM"
+            width={1200}
+            height={206}
+          />
         </a>
         <nav className="desktop-nav" aria-label="Ana menü">
+          <a href="#tools">{t.nav.tools}</a>
           <a href="/learn/">{t.nav.learn}</a>
-          <a href="/tools/">Tools</a>
+          <a href="#roadmap">{t.nav.roadmap}</a>
           <a href="/news/">{t.nav.news}</a>
-          <a href="#platform">{t.nav.principles}</a>
           <a href="#contact">{t.nav.contact}</a>
         </nav>
         <details className="mobile-site-menu">
           <summary>{t.nav.menu}</summary>
           <div>
+            <a href="#tools">{t.nav.tools}</a>
             <a href="/learn/">{t.nav.learn}</a>
-            <a href="/tools/">Tools</a>
+            <a href="#roadmap">{t.nav.roadmap}</a>
             <a href="/news/">{t.nav.news}</a>
-            <a href="#platform">{t.nav.principles}</a>
             <a href="#contact">{t.nav.contact}</a>
           </div>
         </details>
@@ -619,7 +622,6 @@ export default function Home() {
           >
             TR
           </button>
-          <span>/</span>
           <button
             className={language === "en" ? "active" : ""}
             onClick={() => setLanguage("en")}
@@ -631,230 +633,293 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="hero platform-hero" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <h1 id="hero-title">{t.hero.title}</h1>
-          <div className="rule rule--accent" />
-          <ul className="field-list" aria-label={t.hero.fieldLabel}>
-            {t.hero.fields.map((field) => <li key={field}>{field}</li>)}
-          </ul>
-          <a className="hero-entry" href="#tools">
-            {t.hero.scroll}
-            <Arrow direction="down" />
-          </a>
-        </div>
-      </section>
-
-      <section className="section tools-section tools-section--platform" id="tools">
-        <div className="tools-copy">
-          <div className="section-head compact-head tools-section-head">
-            <div>
-              <p className="section-kicker">{t.tools.kicker}</p>
-              <h2>{t.tools.title}</h2>
+      <section className="hero hero--revamp">
+        <div className="hero-grid" aria-hidden="true" />
+        <div className="hero-glow" aria-hidden="true" />
+        <div className="hero-inner">
+          <div className="hero-copy">
+            <p className="hero-badge">
+              <span className="pulse" aria-hidden="true" />
+              {t.hero.badge}
+            </p>
+            <h1 id="hero-title">
+              {t.hero.titleLead}{" "}
+              <span className="accent">{t.hero.titleAccent}</span>{" "}
+              {t.hero.titleTail}
+            </h1>
+            <p className="hero-text">{t.hero.text}</p>
+            <div className="hero-actions">
+              <a className="btn btn--primary" href="#tools">
+                {t.hero.ctaPrimary}
+                <Arrow />
+              </a>
+              <a className="btn btn--ghost" href="/news/">
+                {t.hero.ctaSecondary}
+              </a>
             </div>
-            <p className="tools-availability-note">{t.tools.intro}</p>
-          </div>
-          <div className="tools-choice-list">
-            <div className="tool-group-heading" id="available-tools">
-              <span>01</span>
-              <div><h3>{t.tools.availableTitle}</h3><p>{t.tools.availableIntro}</p></div>
-            </div>
-            {t.tools.items.filter((item) => item.kind === "tool").map((item) => (
-              <article key={item.no}>
-                <span>{item.no} / {item.discipline} / {item.code}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <ul>
-                  {item.features.map((feature) => <li key={feature}>{feature}</li>)}
-                </ul>
-                <div className="tools-actions">
-                  <a className="button button--primary" href={item.href}>
-                    {t.tools.open}
-                    <Arrow />
-                  </a>
-                  {"guide" in item && item.guide ? (
-                    <a className="tools-guide-link" href={item.guide} download>
-                      {t.tools.guide}<span aria-hidden="true">PDF ↓</span>
-                    </a>
-                  ) : null}
+            <dl className="hero-stats">
+              {t.hero.stats.map((s) => (
+                <div key={s.label}>
+                  <dt className="sr-only">{s.label}</dt>
+                  <dd className="stat-value">{s.value}</dd>
+                  <dd className="stat-label">{s.label}</dd>
                 </div>
-              </article>
-            ))}
-            <div className="tool-group-heading" id="simulators">
-              <span>02</span>
-              <div><h3>{t.tools.simulatorTitle}</h3><p>{t.tools.simulatorIntro}</p></div>
+              ))}
+            </dl>
+          </div>
+          <div className="hero-panel" role="presentation">
+            <div className="panel-head">
+              <span className="panel-title">
+                <span aria-hidden="true">▮</span> {t.panel.title}
+              </span>
+              <span className="panel-live">
+                <span className="pulse" aria-hidden="true" />
+                {t.panel.link}
+              </span>
             </div>
-            {t.tools.items.filter((item) => item.kind === "simulator").map((item) => (
-              <article key={item.no}>
-                <span>{item.no} / {item.discipline} / {item.code}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <ul>{item.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
-                <div className="tools-actions">
-                  <a className="button button--primary" href={item.href}>{t.tools.open}<Arrow /></a>
+            <div className="panel-body">
+              <div className="panel-line">
+                <span className="muted">{t.panel.canId}</span>{" "}
+                <span className="accent">0x18FECA03</span>{" "}
+                <span className="muted">· {t.panel.bytes}</span>
+              </div>
+              <div className="panel-chips">
+                <div className="chip">
+                  <span className="chip-k">PGN</span>
+                  <span className="chip-v">65226</span>
                 </div>
-              </article>
-            ))}
-          </div>
-          <small><i />CLIENT-SIDE PROCESSING · NO ACCOUNT</small>
-        </div>
-      </section>
-
-      <section className="section roadmap-section" id="roadmap">
-        <div className="section-head">
-          <p className="section-kicker">{t.roadmap.kicker}</p>
-          <h2>{t.roadmap.title}</h2>
-          <p>{t.roadmap.intro}</p>
-        </div>
-        <div className="roadmap-grid">
-          {t.roadmap.items.map((item, index) => (
-            <article className="roadmap-card" key={item.title}>
-              <div className="roadmap-meta">
-                <span>0{index + 1}</span>
-                <span>{item.discipline} · {item.code}</span>
+                <div className="chip">
+                  <span className="chip-k">SPN</span>
+                  <span className="chip-v">3362</span>
+                </div>
+                <div className="chip">
+                  <span className="chip-k">FMI</span>
+                  <span className="chip-v">31</span>
+                </div>
               </div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-              <div className="planned-status"><i />{t.roadmap.status}</div>
-            </article>
-          ))}
+              <div className="panel-result">
+                <span className="muted">{t.panel.result} </span>
+                {t.panel.resultValue}{" "}
+                <strong className="accent">{t.panel.resultStatus}</strong>
+              </div>
+              <p className="panel-note">🔒 {t.panel.note}</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="section notes-section" id="blog">
-        <div className="notes-head">
-          <p className="section-kicker">{t.blog.kicker}</p>
-          <h2>{t.blog.title}</h2>
-          <p>{t.blog.intro}</p>
-          <a className="text-link blog-all-link" href="/blog/">
-            {t.blog.all}<Arrow />
+      <section id="tools" className="section">
+        <div className="section-head">
+          <div>
+            <p className="kicker">{t.tools.kicker}</p>
+            <h2>{t.tools.title}</h2>
+            <p className="section-intro">{t.tools.intro}</p>
+          </div>
+          <a className="text-link" href="/tools/">
+            {t.tools.allTools}
+            <Arrow />
           </a>
         </div>
-        <div className="notes-grid">
-          {t.blog.items.map((item, index) => (
-            <article className="note-card" key={item.title}>
-              <div className="note-meta">
-                <span>0{index + 1}</span>
-                <span>{item.type}</span>
-              </div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-              <a className="note-link" href={item.href}>{t.blog.read}<Arrow /></a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section news-home-section" id="news">
-        <div className="section-head">
-          <p className="section-kicker">{t.news.kicker}</p>
-          <h2>{t.news.title}</h2>
-          <p>{t.news.intro}</p>
-        </div>
-        <div className="news-category-grid">
-          {t.news.categories.map((category) => (
-            <a href={`/news/#${category.slug}`} key={category.code}>
-              <span>{category.code}</span>
-              <h3>{category.title}</h3>
-              <p>{category.text}</p>
-              <Arrow />
-            </a>
-          ))}
-        </div>
-        <a className="text-link news-home-link" href="/news/">{t.news.open}<Arrow /></a>
-      </section>
-
-      <section className="section approach-section platform-section" id="platform">
-        <div className="approach-intro">
-          <p className="section-kicker">{t.platform.kicker}</p>
-          <h2>{t.platform.title}</h2>
-          <p>{t.platform.intro}</p>
-        </div>
-        <ol className="approach-list">
-          {t.platform.items.map((item, index) => (
-            <li key={item.title}>
-              <span>0{index + 1}</span>
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="section contact-section" id="contact">
-        <div className="contact-copy">
-          <p className="section-kicker">{t.contact.kicker}</p>
-          <h2>{t.contact.title}</h2>
-          <p>{t.contact.intro}</p>
-          <a className="contact-email" href="mailto:info@algo-team.com">
-            <span>{t.contact.direct}</span>
-            info@algo-team.com
-          </a>
-        </div>
-        <form className="contact-form" onSubmit={prepareEmail}>
-          <div className="contact-field-row">
-            <label>
-              <span>{t.contact.name}</span>
-              <input
-                name="name"
-                placeholder={t.contact.namePlaceholder}
-                required
-                type="text"
-                autoComplete="name"
-              />
-            </label>
-            <label>
-              <span>{t.contact.email}</span>
-              <input
-                name="email"
-                placeholder={t.contact.emailPlaceholder}
-                required
-                type="email"
-                autoComplete="email"
-              />
-            </label>
-          </div>
-          <label>
-            <span>{t.contact.message}</span>
-            <textarea
-              name="message"
-              placeholder={t.contact.messagePlaceholder}
-              required
-              rows={6}
-            />
-          </label>
-          <div className="contact-submit">
-            <button className="button button--primary" type="submit">
-              {t.contact.send}
-              <Arrow />
+        <div className="chip-row" role="group" aria-label={t.tools.kicker}>
+          {[t.tools.filters[0], ...toolFilters[language]].map((f) => (
+            <button
+              key={f}
+              type="button"
+              className={`chip-btn${filter === (f === t.tools.filters[0] ? "all" : f) ? " active" : ""}`}
+              aria-pressed={filter === (f === t.tools.filters[0] ? "all" : f)}
+              onClick={() => setFilter(f === t.tools.filters[0] ? "all" : f)}
+            >
+              {f}
             </button>
-            <small>{t.contact.note}</small>
-          </div>
-        </form>
-      </section>
-
-      <footer>
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <p className="footer-brand-label">{t.footer.label}</p>
-            <p className="footer-brand-note">{t.footer.note}</p>
-          </div>
-          {t.footer.columns.map((col) => (
-            <nav className="footer-column" key={col.title} aria-label={col.title}>
-              <h3>{col.title}</h3>
-              <ul>
-                {col.links.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href}>{link.label}</a>
+          ))}
+        </div>
+        <div className="card-grid">
+          {visibleTools.map((tool) => (
+            <a className="card" key={tool.href + tool.title} href={tool.href}>
+              <div className="card-top">
+                <span className="card-code">{tool.code}</span>
+                <span className="card-disc">{tool.discipline}</span>
+              </div>
+              <h3>{tool.title}</h3>
+              <p>{tool.text}</p>
+              <ul className="feature-list">
+                {tool.features.map((f) => (
+                  <li key={f}>
+                    <span aria-hidden="true">✓</span> {f}
                   </li>
                 ))}
               </ul>
-            </nav>
+              <span className="card-open">
+                {tool.title} {t.tools.open}
+                <Arrow />
+              </span>
+            </a>
           ))}
         </div>
-        <p className="footer-bottom">© {new Date().getFullYear()} ALGO TEAM</p>
+      </section>
+
+      <section className="section section--tinted">
+        <div className="section-head section-head--center">
+          <div>
+            <p className="kicker">{t.workflow.kicker}</p>
+            <h2>{t.workflow.title}</h2>
+          </div>
+        </div>
+        <div className="grid-3">
+          {t.workflow.steps.map((s) => (
+            <div className="card card--flat" key={s.step}>
+              <span className="step-no">{s.step}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="guides" className="section">
+        <div className="section-head">
+          <div>
+            <p className="kicker">{t.guides.kicker}</p>
+            <h2>{t.guides.title}</h2>
+            <p className="section-intro">{t.guides.intro}</p>
+          </div>
+          <a className="text-link" href="/learn/">
+            {t.guides.all}
+            <Arrow />
+          </a>
+        </div>
+        <div className="grid-3">
+          {t.guides.items.map((g) => (
+            <a className="card" key={g.href + g.title} href={g.href}>
+              <div className="card-top">
+                <span className="card-disc">{g.category}</span>
+              </div>
+              <h3>{g.title}</h3>
+              <span className="card-open">
+                {t.guides.read}
+                <Arrow />
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section id="news" className="section section--tinted">
+        <div className="section-head">
+          <div>
+            <p className="kicker">{t.news.kicker}</p>
+            <h2>{t.news.title}</h2>
+            <p className="section-intro">{t.news.intro}</p>
+          </div>
+          <a className="text-link" href="/news/">
+            {t.news.all}
+            <Arrow />
+          </a>
+        </div>
+        <div className="grid-2">
+          {t.news.items.map((n) => (
+            <a className="card" key={n.href + n.title} href={n.href}>
+              <div className="card-top">
+                <span className="card-disc">{n.date}</span>
+              </div>
+              <h3>{n.title}</h3>
+              <p>{n.text}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section id="roadmap" className="section">
+        <div className="section-head">
+          <div>
+            <p className="kicker">{t.roadmap.kicker}</p>
+            <h2>{t.roadmap.title}</h2>
+            <p className="section-intro">{t.roadmap.intro}</p>
+          </div>
+        </div>
+        <div className="grid-3">
+          {t.roadmap.items.map((r) => (
+            <div className="card card--flat" key={r.code + r.title}>
+              <div className="card-top">
+                <span className="card-code">{r.code}</span>
+                <span className="status-badge">{t.roadmap.status}</span>
+              </div>
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="platform" className="section section--tinted">
+        <div className="section-head section-head--center">
+          <div>
+            <p className="kicker">{t.platform.kicker}</p>
+            <h2>{t.platform.title}</h2>
+            <p className="section-intro">{t.platform.intro}</p>
+          </div>
+        </div>
+        <div className="grid-3">
+          {t.platform.items.map((p) => (
+            <div className="card card--flat" key={p.title}>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="contact" className="section">
+        <div className="contact-wrap">
+          <div>
+            <p className="kicker">{t.contact.kicker}</p>
+            <h2>{t.contact.title}</h2>
+            <p className="section-intro">{t.contact.intro}</p>
+            <p className="contact-direct">
+              <span className="muted">{t.contact.direct}:</span>{" "}
+              <a href="mailto:info@algo-team.com">info@algo-team.com</a>
+            </p>
+          </div>
+          <form
+            className="contact-form"
+            onSubmit={prepareEmail}
+            action="mailto:info@algo-team.com"
+            method="post"
+            encType="text/plain"
+          >
+            <label>
+              {t.contact.name}
+              <input name="name" placeholder={t.contact.namePlaceholder} required />
+            </label>
+            <label>
+              {t.contact.email}
+              <input
+                name="email"
+                type="email"
+                placeholder={t.contact.emailPlaceholder}
+                required
+              />
+            </label>
+            <label>
+              {t.contact.message}
+              <textarea
+                name="message"
+                rows={4}
+                placeholder={t.contact.messagePlaceholder}
+                required
+              />
+            </label>
+            <button className="btn btn--primary" type="submit">
+              {t.contact.send}
+            </button>
+            <p className="form-note">{t.contact.note}</p>
+          </form>
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <p className="footer-label">{t.footer.label}</p>
+        <p className="footer-note">{t.footer.note}</p>
       </footer>
     </main>
   );
