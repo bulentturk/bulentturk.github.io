@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { createElement, useEffect, useRef, useState } from "react";
 
 type Language = "tr" | "en";
 
@@ -543,6 +543,84 @@ const toolFilters: Record<Language, readonly string[]> = {
   en: ["CAN Bus", "J1939", "Hydraulics"],
 };
 
+type RevealTag = "div" | "p" | "h2" | "span" | "a" | "form";
+
+type RevealProps = {
+  children: React.ReactNode;
+  delay?: number;
+  as?: RevealTag;
+  className?: string;
+  href?: string;
+  action?: string;
+  method?: string;
+  encType?: string;
+  role?: string;
+  id?: string;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
+function Reveal({
+  children,
+  delay = 0,
+  as: Tag = "div",
+  className = "",
+  href,
+  action,
+  method,
+  encType,
+  role,
+  id,
+  onSubmit,
+}: RevealProps): React.ReactElement {
+  const ref = useRef<HTMLElement | null>(null);
+  const shown = useRef(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          if (shown.current) continue;
+          shown.current = true;
+          doubleRAF(() => setVisible(true));
+          io.disconnect();
+          return;
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.01 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const tagProps: Record<string, unknown> = {
+    ref,
+    "data-reveal": visible ? "in" : "out",
+    className: `rv-reveal${className ? ` ${className}` : ""}`,
+    style: delay ? { transitionDelay: `${delay}ms` } : undefined,
+  };
+  if (href) tagProps.href = href;
+  if (action) tagProps.action = action;
+  if (method) tagProps.method = method;
+  if (encType) tagProps.encType = encType;
+  if (role) tagProps.role = role;
+  if (id) tagProps.id = id;
+  if (onSubmit) tagProps.onSubmit = onSubmit;
+
+  return createElement(Tag, tagProps as never, children);
+}
+
+function doubleRAF(fn: () => void) {
+  requestAnimationFrame(() => requestAnimationFrame(fn));
+}
+
 export default function Home() {
   const [language, setLanguage] = useState<Language>("tr");
   const [filter, setFilter] = useState<string>("all");
@@ -590,49 +668,51 @@ export default function Home() {
 
   return (
     <main id="top">
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="ALGO TEAM ana sayfa">
-          <img
-            src="/assets/algo-team-logo.png"
-            alt="ALGO TEAM"
-            width={1200}
-            height={206}
-          />
-        </a>
-        <nav className="desktop-nav" aria-label="Ana menü">
-          <a href="#tools">{t.nav.tools}</a>
-          <a href="/learn/">{t.nav.learn}</a>
-          <a href="#roadmap">{t.nav.roadmap}</a>
-          <a href="/news/">{t.nav.news}</a>
-          <a href="#contact">{t.nav.contact}</a>
-        </nav>
-        <details className="mobile-site-menu">
-          <summary>{t.nav.menu}</summary>
-          <div>
+      <header className="rv-header">
+        <div className="rv-header-inner">
+          <a className="rv-brand" href="#top" aria-label="ALGO TEAM ana sayfa">
+            <img
+              src="/assets/algo-team-logo.png"
+              alt="ALGO TEAM"
+              width={1200}
+              height={206}
+            />
+          </a>
+          <nav className="rv-nav" aria-label="Ana menü">
             <a href="#tools">{t.nav.tools}</a>
             <a href="/learn/">{t.nav.learn}</a>
             <a href="#roadmap">{t.nav.roadmap}</a>
             <a href="/news/">{t.nav.news}</a>
             <a href="#contact">{t.nav.contact}</a>
+          </nav>
+          <details className="rv-mobile-menu">
+            <summary>{t.nav.menu}</summary>
+            <div>
+              <a href="#tools">{t.nav.tools}</a>
+              <a href="/learn/">{t.nav.learn}</a>
+              <a href="#roadmap">{t.nav.roadmap}</a>
+              <a href="/news/">{t.nav.news}</a>
+              <a href="#contact">{t.nav.contact}</a>
+            </div>
+          </details>
+          <div className="rv-lang" aria-label="Dil seçimi">
+            <button
+              className={language === "tr" ? "active" : ""}
+              onClick={() => setLanguage("tr")}
+              type="button"
+              aria-pressed={language === "tr"}
+            >
+              TR
+            </button>
+            <button
+              className={language === "en" ? "active" : ""}
+              onClick={() => setLanguage("en")}
+              type="button"
+              aria-pressed={language === "en"}
+            >
+              EN
+            </button>
           </div>
-        </details>
-        <div className="language-switch" aria-label="Dil seçimi">
-          <button
-            className={language === "tr" ? "active" : ""}
-            onClick={() => setLanguage("tr")}
-            type="button"
-            aria-pressed={language === "tr"}
-          >
-            TR
-          </button>
-          <button
-            className={language === "en" ? "active" : ""}
-            onClick={() => setLanguage("en")}
-            type="button"
-            aria-pressed={language === "en"}
-          >
-            EN
-          </button>
         </div>
       </header>
 
@@ -640,7 +720,7 @@ export default function Home() {
         <div className="rv-hero-grid" aria-hidden="true" />
         <div className="rv-hero-glow" aria-hidden="true" />
         <div className="rv-hero-inner">
-          <div className="rv-hero-copy">
+          <Reveal className="rv-hero-copy">
             <p className="rv-hero-badge">
               <span className="rv-pulse" aria-hidden="true" />
               {t.hero.badge}
@@ -669,8 +749,8 @@ export default function Home() {
                 </div>
               ))}
             </dl>
-          </div>
-          <div className="rv-hero-panel" role="presentation">
+          </Reveal>
+          <Reveal className="rv-hero-panel" role="presentation" delay={140}>
             <div className="rv-panel-head">
               <span className="rv-panel-title">▮ {t.panel.title}</span>
               <span className="rv-panel-live">
@@ -705,7 +785,7 @@ export default function Home() {
               </div>
               <p className="rv-panel-note">🔒 {t.panel.note}</p>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -735,8 +815,8 @@ export default function Home() {
           ))}
         </div>
         <div className="rv-card-grid">
-          {visibleTools.map((tool) => (
-            <a className="rv-card" key={tool.href + tool.title} href={tool.href}>
+          {visibleTools.map((tool, i) => (
+            <Reveal key={tool.href + tool.title} as="a" className="rv-card" href={tool.href} delay={(i % 3) * 90}>
               <div className="rv-card-top">
                 <span className="rv-card-code">{tool.code}</span>
                 <span className="rv-card-disc">{tool.discipline}</span>
@@ -754,7 +834,7 @@ export default function Home() {
                 {tool.title} {t.tools.open}
                 <Arrow />
               </span>
-            </a>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -767,12 +847,12 @@ export default function Home() {
           </div>
         </div>
         <div className="rv-grid-3">
-          {t.workflow.steps.map((s) => (
-            <div className="rv-card rv-card--flat" key={s.step}>
+          {t.workflow.steps.map((s, i) => (
+            <Reveal key={s.step} className="rv-card rv-card--flat" delay={i * 110}>
               <span className="rv-step-no">{s.step}</span>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -790,8 +870,8 @@ export default function Home() {
           </a>
         </div>
         <div className="rv-grid-3">
-          {t.guides.items.map((g) => (
-            <a className="rv-card" key={g.href + g.title} href={g.href}>
+          {t.guides.items.map((g, i) => (
+            <Reveal key={g.href + g.title} as="a" className="rv-card" href={g.href} delay={i * 100}>
               <div className="rv-card-top">
                 <span className="rv-card-disc">{g.category}</span>
               </div>
@@ -800,7 +880,7 @@ export default function Home() {
                 {t.guides.read}
                 <Arrow />
               </span>
-            </a>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -818,14 +898,14 @@ export default function Home() {
           </a>
         </div>
         <div className="rv-grid-2">
-          {t.news.items.map((n) => (
-            <a className="rv-card" key={n.href + n.title} href={n.href}>
+          {t.news.items.map((n, i) => (
+            <Reveal key={n.href + n.title} as="a" className="rv-card" href={n.href} delay={(i % 2) * 100}>
               <div className="rv-card-top">
                 <span className="rv-card-disc">{n.date}</span>
               </div>
               <h3>{n.title}</h3>
               <p>{n.text}</p>
-            </a>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -839,15 +919,15 @@ export default function Home() {
           </div>
         </div>
         <div className="rv-grid-3">
-          {t.roadmap.items.map((r) => (
-            <div className="rv-card rv-card--flat" key={r.code + r.title}>
+          {t.roadmap.items.map((r, i) => (
+            <Reveal key={r.code + r.title} className="rv-card rv-card--flat" delay={i * 110}>
               <div className="rv-card-top">
                 <span className="rv-card-code">{r.code}</span>
                 <span className="rv-status-badge">{t.roadmap.status}</span>
               </div>
               <h3>{r.title}</h3>
               <p>{r.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -861,11 +941,11 @@ export default function Home() {
           </div>
         </div>
         <div className="rv-grid-3">
-          {t.platform.items.map((p) => (
-            <div className="rv-card rv-card--flat" key={p.title}>
+          {t.platform.items.map((p, i) => (
+            <Reveal key={p.title} className="rv-card rv-card--flat" delay={i * 110}>
               <h3>{p.title}</h3>
               <p>{p.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -881,8 +961,10 @@ export default function Home() {
               <a href="mailto:info@algo-team.com">info@algo-team.com</a>
             </p>
           </div>
-          <form
+          <Reveal
+            as="form"
             className="rv-contact-form"
+            delay={120}
             onSubmit={prepareEmail}
             action="mailto:info@algo-team.com"
             method="post"
@@ -914,7 +996,7 @@ export default function Home() {
               {t.contact.send}
             </button>
             <p className="rv-form-note">{t.contact.note}</p>
-          </form>
+          </Reveal>
         </div>
       </section>
 
