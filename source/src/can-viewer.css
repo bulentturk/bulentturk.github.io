@@ -1,9 +1,9 @@
 .can-viewer {
-  --can-bg: #eef1ee;
-  --can-paper: #f8f8f4;
+  --can-bg: #f4fafc;
+  --can-paper: #f9fcfd;
   --can-ink: #102232;
   --can-muted: #5b6972;
-  --can-line: #cfd5d3;
+  --can-line: #dbe8ef;
   --can-signal: #087f8c;
   --can-signal-soft: #d5ebea;
   --can-green: #28a979;
@@ -21,7 +21,7 @@
 
 .can-header {
   align-items: center;
-  background: rgba(248, 248, 244, 0.95);
+  background: rgba(249, 252, 253, 0.95);
   border-bottom: 1px solid var(--can-line);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -61,7 +61,7 @@
 }
 
 .can-brand strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 23px;
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -90,7 +90,7 @@
 }
 
 .can-language i {
-  color: #aeb7b7;
+  color: #b9cfdd;
   font-style: normal;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .can-intro h1 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: clamp(62px, 7.2vw, 112px);
   font-weight: 400;
   letter-spacing: -0.065em;
@@ -174,7 +174,7 @@
 .can-connection-panel {
   align-items: stretch;
   background: var(--can-ink);
-  color: #f8f8f4;
+  color: #f9fcfd;
   display: grid;
   grid-template-columns: 0.8fr 1fr 0.9fr 0.9fr 0.65fr minmax(260px, 1.45fr);
   padding: 0 clamp(22px, 4vw, 64px);
@@ -253,7 +253,7 @@
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 0;
-  color: #f8f8f4;
+  color: #f9fcfd;
   cursor: pointer;
   font-family: var(--font-geist-mono), monospace;
   font-size: 11px;
@@ -291,8 +291,8 @@
 }
 
 .can-primary {
-  background: #f7f7f2;
-  border-color: #f7f7f2;
+  background: #f4fafc;
+  border-color: #f4fafc;
   color: var(--can-ink);
 }
 
@@ -303,7 +303,7 @@
 
 .can-secondary {
   background: transparent;
-  color: #c0cdd0;
+  color: #d3e2ea;
 }
 
 .can-secondary:hover:not(:disabled) {
@@ -359,7 +359,7 @@
 }
 
 .can-setup {
-  background: #e7ece9;
+  background: #eef5f8;
   border-bottom: 1px solid var(--can-line);
   display: grid;
   gap: 40px 70px;
@@ -376,7 +376,7 @@
 }
 
 .can-setup-head h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: clamp(31px, 3vw, 47px);
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -415,7 +415,7 @@
 }
 
 .can-setup-steps h3 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 23px;
   font-weight: 400;
   letter-spacing: -0.025em;
@@ -455,7 +455,7 @@
 
 .can-format-panel {
   align-items: center;
-  background: #e7ece9;
+  background: #eef5f8;
   border-bottom: 1px solid var(--can-line);
   display: flex;
   gap: 30px;
@@ -484,7 +484,7 @@
 }
 
 .can-format-switch {
-  border: 1px solid #bfc8c6;
+  border: 1px solid #cbdce6;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
@@ -506,7 +506,7 @@
 }
 
 .can-io-panel {
-  background: #e7ece9;
+  background: #eef5f8;
   border-bottom: 1px solid var(--can-line);
   display: grid;
   gap: 1px;
@@ -541,7 +541,7 @@
 }
 
 .can-io-head h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 25px;
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -567,14 +567,14 @@
 }
 
 .can-io-head > strong.is-ready {
-  background: #e1f1e8;
+  background: #eef5f8;
   border-color: #acd6c0;
   color: #187755;
 }
 
 .can-tx-editing {
   align-items: center;
-  background: #e3f0ef;
+  background: #eef5f8;
   border-bottom: 1px solid #bdd8d6;
   color: var(--can-signal);
   display: flex;
@@ -687,7 +687,7 @@
 }
 
 .can-byte-editor input {
-  background: #eef1ee;
+  background: #f4fafc;
   border: 1px solid var(--can-line);
   font-size: 13px;
   font-weight: 600;
@@ -767,7 +767,7 @@
 }
 
 .can-dynamic-byte {
-  background: #f2f4f1;
+  background: #f4fafc;
   border: 1px solid var(--can-line);
   min-width: 0;
   padding: 12px;
@@ -782,7 +782,7 @@
 }
 
 .can-dynamic-byte.is-checksum {
-  background: #eef5f4;
+  background: #f4fafc;
   border-color: #8ebfc2;
 }
 
@@ -1238,7 +1238,7 @@
 }
 
 .can-frame-table th {
-  background: #e9edeb;
+  background: #eef5f8;
   border-bottom: 1px solid var(--can-line);
   color: #6f7d82;
   font-family: var(--font-geist-mono), monospace;
@@ -1254,7 +1254,7 @@
 }
 
 .can-frame-table td {
-  border-bottom: 1px solid #e0e4e1;
+  border-bottom: 1px solid #e8f1f5;
   color: #59676d;
   font-family: var(--font-geist-mono), monospace;
   font-size: 9px;
@@ -1286,7 +1286,7 @@
 }
 
 .can-frame-table tbody tr:hover {
-  background: #f0f4f1;
+  background: #f4fafc;
 }
 
 .can-frame-table tbody tr.is-selected {
@@ -1295,8 +1295,8 @@
 }
 
 .can-frame-type {
-  background: #e5eae8;
-  border: 1px solid #d3d9d7;
+  background: #eef5f8;
+  border: 1px solid #dbe8ef;
   color: #68777c;
   display: inline-block;
   font-size: 7px;
@@ -1306,7 +1306,7 @@
 }
 
 .can-frame-type.is-ext {
-  background: #d9eceb;
+  background: #e8f1f5;
   border-color: #b7d9d7;
   color: var(--can-signal);
 }
@@ -1352,7 +1352,7 @@
 }
 
 .can-empty h3 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 30px;
   font-weight: 400;
   letter-spacing: -0.03em;
@@ -1390,7 +1390,7 @@
 }
 
 .can-decode-head > strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 25px;
   font-weight: 400;
   letter-spacing: -0.03em;
@@ -1453,7 +1453,7 @@
 }
 
 .can-signal-header {
-  background: #e9edeb;
+  background: #eef5f8;
   border-bottom: 1px solid var(--can-line);
   color: #728087;
   font-family: var(--font-geist-mono), monospace;
@@ -1465,7 +1465,7 @@
 
 .can-signal-row {
   align-items: center;
-  border-bottom: 1px solid #e0e4e1;
+  border-bottom: 1px solid #e8f1f5;
   min-height: 62px;
   padding: 10px 17px;
 }
@@ -1524,7 +1524,7 @@
 }
 
 .can-payload > div > span {
-  background: #e6ebe8;
+  background: #eef5f8;
   border: 1px solid var(--can-line);
   display: flex;
   flex-direction: column;
@@ -1553,7 +1553,7 @@
 }
 
 .can-sent-panel {
-  background: #e7ece9;
+  background: #eef5f8;
   border-top: 1px solid var(--can-line);
   padding: 44px clamp(22px, 4vw, 64px) 54px;
 }
@@ -1574,7 +1574,7 @@
 }
 
 .can-sent-head h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 34px;
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -1637,7 +1637,7 @@
 }
 
 .can-sent-table th {
-  background: #dfe5e2;
+  background: #e8f1f5;
   border-bottom: 1px solid var(--can-line);
   color: #6f7d82;
   font-family: var(--font-geist-mono), monospace;
@@ -1650,7 +1650,7 @@
 }
 
 .can-sent-table td {
-  border-bottom: 1px solid #e0e4e1;
+  border-bottom: 1px solid #e8f1f5;
   color: #59676d;
   font-family: var(--font-geist-mono), monospace;
   font-size: 9px;
@@ -1666,11 +1666,11 @@
 
 .can-sent-table tbody tr:hover,
 .can-sent-table tbody tr:focus-visible {
-  background: #f0f4f1;
+  background: #f4fafc;
 }
 
 .can-sent-table tbody tr.is-running {
-  background: #eef7f2;
+  background: #f4fafc;
 }
 
 .can-sent-table tbody tr.is-running td:first-child {
@@ -1710,7 +1710,7 @@
 }
 
 .can-cycle-toggle > span {
-  background: #c9d0cd;
+  background: #d3e2ea;
   border-radius: 9px;
   height: 16px;
   position: relative;
@@ -1797,7 +1797,7 @@
   border-left: 3px solid #65c4c9;
   bottom: 24px;
   box-shadow: 0 16px 45px rgba(16, 34, 50, 0.24);
-  color: #f8f8f4;
+  color: #f9fcfd;
   font-size: 11px;
   left: 50%;
   max-width: min(560px, calc(100vw - 40px));
@@ -2116,4 +2116,51 @@
   .can-empty i {
     animation: none;
   }
+}
+
+/* ------------------------------------------------------------------
+   Ana sayfa temasıyla uyum: rv- paleti, sans tipografi ve sabit üst
+   menü. Sayfa yapısı ve araç davranışı korunur; yalnızca renk, font
+   ve yüzey ölçeği değişir.
+   ------------------------------------------------------------------ */
+
+.can-viewer {
+  --can-bg: #f9fcfd;
+  --can-paper: #ffffff;
+  --can-ink: #0b2b47;
+  --can-muted: #4a6175;
+  --can-line: rgba(8, 60, 98, 0.14);
+  --can-signal: #0891a6;
+  --can-signal-soft: #eef5f8;
+}
+
+/* Büyük serif başlıklar yerine site ölçeğinde sans başlıklar. */
+.can-brand strong,
+.can-intro h1,
+.can-setup-head h2,
+.can-setup-steps h3,
+.can-io-head h2,
+.can-empty h3,
+.can-decode-head > strong,
+.can-sent-head h2 {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.can-intro h1 {
+  font-size: clamp(30px, 4.4vw, 44px);
+  line-height: 1.14;
+}
+
+/* Araç çubuğu ve üst menü aynı yerde yapışmasın: site başlığı akışta kalır. */
+
+header.rv-header {
+  position: relative;
+  top: auto;
+  z-index: 1;
+}
+
+/* Ortak üst menü yüksekliği kadar kısal ki gövde tam ekranı doldursun. */
+.can-viewer {
+  min-height: calc(100dvh - var(--rv-header-h, 56px));
 }

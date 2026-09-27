@@ -1,11 +1,11 @@
 .dbc-app {
-  --dbc-bg: #edf0ee;
-  --dbc-panel: #f8f8f5;
-  --dbc-paper: #fffefa;
+  --dbc-bg: #eef5f8;
+  --dbc-panel: #f9fcfd;
+  --dbc-paper: #ffffff;
   --dbc-ink: #102232;
   --dbc-muted: #64727b;
-  --dbc-line: #d8ddda;
-  --dbc-line-strong: #aab6b6;
+  --dbc-line: #e2edf3;
+  --dbc-line-strong: #b9cfdd;
   --dbc-signal: #087f8c;
   --dbc-signal-dark: #075c67;
   --dbc-danger: #b8413d;
@@ -130,7 +130,7 @@
 .dbc-inline-add:hover,
 .dbc-subsection-head button:hover,
 .dbc-source-head button:hover {
-  background: #edf6f5;
+  background: #f4fafc;
   border-color: #7dadb1;
 }
 
@@ -186,7 +186,7 @@
 }
 
 .dbc-statusbar {
-  background: #f5f6f3;
+  background: #f4fafc;
   border-bottom: 1px solid var(--dbc-line);
   height: 38px;
   justify-content: space-between;
@@ -219,7 +219,7 @@
 
 .dbc-validation-pill {
   align-items: center;
-  background: #e6f2ed;
+  background: #eef5f8;
   border: 0;
   border-radius: 20px;
   color: #24745f !important;
@@ -239,7 +239,7 @@
 }
 
 .dbc-validation-pill.has-errors {
-  background: #f8e8e6;
+  background: #eef5f8;
   color: var(--dbc-danger) !important;
 }
 
@@ -256,7 +256,7 @@
 }
 
 .dbc-sidebar {
-  background: #f2f4f1;
+  background: #f4fafc;
   border-right: 1px solid var(--dbc-line);
   display: flex;
   flex-direction: column;
@@ -362,11 +362,11 @@
 }
 
 .dbc-message-list > button:hover {
-  background: #e8ece9;
+  background: #eef5f8;
 }
 
 .dbc-message-list > button.active {
-  background: #e3efed;
+  background: #eef5f8;
 }
 
 .dbc-message-list > button.active::before {
@@ -507,7 +507,7 @@
 .dbc-file-panel,
 .dbc-card,
 .dbc-no-message {
-  background: rgba(255, 254, 250, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid var(--dbc-line);
   margin: 0 auto 16px;
   max-width: 1120px;
@@ -551,7 +551,7 @@
 
 .dbc-card-heading h1,
 .dbc-card-heading h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 31px;
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -812,7 +812,7 @@
 }
 
 .dbc-value-table button {
-  background: #f9eeee;
+  background: #f4fafc;
   border: 1px solid #e5caca;
   color: var(--dbc-danger);
   cursor: pointer;
@@ -864,7 +864,7 @@
 
 .dbc-bit-row > span:first-child {
   align-items: center;
-  background: #f1f3f0;
+  background: #f4fafc;
   border-right: 1px solid var(--dbc-line);
   color: var(--dbc-muted);
   display: flex;
@@ -880,7 +880,7 @@
 }
 
 .dbc-bit-row--head span {
-  background: #eef1ef !important;
+  background: #f4fafc !important;
   border-right: 1px solid var(--dbc-line);
   color: var(--dbc-muted);
   font-family: "Cascadia Mono", Consolas, monospace;
@@ -951,7 +951,7 @@
 }
 
 .dbc-no-message h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 34px;
   font-weight: 400;
 }
@@ -1038,7 +1038,7 @@
 }
 
 .dbc-validation-summary strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 29px;
   font-weight: 400;
 }
@@ -1084,7 +1084,7 @@
 }
 
 .dbc-issue-list > button:hover {
-  background: #f2f5f2;
+  background: #f4fafc;
 }
 
 .dbc-issue-list > button > i {
@@ -1154,7 +1154,7 @@
 }
 
 .dbc-validation-empty h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 38px;
   font-weight: 400;
   margin: 17px 0 6px;
@@ -1463,5 +1463,58 @@
   .dbc-app *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Ana sayfa temasıyla uyum: rv- paleti, sans tipografi ve sabit üst
+   menü. Sayfa yapısı ve araç davranışı korunur; yalnızca renk, font
+   ve yüzey ölçeği değişir.
+   ------------------------------------------------------------------ */
+
+.dbc-app {
+  --dbc-bg: #f9fcfd;
+  --dbc-panel: #ffffff;
+  --dbc-paper: #ffffff;
+  --dbc-ink: #0b2b47;
+  --dbc-muted: #4a6175;
+  --dbc-line: rgba(8, 60, 98, 0.14);
+  --dbc-line-strong: rgba(8, 60, 98, 0.3);
+  --dbc-signal: #0891a6;
+  --dbc-signal-dark: #083c62;
+}
+
+/* Büyük serif başlıklar yerine site ölçeğinde sans başlıklar. */
+.dbc-card-heading h2,
+.dbc-no-message h2,
+.dbc-validation-summary strong,
+.dbc-validation-empty h2 {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.dbc-validation-empty h2,
+.dbc-no-message h2 {
+  font-size: clamp(30px, 4.4vw, 44px);
+  line-height: 1.14;
+}
+
+/* Araç çubuğu ve üst menü aynı yerde yapışmasın: site başlığı akışta kalır. */
+
+header.rv-header {
+  position: relative;
+  top: auto;
+  z-index: 1;
+}
+
+/* Ortak üst menü eklendiği için tam ekran düzen kırpılmamalı: gövde
+   akışta kalır, editör alanı üst menü kadar kısalır. */
+@media (min-width: 821px) {
+  .dbc-app {
+    height: auto;
+  }
+
+  .dbc-shell {
+    height: calc(100dvh - 110px - var(--rv-header-h, 56px));
   }
 }

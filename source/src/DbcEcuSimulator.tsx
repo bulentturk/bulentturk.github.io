@@ -27,6 +27,8 @@ import {
   type DbcSignal,
 } from "./dbc/dbc";
 import "./dbc-ecu-simulator.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 type NumericFormat = "hex" | "decimal";
@@ -231,7 +233,7 @@ function signalStep(signal: DbcSignal): number {
 }
 
 export default function DbcEcuSimulator() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [database, setDatabase] = useState<DbcDatabase | null>(null);
   const [dbcName, setDbcName] = useState("");
   const [selectedNode, setSelectedNode] = useState("*");
@@ -524,6 +526,8 @@ export default function DbcEcuSimulator() {
 
   return (
     <main className="dbc-simulator">
+      <SiteHeader active="tools" language={language} />
+
       <header className="sim-header">
         <a href="/tools/">← {t.back}</a>
         <div><span>CAN / DBC / J1939</span><strong>{t.title}</strong></div>

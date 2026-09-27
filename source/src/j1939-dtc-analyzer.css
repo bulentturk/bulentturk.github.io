@@ -1,13 +1,13 @@
 .jda-app {
-  --jda-bg: #e9eeeb;
-  --jda-paper: #fffefa;
-  --jda-panel: #f6f8f5;
+  --jda-bg: #eef5f8;
+  --jda-paper: #ffffff;
+  --jda-panel: #f9fcfd;
   --jda-ink: #102531;
   --jda-muted: #66747b;
-  --jda-line: #d1d9d5;
+  --jda-line: #dbe8ef;
   --jda-accent: #087d70;
   --jda-accent-bright: #13a990;
-  --jda-accent-soft: #dcefe9;
+  --jda-accent-soft: #eef5f8;
   --jda-blue: #2d7da5;
   --jda-amber: #bf721f;
   --jda-red: #b84950;
@@ -40,7 +40,7 @@
 
 .jda-header {
   align-items: center;
-  background: rgba(255, 254, 250, 0.97);
+  background: rgba(255, 255, 255, 0.97);
   border-bottom: 1px solid var(--jda-line);
   display: grid;
   grid-template-columns: minmax(210px, 1fr) auto minmax(210px, 1fr);
@@ -107,7 +107,7 @@
 }
 
 .jda-title strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 17px;
   font-weight: 400;
   margin-top: 4px;
@@ -174,7 +174,7 @@
 }
 
 .jda-language span {
-  color: #b1b8b7;
+  color: #b9cfdd;
   font-size: 9px;
 }
 
@@ -204,7 +204,7 @@
 }
 
 .jda-hero-copy h1 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: clamp(46px, 5.2vw, 72px);
   font-weight: 400;
   letter-spacing: -0.055em;
@@ -262,7 +262,7 @@
   background:
     linear-gradient(135deg, rgba(8, 125, 112, 0.055), transparent 60%),
     var(--jda-paper);
-  border: 1px solid #bfcac5;
+  border: 1px solid #cbdce6;
   box-shadow: 16px 16px 0 rgba(16, 37, 49, 0.055);
   display: flex;
   flex-direction: column;
@@ -489,7 +489,7 @@
 }
 
 .jda-kpis strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 22px;
   font-weight: 400;
   margin-top: 5px;
@@ -524,7 +524,7 @@
 }
 
 .jda-tabs {
-  background: #f4f6f3;
+  background: #f4fafc;
   border-bottom: 1px solid var(--jda-line);
   display: flex;
   min-height: 48px;
@@ -619,7 +619,7 @@
 
 .jda-panel-heading h2,
 .jda-detail-hero h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 22px;
   font-weight: 400;
   margin: 5px 0 0;
@@ -627,13 +627,13 @@
 
 .jda-panel-heading > strong {
   color: var(--jda-accent);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 28px;
   font-weight: 400;
 }
 
 .jda-fault-table-head {
-  background: #eff3f0;
+  background: #f4fafc;
   border-bottom: 1px solid var(--jda-line);
   display: grid;
   grid-template-columns: 1.35fr 0.85fr 0.75fr;
@@ -689,7 +689,7 @@
 
 .jda-fault-rows > button:hover,
 .jda-fault-rows > button.active {
-  background: #edf5f1;
+  background: #f4fafc;
 }
 
 .jda-fault-rows > button.active::after {
@@ -766,7 +766,7 @@
 }
 
 .jda-detail-hero h2 i {
-  color: #aeb8b5;
+  color: #b9cfdd;
   font-style: normal;
   padding: 0 4px;
 }
@@ -797,7 +797,7 @@
 }
 
 .jda-status-badge.is-active {
-  background: #f8e7e7;
+  background: #eef5f8;
   border-color: #e0afb1;
   color: var(--jda-red);
 }
@@ -845,7 +845,7 @@
 
 .jda-fmi-line {
   align-items: center;
-  background: #eff3f0;
+  background: #f4fafc;
   border-bottom: 1px solid var(--jda-line);
   display: flex;
   gap: 13px;
@@ -920,7 +920,7 @@
 }
 
 .jda-timeline-bar {
-  background: #dce3df;
+  background: #e8f1f5;
   height: 8px;
   margin: 23px 0 15px;
   position: relative;
@@ -977,7 +977,7 @@
 
 .jda-lamp {
   align-items: center;
-  background: #f3f5f3;
+  background: #f4fafc;
   border: 1px solid var(--jda-line);
   display: flex;
   gap: 10px;
@@ -986,8 +986,8 @@
 }
 
 .jda-lamp > i {
-  background: #a8b2af;
-  border: 4px solid #e4e8e6;
+  background: #b0c8d8;
+  border: 4px solid #e8f1f5;
   border-radius: 50%;
   flex: 0 0 auto;
   height: 19px;
@@ -1034,8 +1034,8 @@
 
 .jda-context-empty {
   align-items: center;
-  background: #eef3f0;
-  border: 1px dashed #aebdb7;
+  background: #f4fafc;
+  border: 1px dashed #c2d6e2;
   display: grid;
   gap: 15px;
   grid-template-columns: auto 1fr auto;
@@ -1084,7 +1084,7 @@
 }
 
 .jda-context-grid article {
-  background: #f3f6f3;
+  background: #f4fafc;
   border: 1px solid var(--jda-line);
   display: flex;
   flex-direction: column;
@@ -1099,7 +1099,7 @@
 }
 
 .jda-context-grid article > strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 16px;
   font-weight: 400;
   margin: 8px 0 3px;
@@ -1231,7 +1231,7 @@
 }
 
 .jda-service-note textarea {
-  background: #f7f8f6;
+  background: #f9fcfd;
   border: 1px solid var(--jda-line);
   min-height: 78px;
   padding: 10px;
@@ -1270,7 +1270,7 @@
 }
 
 .jda-empty h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 34px;
   font-weight: 400;
   margin: 20px 0 9px;
@@ -1288,8 +1288,8 @@
 }
 
 .jda-empty--small {
-  background: #f2f5f2;
-  border: 1px dashed #b5c0bb;
+  background: #f4fafc;
+  border: 1px dashed #c2d6e2;
   min-height: 75px;
   padding: 20px;
 }
@@ -1307,7 +1307,7 @@
 }
 
 .jda-section-heading h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 32px;
   font-weight: 400;
   letter-spacing: -0.03em;
@@ -1333,7 +1333,7 @@
 }
 
 .jda-network-head {
-  background: #eef2ef;
+  background: #f4fafc;
   border: 1px solid var(--jda-line);
   border-bottom: 0;
   margin-top: 20px;
@@ -1380,7 +1380,7 @@
 }
 
 .jda-pgn-list {
-  background: #f4f6f4;
+  background: #f4fafc;
   border-top: 1px solid var(--jda-line);
   grid-column: 1 / 6;
   margin: 8px -12px -9px;
@@ -1408,7 +1408,7 @@
 }
 
 .jda-tp-issues h3 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 22px;
   font-weight: 400;
 }
@@ -1457,7 +1457,7 @@
 }
 
 .jda-manual-inputs input {
-  background: #f6f8f5;
+  background: #f9fcfd;
   border: 1px solid var(--jda-line);
   font-family: "Cascadia Mono", Consolas, monospace;
   font-size: 12px;
@@ -1513,7 +1513,7 @@
 }
 
 .jda-manual-dtcs h3 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 22px;
   font-weight: 400;
   margin: 5px 0;
@@ -1556,7 +1556,7 @@
 }
 
 .jda-byte-map h3 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 20px;
   font-weight: 400;
   margin: 0 0 12px;
@@ -1569,7 +1569,7 @@
 }
 
 .jda-byte-map article {
-  background: #eef2ef;
+  background: #f4fafc;
   border: 1px solid var(--jda-line);
   display: flex;
   flex-direction: column;
@@ -1638,7 +1638,7 @@
 
 .jda-dictionary-actions > div > strong {
   color: var(--jda-accent);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 26px;
   font-weight: 400;
 }
@@ -1656,7 +1656,7 @@
 }
 
 .jda-dict-columns {
-  background: #edf3f0;
+  background: #f4fafc;
   border-bottom: 1px solid var(--jda-line);
   color: var(--jda-muted);
   font-family: "Cascadia Mono", Consolas, monospace;
@@ -1678,7 +1678,7 @@
 }
 
 .jda-dictionary-table > div {
-  background: #edf1ef;
+  background: #f4fafc;
   border: 1px solid var(--jda-line);
   padding: 9px 11px;
 }
@@ -1732,7 +1732,7 @@
 }
 
 .jda-error-toast {
-  background: #fff0f0;
+  background: #f4fafc;
   border-color: #d8989d;
   color: #8d3238;
 }
@@ -1755,7 +1755,7 @@
 }
 
 .jda-toast {
-  background: #e8f6ef;
+  background: #f4fafc;
   border-color: #89bba9;
   color: #176650;
 }
@@ -1794,7 +1794,7 @@
 }
 
 .jda-dialog header h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 28px;
   font-weight: 400;
   margin: 6px 0;
@@ -1830,7 +1830,7 @@
 
 .jda-report-fields input,
 .jda-report-fields textarea {
-  background: #f5f7f5;
+  background: #f4fafc;
   border: 1px solid var(--jda-line);
   font-size: 9px;
   min-height: 37px;
@@ -1847,7 +1847,7 @@
 }
 
 .jda-report-select-head {
-  background: #eef2ef;
+  background: #f4fafc;
   border-bottom: 1px solid var(--jda-line);
   border-top: 1px solid var(--jda-line);
   padding: 10px 22px;
@@ -1884,7 +1884,7 @@
 }
 
 .jda-report-faults label:has(input:checked) {
-  background: #edf6f2;
+  background: #f4fafc;
   border-color: #86b4a8;
 }
 
@@ -2277,7 +2277,7 @@
   }
 
   .jda-print-header h1 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 27px;
     font-weight: 400;
     letter-spacing: -0.03em;
@@ -2308,15 +2308,15 @@
   }
 
   .jda-print-meta {
-    background: #f0f4f1;
-    border: 1px solid #cbd5d0;
+    background: #f4fafc;
+    border: 1px solid #dbe8ef;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     margin-bottom: 4mm;
   }
 
   .jda-print-meta article {
-    border-right: 1px solid #cbd5d0;
+    border-right: 1px solid #dbe8ef;
     display: flex;
     flex-direction: column;
     min-height: 17mm;
@@ -2365,7 +2365,7 @@
 
   .jda-print-section-title {
     align-items: baseline;
-    border-bottom: 1px solid #cbd5d0;
+    border-bottom: 1px solid #dbe8ef;
     display: flex;
     gap: 3mm;
     margin-bottom: 2.5mm;
@@ -2373,7 +2373,7 @@
   }
 
   .jda-print-section-title h2 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 17px;
     font-weight: 400;
     margin: 0;
@@ -2386,7 +2386,7 @@
   }
 
   .jda-print-kpis article {
-    border: 1px solid #cbd5d0;
+    border: 1px solid #dbe8ef;
     display: flex;
     flex-direction: column;
     min-height: 17mm;
@@ -2394,7 +2394,7 @@
   }
 
   .jda-print-kpis strong {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 17px;
     font-weight: 400;
     margin-top: 2mm;
@@ -2408,13 +2408,13 @@
 
   .jda-print-report th,
   .jda-print-report td {
-    border: 1px solid #cbd3d0;
+    border: 1px solid #dbe8ef;
     padding: 1.6mm 2mm;
     text-align: left;
   }
 
   .jda-print-report th {
-    background: #e9efec;
+    background: #eef5f8;
     color: #43555e;
     font-family: "Cascadia Mono", Consolas, monospace;
     font-size: 5.8px;
@@ -2446,7 +2446,7 @@
   }
 
   .jda-print-fault {
-    border: 1px solid #c3ceca;
+    border: 1px solid #d3e2ea;
     break-after: page;
     min-height: 160mm;
     padding: 4mm;
@@ -2458,7 +2458,7 @@
 
   .jda-print-fault > header {
     align-items: flex-start;
-    border-bottom: 1px solid #d3dbd7;
+    border-bottom: 1px solid #e2edf3;
     display: grid;
     gap: 2mm;
     grid-template-columns: auto 1fr auto;
@@ -2472,7 +2472,7 @@
   }
 
   .jda-print-fault h3 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 19px;
     font-weight: 400;
     margin: 0;
@@ -2491,13 +2491,13 @@
   }
 
   .jda-print-fault-facts {
-    border-bottom: 1px solid #d3dbd7;
+    border-bottom: 1px solid #e2edf3;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
   }
 
   .jda-print-fault-facts > div {
-    border-right: 1px solid #d3dbd7;
+    border-right: 1px solid #e2edf3;
     display: flex;
     flex-direction: column;
     min-height: 13mm;
@@ -2521,7 +2521,7 @@
   }
 
   .jda-print-fmi {
-    background: #edf2ef;
+    background: #f4fafc;
     margin: 2.5mm 0;
     padding: 2mm 2.5mm;
   }
@@ -2553,7 +2553,7 @@
   }
 
   .jda-print-fault h4 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 12px;
     font-weight: 400;
     margin: 3mm 0 2mm;
@@ -2566,8 +2566,8 @@
   }
 
   .jda-print-context > div {
-    background: #f0f4f1;
-    border: 1px solid #d0d8d4;
+    background: #f4fafc;
+    border: 1px solid #dbe8ef;
     display: flex;
     flex-direction: column;
     min-height: 11mm;
@@ -2608,7 +2608,7 @@
   }
 
   .jda-print-evidence {
-    background: #eef2ef;
+    background: #f4fafc;
     display: grid;
     gap: 1mm 2mm;
     grid-template-columns: auto 1fr;
@@ -2628,7 +2628,7 @@
   }
 
   .jda-print-footer {
-    border-top: 1px solid #cbd5d0;
+    border-top: 1px solid #dbe8ef;
     color: #64757c;
     display: flex;
     font-size: 6px;
@@ -2653,5 +2653,83 @@
   .jda-print-footer small {
     font-size: 5.5px;
     margin-top: 1mm;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Ana sayfa temasıyla uyum: rv- paleti, sans tipografi ve sabit üst
+   menü. Sayfa yapısı ve araç davranışı korunur; yalnızca renk, font
+   ve yüzey ölçeği değişir.
+   ------------------------------------------------------------------ */
+
+.jda-app {
+  --jda-bg: #f9fcfd;
+  --jda-paper: #ffffff;
+  --jda-panel: #eef5f8;
+  --jda-ink: #0b2b47;
+  --jda-muted: #4a6175;
+  --jda-line: rgba(8, 60, 98, 0.14);
+  --jda-accent: #0891a6;
+  --jda-accent-bright: #0ca5bc;
+  --jda-accent-soft: #eef5f8;
+  --jda-blue: #0b6f96;
+}
+
+/* Büyük serif başlıklar yerine site ölçeğinde sans başlıklar. */
+.jda-title strong,
+.jda-hero-copy h1,
+.jda-kpis strong,
+.jda-detail-hero h2,
+.jda-panel-heading > strong,
+.jda-context-grid article > strong,
+.jda-empty h2,
+.jda-section-heading h2,
+.jda-tp-issues h3,
+.jda-manual-dtcs h3,
+.jda-byte-map h3,
+.jda-dictionary-actions > div > strong,
+.jda-dialog header h2,
+.jda-print-header h1,
+.jda-print-section-title h2,
+.jda-print-kpis strong,
+.jda-print-fault h3,
+.jda-print-fault h4 {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.jda-hero-copy h1,
+.jda-empty h2 {
+  font-size: clamp(30px, 4.4vw, 44px);
+  line-height: 1.14;
+}
+
+/* Araç çubuğu ve üst menü aynı yerde yapışmasın: site başlığı akışta kalır. */
+
+header.rv-header {
+  position: relative;
+  top: auto;
+  z-index: 1;
+}
+
+/* Ortak üst menü yüksekliği kadar kısal; yapışkan panel ve kaydırma
+   alanları ekran dışına taşmasın. */
+@media screen {
+  .jda-app {
+    min-height: calc(100dvh - var(--rv-header-h, 56px));
+  }
+}
+
+@media (min-width: 901px) {
+  .jda-landing {
+    min-height: calc(100dvh - 72px - var(--rv-header-h, 56px));
+  }
+
+  .jda-fault-list {
+    max-height: calc(100dvh - 238px - var(--rv-header-h, 56px));
+  }
+
+  .jda-fault-rows {
+    max-height: calc(100dvh - 349px - var(--rv-header-h, 56px));
   }
 }

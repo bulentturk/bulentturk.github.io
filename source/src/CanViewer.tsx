@@ -35,6 +35,8 @@ import {
   normalizeTxByteConfig,
 } from "./can/tx-generation";
 import "./can-viewer.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 type ViewMode = "messages" | "trace";
@@ -668,7 +670,7 @@ function durationLabel(milliseconds: number): string {
 }
 
 export default function CanViewer() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [bridge, setBridge] = useState<BridgeStatus>({ ok: false, connected: false });
   const [channel, setChannel] = useState(1);
   const [bitrate, setBitrate] = useState(250_000);
@@ -1678,6 +1680,8 @@ export default function CanViewer() {
 
   return (
     <main className="can-viewer">
+      <SiteHeader active="tools" language={language} />
+
       <header className="can-header">
         <a className="can-back" href="/">
           <span aria-hidden="true">←</span> {t.back}

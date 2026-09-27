@@ -37,6 +37,8 @@ import {
   type SpnKnowledge,
 } from "./j1939/j1939";
 import "./j1939-dtc-analyzer.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type View = "diagnosis" | "network" | "manual" | "dictionary";
 
@@ -681,7 +683,7 @@ function ManualDecoder({
 }
 
 export default function J1939DtcAnalyzer() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [view, setView] = useState<View>("diagnosis");
   const [log, setLog] = useState<ParsedLog | null>(null);
   const [database, setDatabase] = useState<DbcDatabase | null>(null);
@@ -896,6 +898,8 @@ export default function J1939DtcAnalyzer() {
       <input ref={traceInputRef} hidden type="file" accept=".trc,.asc,.csv,.log,.txt,text/plain" onChange={onTraceChange} />
       <input ref={dbcInputRef} hidden type="file" accept=".dbc,text/plain" onChange={onDbcChange} />
       <input ref={dictionaryInputRef} hidden type="file" accept=".csv,.xlsx,.xls,text/csv" onChange={onDictionaryChange} />
+
+      <SiteHeader active="tools" language={language} />
 
       <header className="jda-header">
         <a className="jda-brand" href="/">

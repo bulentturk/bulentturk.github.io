@@ -14,6 +14,7 @@
   --rv-card: #ffffff;
   --rv-border: rgba(8, 60, 98, 0.14);
   --rv-tint: #eef5f8;
+  --rv-header-h: 56px; /* ortak üst menünün yaklaşık yüksekliği */
 }
 
 /* ---------- Header ---------- */

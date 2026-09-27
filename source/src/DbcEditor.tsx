@@ -27,6 +27,8 @@ import {
   type ValidationIssue,
 } from "./dbc/dbc";
 import "./dbc-editor.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 type WorkspaceTab = "editor" | "source" | "validation";
@@ -394,7 +396,7 @@ function BitLayout({
 }
 
 export default function DbcEditor() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [database, setDatabase] = useState<DbcDatabase>(() => createExampleDatabase());
   const [selectedMessageUid, setSelectedMessageUid] = useState<string | null>(
     () => database.messages[0]?.uid ?? null,
@@ -672,6 +674,8 @@ export default function DbcEditor() {
       }}
       onDrop={onDrop}
     >
+      <SiteHeader active="tools" language={language} />
+
       <header className="dbc-topbar">
         <div className="dbc-brand-block">
           <a href="/" className="dbc-back-link" aria-label={t.back}>

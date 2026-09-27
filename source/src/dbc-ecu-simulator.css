@@ -1,9 +1,9 @@
 .dbc-simulator {
-  --sim-bg: #eef1ee;
-  --sim-paper: #f8f8f4;
+  --sim-bg: #f4fafc;
+  --sim-paper: #f9fcfd;
   --sim-ink: #102232;
   --sim-muted: #5b6972;
-  --sim-line: #cfd5d3;
+  --sim-line: #dbe8ef;
   --sim-accent: #087f8c;
   --sim-green: #28a979;
   background: var(--sim-bg);
@@ -17,7 +17,7 @@
 
 .sim-header {
   align-items: center;
-  background: rgba(248, 248, 244, 0.96);
+  background: rgba(249, 252, 253, 0.96);
   border-bottom: 1px solid var(--sim-line);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -43,7 +43,7 @@
   letter-spacing: .14em;
 }
 .sim-header > div:nth-child(2) strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 23px;
   font-weight: 400;
   letter-spacing: -.035em;
@@ -52,7 +52,7 @@
 .sim-language { align-items: center; display: flex; gap: 7px; justify-self: end; }
 .sim-language button { background: transparent; border: 0; color: #879299; cursor: pointer; font-family: var(--font-geist-mono), monospace; font-size: 10px; padding: 7px 2px; }
 .sim-language button.is-active { color: var(--sim-ink); font-weight: 700; }
-.sim-language i { color: #aeb7b7; font-style: normal; }
+.sim-language i { color: #b9cfdd; font-style: normal; }
 
 .sim-hero {
   align-items: end;
@@ -69,7 +69,7 @@
   padding: 72px clamp(22px, 4vw, 64px) 54px;
 }
 .sim-hero p { color: var(--sim-accent); font-family: var(--font-geist-mono), monospace; font-size: 9px; font-weight: 700; letter-spacing: .16em; margin: 0 0 24px; }
-.sim-hero h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(58px, 7vw, 108px); font-weight: 400; letter-spacing: -.065em; line-height: .88; margin: 0; }
+.sim-hero h1 { font-family: "Segoe UI", Arial, Helvetica, sans-serif; font-size: clamp(58px, 7vw, 108px); font-weight: 400; letter-spacing: -.065em; line-height: .88; margin: 0; }
 .sim-hero h2 { color: var(--sim-muted); font-size: clamp(14px, 1.25vw, 18px); font-weight: 450; line-height: 1.55; margin: 28px 0 0; max-width: 920px; }
 .sim-hero aside { display: flex; flex-direction: column; gap: 15px; padding-bottom: 8px; }
 .sim-hero aside span { align-items: center; display: flex; font-family: var(--font-geist-mono), monospace; font-size: 9px; gap: 9px; }
@@ -78,7 +78,7 @@
 
 .sim-connection {
   background: var(--sim-ink);
-  color: #f8f8f4;
+  color: #f9fcfd;
   display: grid;
   grid-template-columns: .8fr 1fr .85fr .9fr minmax(270px, 1.4fr);
   padding: 0 clamp(22px, 4vw, 64px);
@@ -87,15 +87,15 @@
 .sim-status:first-child { border-left: 1px solid rgba(255,255,255,.13); }
 .sim-status, .sim-connection > label { display: flex; flex-direction: column; }
 .sim-status > span, .sim-connection > label > span { color: #82979d; font-family: var(--font-geist-mono), monospace; font-size: 8px; letter-spacing: .12em; text-transform: uppercase; }
-.sim-status strong { align-items: center; color: #c4ced0; display: flex; font-size: 12px; gap: 8px; margin-top: 14px; }
+.sim-status strong { align-items: center; color: #d3e2ea; display: flex; font-size: 12px; gap: 8px; margin-top: 14px; }
 .sim-status strong i { background: #7b8d92; border-radius: 50%; height: 7px; width: 7px; }
 .sim-status strong.is-online i { background: #53d8a4; box-shadow: 0 0 0 4px rgba(83,216,164,.08); }
 .sim-status small { color: #758a90; font-family: var(--font-geist-mono), monospace; font-size: 8px; margin-top: 7px; }
 .sim-connection select { background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,.22); color: #fff; cursor: pointer; font-family: var(--font-geist-mono), monospace; font-size: 10px; margin-top: 14px; outline: 0; padding: 6px 0; }
 .sim-connection option { background: var(--sim-ink); }
 .sim-connect-actions { display: grid; gap: 8px; grid-template-columns: 1.3fr .8fr; }
-.sim-connect-actions button { background: transparent; border: 1px solid rgba(255,255,255,.22); color: #c0cdd0; cursor: pointer; font-size: 9px; padding: 12px; }
-.sim-connect-actions button.is-primary { background: #f7f7f2; color: var(--sim-ink); }
+.sim-connect-actions button { background: transparent; border: 1px solid rgba(255,255,255,.22); color: #d3e2ea; cursor: pointer; font-size: 9px; padding: 12px; }
+.sim-connect-actions button.is-primary { background: #f4fafc; color: var(--sim-ink); }
 .sim-connect-actions button:hover:not(:disabled) { background: #65c4c9; border-color: #65c4c9; color: var(--sim-ink); }
 .sim-connect-actions button:disabled { cursor: not-allowed; opacity: .38; }
 
@@ -105,15 +105,15 @@
 .sim-safety label { align-items: flex-start; border-left: 1px solid #dfb497; cursor: pointer; display: flex; font-size: 10px; gap: 12px; line-height: 1.55; padding: 6px 0 6px 24px; }
 .sim-safety input { accent-color: #a84f2b; margin-top: 2px; }
 
-.sim-config { background: #e7ece9; border-bottom: 1px solid var(--sim-line); padding: 44px clamp(22px, 4vw, 64px); }
+.sim-config { background: #eef5f8; border-bottom: 1px solid var(--sim-line); padding: 44px clamp(22px, 4vw, 64px); }
 .sim-config-head { align-items: center; background: var(--sim-paper); border: 1px solid var(--sim-line); display: grid; gap: 20px; grid-template-columns: auto 1fr auto; min-height: 112px; padding: 20px 24px; }
 .sim-config-head > span { align-self: start; color: var(--sim-accent); font-family: var(--font-geist-mono), monospace; font-size: 8px; font-weight: 700; letter-spacing: .12em; padding-top: 4px; }
-.sim-config-head h2 { font-family: Georgia, "Times New Roman", serif; font-size: 28px; font-weight: 400; letter-spacing: -.035em; margin: 0; }
+.sim-config-head h2 { font-family: "Segoe UI", Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 400; letter-spacing: -.035em; margin: 0; }
 .sim-config-head p { color: var(--sim-muted); font-size: 10px; line-height: 1.5; margin: 7px 0 0; }
 .sim-config-head > strong { color: var(--sim-muted); font-family: var(--font-geist-mono), monospace; font-size: 9px; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sim-load-row { align-items: stretch; background: var(--sim-paper); border: 1px solid var(--sim-line); border-top: 0; display: flex; min-height: 58px; }
 .sim-load-row > button { background: transparent; border: 0; border-right: 1px solid var(--sim-line); color: var(--sim-accent); cursor: pointer; font-size: 9px; font-weight: 700; padding: 0 22px; }
-.sim-load-row > button:hover { background: #dfeeed; }
+.sim-load-row > button:hover { background: #eef5f8; }
 .sim-dbc-summary { display: flex; flex-direction: column; gap: 6px; justify-content: center; margin-left: auto; padding: 10px 20px; }
 .sim-dbc-summary span { color: #79868b; font-family: var(--font-geist-mono), monospace; font-size: 7px; letter-spacing: .1em; text-transform: uppercase; }
 .sim-dbc-summary strong { font-family: var(--font-geist-mono), monospace; font-size: 9px; }
@@ -126,11 +126,11 @@
 .sim-message-picker > button:hover:not(:disabled) { background: var(--sim-accent); }
 .sim-message-picker > button:disabled { cursor: not-allowed; opacity: .4; }
 
-.sim-display-bar { align-items: center; background: #e7ece9; border-bottom: 1px solid var(--sim-line); display: flex; gap: 30px; justify-content: flex-end; padding: 13px clamp(22px, 4vw, 64px); }
+.sim-display-bar { align-items: center; background: #eef5f8; border-bottom: 1px solid var(--sim-line); display: flex; gap: 30px; justify-content: flex-end; padding: 13px clamp(22px, 4vw, 64px); }
 .sim-display-bar > strong, .sim-display-bar > div > span { color: #78858a; font-family: var(--font-geist-mono), monospace; font-size: 8px; letter-spacing: .1em; text-transform: uppercase; }
 .sim-display-bar > strong { color: var(--sim-ink); margin-right: auto; }
 .sim-display-bar > div { align-items: center; display: flex; gap: 10px; }
-.sim-display-bar > div > div { border: 1px solid #bfc8c6; display: grid; grid-template-columns: 1fr 1fr; }
+.sim-display-bar > div > div { border: 1px solid #cbdce6; display: grid; grid-template-columns: 1fr 1fr; }
 .sim-display-bar button { background: transparent; border: 0; color: #69777c; cursor: pointer; font-family: var(--font-geist-mono), monospace; font-size: 8px; min-width: 48px; padding: 7px 9px; }
 .sim-display-bar button.is-active { background: var(--sim-ink); color: #fff; }
 
@@ -138,7 +138,7 @@
 .sim-empty { align-items: center; background: var(--sim-paper); border: 1px solid var(--sim-line); display: flex; flex-direction: column; justify-content: center; min-height: 300px; text-align: center; }
 .sim-empty > div { display: flex; gap: 9px; }
 .sim-empty i { background: #a9c7c8; border-radius: 50%; height: 8px; width: 8px; }
-.sim-empty h2 { font-family: Georgia, "Times New Roman", serif; font-size: 29px; font-weight: 400; margin: 24px 0 8px; }
+.sim-empty h2 { font-family: "Segoe UI", Arial, Helvetica, sans-serif; font-size: 29px; font-weight: 400; margin: 24px 0 8px; }
 .sim-empty p { color: var(--sim-muted); font-size: 11px; margin: 0; }
 
 .sim-message-card { background: var(--sim-paper); border: 1px solid var(--sim-line); scroll-margin-top: 96px; }
@@ -146,15 +146,15 @@
 .sim-message-card > header { align-items: stretch; border-bottom: 1px solid var(--sim-line); display: grid; grid-template-columns: 78px 1fr auto 70px; min-height: 112px; }
 .sim-message-index { align-items: center; border-right: 1px solid var(--sim-line); display: flex; flex-direction: column; justify-content: center; }
 .sim-message-index span { color: var(--sim-accent); font-family: var(--font-geist-mono), monospace; font-size: 7px; letter-spacing: .12em; }
-.sim-message-index strong { font-family: Georgia, "Times New Roman", serif; font-size: 31px; font-weight: 400; margin-top: 6px; }
+.sim-message-index strong { font-family: "Segoe UI", Arial, Helvetica, sans-serif; font-size: 31px; font-weight: 400; margin-top: 6px; }
 .sim-message-title { display: flex; flex-direction: column; justify-content: center; padding: 20px 24px; }
 .sim-message-title > span { color: var(--sim-accent); font-family: var(--font-geist-mono), monospace; font-size: 8px; letter-spacing: .1em; }
-.sim-message-title h2 { font-family: Georgia, "Times New Roman", serif; font-size: 30px; font-weight: 400; letter-spacing: -.035em; margin: 5px 0; }
+.sim-message-title h2 { font-family: "Segoe UI", Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 400; letter-spacing: -.035em; margin: 5px 0; }
 .sim-message-title p { color: var(--sim-muted); font-family: var(--font-geist-mono), monospace; font-size: 8px; margin: 0; }
 .sim-message-state { align-items: flex-end; display: flex; flex-direction: column; justify-content: center; padding: 20px 24px; }
 .sim-message-state > span { align-items: center; border: 1px solid var(--sim-line); color: #758389; display: flex; font-family: var(--font-geist-mono), monospace; font-size: 7px; gap: 7px; letter-spacing: .08em; padding: 7px 9px; text-transform: uppercase; }
 .sim-message-state > span i { background: #9da8ab; border-radius: 50%; height: 6px; width: 6px; }
-.sim-message-state > span.is-live { background: #e1f1e8; border-color: #acd6c0; color: #187755; }
+.sim-message-state > span.is-live { background: #eef5f8; border-color: #acd6c0; color: #187755; }
 .sim-message-state > span.is-live i { background: #28a979; }
 .sim-message-state small { color: #7f8c90; font-family: var(--font-geist-mono), monospace; font-size: 7px; margin-top: 8px; }
 .sim-remove { background: transparent; border: 0; border-left: 1px solid var(--sim-line); color: #819095; cursor: pointer; font-size: 22px; position: relative; }
@@ -170,7 +170,7 @@
 .sim-payload { border-right: 0; }
 .sim-payload code { background: var(--sim-ink); color: #78dbe0; font-family: var(--font-geist-mono), monospace; font-size: 12px; margin-top: 9px; overflow-x: auto; padding: 10px 12px; white-space: nowrap; }
 
-.sim-signal-head { background: #e9edeb; border-bottom: 1px solid var(--sim-line); display: grid; grid-template-columns: minmax(240px, .9fr) minmax(400px, 1.8fr) 120px; padding: 9px 18px; }
+.sim-signal-head { background: #eef5f8; border-bottom: 1px solid var(--sim-line); display: grid; grid-template-columns: minmax(240px, .9fr) minmax(400px, 1.8fr) 120px; padding: 9px 18px; }
 .sim-signal-head span { color: #78858a; font-family: var(--font-geist-mono), monospace; font-size: 7px; letter-spacing: .1em; text-transform: uppercase; }
 .sim-signals { display: grid; }
 .sim-signal-row { align-items: center; border-bottom: 1px solid var(--sim-line); display: grid; grid-template-columns: minmax(240px, .9fr) minmax(400px, 1.8fr) 120px; min-height: 88px; padding: 12px 18px; }
@@ -182,7 +182,7 @@
 .sim-signal-control input[type="number"], .sim-signal-control select { background: #fff; border: 1px solid var(--sim-line); color: var(--sim-ink); font-family: var(--font-geist-mono), monospace; font-size: 11px; min-height: 34px; padding: 6px 9px; }
 .sim-signal-control > div span { color: var(--sim-muted); font-family: var(--font-geist-mono), monospace; font-size: 9px; padding-left: 10px; }
 .sim-signal-control input[type="range"] { accent-color: var(--sim-accent); cursor: pointer; max-width: 540px; width: 100%; }
-.sim-signal-row > code { background: #edf1ee; border: 1px solid var(--sim-line); font-family: var(--font-geist-mono), monospace; font-size: 10px; padding: 9px; text-align: center; }
+.sim-signal-row > code { background: #f4fafc; border: 1px solid var(--sim-line); font-family: var(--font-geist-mono), monospace; font-size: 10px; padding: 9px; text-align: center; }
 .sim-no-signals { color: var(--sim-muted); font-size: 10px; margin: 0; padding: 24px; }
 .sim-fd-warning { background: #fff0e6; border-bottom: 1px solid #e4b99d; color: #65412f; font-size: 9px; line-height: 1.5; margin: 0; padding: 12px 18px; }
 .sim-message-card > footer { display: grid; grid-template-columns: 1fr 1fr; }
@@ -240,4 +240,48 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sim-empty i { animation: none; }
+}
+
+/* ------------------------------------------------------------------
+   Ana sayfa temasıyla uyum: rv- paleti, sans tipografi ve sabit üst
+   menü. Sayfa yapısı ve araç davranışı korunur; yalnızca renk, font
+   ve yüzey ölçeği değişir.
+   ------------------------------------------------------------------ */
+
+.dbc-simulator {
+  --sim-bg: #f9fcfd;
+  --sim-paper: #ffffff;
+  --sim-ink: #0b2b47;
+  --sim-muted: #4a6175;
+  --sim-line: rgba(8, 60, 98, 0.14);
+  --sim-accent: #0891a6;
+}
+
+/* Büyük serif başlıklar yerine site ölçeğinde sans başlıklar. */
+.sim-header > div:nth-child(2) strong,
+.sim-hero h1,
+.sim-config-head h2,
+.sim-empty h2,
+.sim-message-index strong,
+.sim-message-title h2 {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.sim-hero h1 {
+  font-size: clamp(30px, 4.4vw, 44px);
+  line-height: 1.14;
+}
+
+/* Araç çubuğu ve üst menü aynı yerde yapışmasın: site başlığı akışta kalır. */
+
+header.rv-header {
+  position: relative;
+  top: auto;
+  z-index: 1;
+}
+
+/* Ortak üst menü yüksekliği kadar kısal ki gövde tam ekranı doldursun. */
+.dbc-simulator {
+  min-height: calc(100dvh - var(--rv-header-h, 56px));
 }

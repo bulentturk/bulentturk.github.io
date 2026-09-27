@@ -14,6 +14,8 @@ import {
   type NumberRadix,
 } from "./j1939/pgn";
 import "./j1939-pgn-calculator.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 type Mode = "decode" | "build";
@@ -164,7 +166,7 @@ function FieldMap({ identifier, canId }: { identifier: J1939Identifier; canId: n
 }
 
 export default function J1939PgnCalculator() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [mode, setMode] = useState<Mode>("decode");
   const [decodeRadix, setDecodeRadix] = useState<NumberRadix>(16);
   const [canIdInput, setCanIdInput] = useState("18FECA00");
@@ -274,6 +276,8 @@ export default function J1939PgnCalculator() {
 
   return (
     <main className="jpgn-app">
+      <SiteHeader active="tools" language={language} />
+
       <header className="jpgn-header">
         <a href="/tools/"><span aria-hidden="true">←</span>{t.back}</a>
         <strong>ALGO TEAM <small>/ J1939</small></strong>

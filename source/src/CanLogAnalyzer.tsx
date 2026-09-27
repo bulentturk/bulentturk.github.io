@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ToolSeoContent from "./ToolSeoContent";
 import "./can-log-analyzer.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 import type { DbcDatabase, DbcMessage, DbcSignal } from "./dbc/dbc";
 import { createExampleDatabase, parseDbc } from "./dbc/dbc";
 import {
@@ -447,7 +449,7 @@ function signalForUid(decoded: DecodedSignal[], uid: string): DecodedSignal | un
 }
 
 export default function CanLogAnalyzer() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [log, setLog] = useState<ParsedLog | null>(null);
   const [database, setDatabase] = useState<DbcDatabase | null>(null);
   const [dbcName, setDbcName] = useState("");
@@ -755,6 +757,8 @@ export default function CanLogAnalyzer() {
           event.currentTarget.value = "";
         }}
       />
+
+      <SiteHeader active="tools" language={language} />
 
       <header className="cla-topbar">
         <div className="cla-brand">

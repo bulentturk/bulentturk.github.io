@@ -1,12 +1,12 @@
 .cla-app {
-  --cla-bg: #edf0ee;
-  --cla-paper: #fffefa;
-  --cla-panel: #f7f8f5;
+  --cla-bg: #eef5f8;
+  --cla-paper: #ffffff;
+  --cla-panel: #f9fcfd;
   --cla-ink: #102232;
   --cla-muted: #64727b;
-  --cla-line: #d6dcda;
+  --cla-line: #e2edf3;
   --cla-signal: #087f8c;
-  --cla-signal-soft: #dcefed;
+  --cla-signal-soft: #eef5f8;
   --cla-warning: #b46b1d;
   background:
     linear-gradient(rgba(16, 34, 50, 0.027) 1px, transparent 1px),
@@ -119,7 +119,7 @@
 
 .cla-local-pill {
   align-items: center;
-  background: #e6f2ed;
+  background: #eef5f8;
   border-radius: 20px;
   color: #24745f;
   display: inline-flex;
@@ -161,7 +161,7 @@
 }
 
 .cla-lang i {
-  color: #aab3b4;
+  color: #b9cfdd;
   font-size: 9px;
   font-style: normal;
 }
@@ -218,7 +218,7 @@
 }
 
 .cla-empty h1 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: clamp(38px, 5vw, 66px);
   font-weight: 400;
   letter-spacing: -0.05em;
@@ -267,7 +267,7 @@
 
 .cla-commandbar {
   align-items: center;
-  background: #f5f6f3;
+  background: #f4fafc;
   border-bottom: 1px solid var(--cla-line);
   display: flex;
   justify-content: space-between;
@@ -371,7 +371,7 @@
 }
 
 .cla-summary strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 26px;
   font-weight: 400;
   grid-row: 1 / 3;
@@ -473,7 +473,7 @@
 }
 
 .cla-message-panel {
-  background: #f2f4f1;
+  background: #f4fafc;
   border-right: 1px solid var(--cla-line);
   min-width: 0;
 }
@@ -511,7 +511,7 @@
 }
 
 .cla-message-head {
-  background: #e9ece9;
+  background: #eef5f8;
   border-bottom: 1px solid var(--cla-line);
   color: var(--cla-muted);
   font-family: "Cascadia Mono", Consolas, monospace;
@@ -553,11 +553,11 @@
 }
 
 .cla-message-scroll > button:hover {
-  background: #e9eeeb;
+  background: #eef5f8;
 }
 
 .cla-message-scroll > button.active {
-  background: #e1eeec;
+  background: #eef5f8;
 }
 
 .cla-message-scroll > button.active::before {
@@ -628,7 +628,7 @@
 
 .cla-detail-head h1 {
   display: inline-block;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 39px;
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -649,7 +649,7 @@
 }
 
 .cla-id-badges span {
-  background: #eef2ef;
+  background: #f4fafc;
   border: 1px solid var(--cla-line);
   font-family: "Cascadia Mono", Consolas, monospace;
   font-size: 7px;
@@ -719,7 +719,7 @@
 }
 
 .cla-metric-grid strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 25px;
   font-weight: 400;
   margin: 7px 0 4px;
@@ -732,7 +732,7 @@
 }
 
 .cla-card {
-  background: rgba(255, 254, 250, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid var(--cla-line);
   margin-bottom: 14px;
   padding: 18px;
@@ -756,7 +756,7 @@
 }
 
 .cla-card h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 24px;
   font-weight: 400;
   letter-spacing: -0.03em;
@@ -788,7 +788,7 @@
 }
 
 .cla-line-chart line {
-  stroke: #dfe3e1;
+  stroke: #e8f1f5;
   stroke-width: 1;
 }
 
@@ -821,7 +821,7 @@
 }
 
 .cla-byte-grid > div {
-  background: #f3f5f2;
+  background: #f4fafc;
   border: 1px solid var(--cla-line);
   display: grid;
   gap: 5px;
@@ -836,7 +836,7 @@
 }
 
 .cla-byte-grid i {
-  background: linear-gradient(90deg, var(--cla-signal) var(--activity), #dfe4e1 var(--activity));
+  background: linear-gradient(90deg, var(--cla-signal) var(--activity), #e8f1f5 var(--activity));
   height: 4px;
 }
 
@@ -866,7 +866,7 @@
 }
 
 .cla-activity-key i {
-  background: #dfe4e1;
+  background: #e8f1f5;
   height: 5px;
   width: 13px;
 }
@@ -895,7 +895,7 @@
 }
 
 .cla-dbc-empty h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 30px;
   font-weight: 400;
   margin: 17px 0 6px;
@@ -968,7 +968,7 @@
 }
 
 .cla-signal-summary strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 20px;
   font-weight: 400;
 }
@@ -998,7 +998,7 @@
 }
 
 .cla-frame-table > div.head {
-  background: #e9ece9;
+  background: #eef5f8;
   color: var(--cla-muted);
   font-family: "Cascadia Mono", Consolas, monospace;
   font-size: 7px;
@@ -1021,7 +1021,7 @@
 }
 
 .cla-warnings {
-  background: #f8f1e5;
+  background: #f4fafc;
   border-top: 1px solid #ddc9a8;
   color: #76532e;
   font-size: 9px;
@@ -1065,7 +1065,7 @@
 
 .cla-report-dialog {
   background: var(--cla-paper);
-  border: 1px solid #aeb9b6;
+  border: 1px solid #b9cfdd;
   box-shadow: 0 28px 90px rgba(8, 27, 39, 0.32);
   display: flex;
   flex-direction: column;
@@ -1094,7 +1094,7 @@
 }
 
 .cla-report-dialog h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 29px;
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -1118,7 +1118,7 @@
 }
 
 .cla-report-dialog-summary {
-  background: #f0f3f0;
+  background: #f4fafc;
   border-bottom: 1px solid var(--cla-line);
   display: grid;
   grid-template-columns: 1.5fr 0.7fr 1fr;
@@ -1159,7 +1159,7 @@
 }
 
 .cla-report-signal-toolbar strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 19px;
   font-weight: 400;
 }
@@ -1206,7 +1206,7 @@
 
 .cla-report-signal-list label {
   align-items: center;
-  background: #f7f8f5;
+  background: #f9fcfd;
   border: 1px solid var(--cla-line);
   cursor: pointer;
   display: grid;
@@ -1577,7 +1577,7 @@
   }
 
   .cla-print-report-header h1 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 28px;
     font-weight: 400;
     letter-spacing: -0.03em;
@@ -1598,15 +1598,15 @@
   }
 
   .cla-print-report-meta {
-    background: #f1f4f2;
-    border: 1px solid #ccd4d1;
+    background: #f4fafc;
+    border: 1px solid #dbe8ef;
     display: grid;
     grid-template-columns: 1.45fr 1.25fr 0.85fr 0.85fr;
     margin-bottom: 7mm;
   }
 
   .cla-print-report-meta > div {
-    border-right: 1px solid #ccd4d1;
+    border-right: 1px solid #dbe8ef;
     display: flex;
     flex-direction: column;
     gap: 1.3mm;
@@ -1644,13 +1644,13 @@
   }
 
   .cla-print-section-heading {
-    border-bottom: 1px solid #ccd4d1;
+    border-bottom: 1px solid #dbe8ef;
     margin-bottom: 3mm;
     padding-bottom: 2mm;
   }
 
   .cla-print-section-heading h2 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 19px;
     font-weight: 400;
     letter-spacing: -0.02em;
@@ -1670,7 +1670,7 @@
   }
 
   .cla-print-kpis article {
-    border: 1px solid #ccd4d1;
+    border: 1px solid #dbe8ef;
     display: flex;
     flex-direction: column;
     min-height: 21mm;
@@ -1678,7 +1678,7 @@
   }
 
   .cla-print-kpis strong {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 18px;
     font-weight: 400;
     margin: 2mm 0 1mm;
@@ -1697,13 +1697,13 @@
 
   .cla-print-report th,
   .cla-print-report td {
-    border: 1px solid #ccd2d0;
+    border: 1px solid #dbe8ef;
     padding: 1.8mm 2mm;
     text-align: left;
   }
 
   .cla-print-report th {
-    background: #e8eeec;
+    background: #eef5f8;
     color: #42535e;
     font-family: "Cascadia Mono", Consolas, monospace;
     font-size: 6.5px;
@@ -1724,7 +1724,7 @@
   }
 
   .cla-print-signal-card {
-    border: 1px solid #c7d0cd;
+    border: 1px solid #d3e2ea;
     break-inside: avoid;
     margin-bottom: 5mm;
     padding: 3.5mm 4mm 3mm;
@@ -1732,7 +1732,7 @@
 
   .cla-print-signal-card > header {
     align-items: flex-start;
-    border-bottom: 1px solid #d8dedc;
+    border-bottom: 1px solid #e2edf3;
     display: flex;
     justify-content: space-between;
     margin-bottom: 1.5mm;
@@ -1748,7 +1748,7 @@
   }
 
   .cla-print-signal-card h3 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     margin: 1mm 0 0.5mm;
@@ -1784,7 +1784,7 @@
   }
 
   .cla-print-signal-stats {
-    border-top: 1px solid #d8dedc;
+    border-top: 1px solid #e2edf3;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     margin-top: 1mm;
@@ -1792,7 +1792,7 @@
   }
 
   .cla-print-signal-stats > div {
-    border-right: 1px solid #d8dedc;
+    border-right: 1px solid #e2edf3;
     display: flex;
     flex-direction: column;
     gap: 1mm;
@@ -1808,14 +1808,14 @@
   }
 
   .cla-print-signal-stats strong {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 12px;
     font-weight: 400;
   }
 
   .cla-print-report-footer {
     align-items: center;
-    border-top: 1px solid #ccd4d1;
+    border-top: 1px solid #dbe8ef;
     color: #66757d;
     display: flex;
     font-family: "Cascadia Mono", Consolas, monospace;
@@ -1828,4 +1828,65 @@
   .cla-print-report-footer small {
     font-size: 6.5px;
   }
+}
+
+/* ------------------------------------------------------------------
+   Ana sayfa temasıyla uyum: rv- paleti, sans tipografi ve sabit üst
+   menü. Sayfa yapısı ve araç davranışı korunur; yalnızca renk, font
+   ve yüzey ölçeği değişir.
+   ------------------------------------------------------------------ */
+
+.cla-app {
+  --cla-bg: #f9fcfd;
+  --cla-paper: #ffffff;
+  --cla-panel: #eef5f8;
+  --cla-ink: #0b2b47;
+  --cla-muted: #4a6175;
+  --cla-line: rgba(8, 60, 98, 0.14);
+  --cla-signal: #0891a6;
+  --cla-signal-soft: #eef5f8;
+}
+
+/* Büyük serif başlıklar yerine site ölçeğinde sans başlıklar. */
+.cla-empty h1,
+.cla-summary strong,
+.cla-detail-head h1,
+.cla-metric-grid strong,
+.cla-card h2,
+.cla-dbc-empty h2,
+.cla-signal-summary strong,
+.cla-report-dialog h2,
+.cla-report-signal-toolbar strong,
+.cla-print-report-header h1,
+.cla-print-section-heading h2,
+.cla-print-kpis strong,
+.cla-print-signal-card h3,
+.cla-print-signal-stats strong {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.cla-empty h1,
+.cla-detail-head h1 {
+  font-size: clamp(30px, 4.4vw, 44px);
+  line-height: 1.14;
+}
+
+/* Araç çubuğu ve üst menü aynı yerde yapışmasın: site başlığı akışta kalır. */
+
+header.rv-header {
+  position: relative;
+  top: auto;
+  z-index: 1;
+}
+
+/* Ortak üst menü yüksekliği kadar kısal; boş durum ekranı tam doldursun. */
+@media screen {
+  .cla-app {
+    min-height: calc(100dvh - var(--rv-header-h, 56px));
+  }
+}
+
+.cla-empty {
+  min-height: calc(100dvh - 72px - var(--rv-header-h, 56px));
 }
