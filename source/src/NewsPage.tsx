@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import newsArchive from "./content/news-archive.json";
 import { newsDetails } from "./content/news-details";
+import sectorFeed from "./content/sector-feed.json";
 import SiteHeader from "./SiteHeader";
 import { useSiteLanguage } from "./use-site-language";
 
@@ -10,8 +11,10 @@ type Language = "tr" | "en";
 type Category = "all" | "health" | "science-tech" | "mobile-machines" | "mining";
 type NewsItem = (typeof newsArchive.items)[number];
 
-/** Sektör gündeminin yayımlandığı kardeş site. */
-const SECTOR_SITE = "https://makinenabzi.com";
+/** Sektör gündeminin yayımlandığı kardeş site (haber bölümü). */
+const SECTOR_SECTION = sectorFeed.sectionUrl || "https://makinenabzi.com/haberler/";
+/** Haftalık iş akışının RSS'ten güncellediği son başlıklar. */
+const sectorItems = sectorFeed.items.slice(0, 6);
 
 /** Seçkide öne çıkan kategoriler: araçlarımızın kullanıldığı alanlar. */
 const PICK_CATEGORIES: Category[] = ["mobile-machines", "mining"];
@@ -36,6 +39,9 @@ type Labels = {
   archiveHint: string;
   archiveToggle: string;
   count: string;
+  feedAll: string;
+  feedKicker: string;
+  feedNote: string;
   details: string;
   filterLabel: string;
   healthNote: string;
@@ -62,6 +68,9 @@ const LABELS: Record<Language, Labels> = {
     archiveHint: "Arşivi aç",
     archiveToggle: "Tüm haber arşivi",
     count: "haber",
+    feedAll: "Makine Nabzı haberlerinin tamamı",
+    feedKicker: "MAKİNE NABZI'NDAN SON BAŞLIKLAR",
+    feedNote: "Bu altı başlık kardeş siteden haftalık olarak otomatik güncellenir; haberlerin tamamı Makine Nabzı'nda.",
     details: "Ayrıntılar ve bağlam",
     filterLabel: "Haber kategorileri",
     healthNote: "Sağlık içerikleri hakkında",
@@ -89,6 +98,9 @@ const LABELS: Record<Language, Labels> = {
     archiveHint: "Open the archive",
     archiveToggle: "Full news archive",
     count: "stories",
+    feedAll: "All Makine Nabzı stories",
+    feedKicker: "LATEST FROM MAKINE NABZI",
+    feedNote: "These six headlines refresh automatically every week from our sister site; the full feed lives on Makine Nabzı.",
     details: "Details and context",
     filterLabel: "News categories",
     healthNote: "About health coverage",
@@ -121,6 +133,17 @@ function formatDate(value: string, language: Language) {
     year: "numeric",
   }).format(new Date(`${value}T12:00:00`));
 }
+
+function formatMonth(value: string, language: Language) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat(language === "tr" ? "tr-TR" : "en-GB", {
+    month: "short",
+    year: "numeric",
+  }).format(new Date(`${value}T12:00:00`));
+}
+
+const archiveOldest = allItems[allItems.length - 1]?.publishedDate ?? "";
+const archiveNewest = allItems[0]?.publishedDate ?? "";
 
 type StoryCardProps = {
   detail?: string[];
@@ -226,7 +249,7 @@ export default function NewsPage() {
             <a
               className="news-partner-cta"
               data-analytics-action="makine_nabzi"
-              href={SECTOR_SITE}
+              href={SECTOR_SECTION}
               rel="noopener"
               target="_blank"
             >
@@ -235,6 +258,28 @@ export default function NewsPage() {
             <small>{labels.partnerNote}</small>
           </div>
         </div>
+
+        {sectorItems.length ? (
+          <div className="sector-feed">
+            <div className="sector-feed-head">
+              <p className="section-kicker">{labels.feedKicker}</p>
+              <a href={SECTOR_SECTION} rel="noopener" target="_blank">
+                {labels.feedAll} <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <ol className="sector-feed-list">
+              {sectorItems.map((item) => (
+                <li key={item.url}>
+                  <a href={item.url} rel="noopener" target="_blank">
+                    <span>{item.title}</span>
+                    <time dateTime={item.publishedAt}>{formatMonth(item.publishedAt, language)}</time>
+                  </a>
+                </li>
+              ))}
+            </ol>
+            <small className="sector-feed-note">{labels.feedNote}</small>
+          </div>
+        ) : null}
       </section>
 
       <section aria-labelledby="news-picks-title" className="news-picks">
@@ -256,7 +301,7 @@ export default function NewsPage() {
           ))}
         </div>
         <p className="news-picks-more">
-          <a href={SECTOR_SITE} rel="noopener" target="_blank">
+          <a href={SECTOR_SECTION} rel="noopener" target="_blank">
             {labels.picksMore} <span aria-hidden="true">↗</span>
           </a>
         </p>
@@ -266,7 +311,11 @@ export default function NewsPage() {
         <summary>
           <span className="news-archive-title">
             <strong>{labels.archiveToggle}</strong>
-            <small>{allItems.length} {labels.count}</small>
+            <small>
+              {allItems.length} {labels.count}
+              {" · "}
+              {formatMonth(archiveOldest, language)} – {formatMonth(archiveNewest, language)}
+            </small>
           </span>
           <i aria-hidden="true">{labels.archiveHint}</i>
         </summary>

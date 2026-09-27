@@ -14,6 +14,7 @@ OUT = ROOT / ".test-artifacts" / "news-hub"
 ROUTE = "/news/"
 URL = "https://algo-team.com" + ROUTE
 SECTOR_SITE = "https://makinenabzi.com"
+SECTOR_NEWS = "https://makinenabzi.com/haberler/"
 TITLE = "Haberler: Sektör Gündemi ve Makine Nabzı | ALGO TEAM"
 HERO_TR = "Sektör gündemi artık Makine Nabzı'nda."
 HERO_EN = "Sector news now lives on Makine Nabzı."
@@ -21,6 +22,8 @@ PICK_COUNT = 6
 
 ITEMS = json.loads((ROOT / "src/content/news-archive.json").read_text(encoding="utf-8"))["items"]
 ARCHIVE_COUNT = len(ITEMS)
+FEED = json.loads((ROOT / "src/content/sector-feed.json").read_text(encoding="utf-8"))
+FEED_ITEMS = FEED["items"]
 
 
 def check_static() -> None:
@@ -36,8 +39,17 @@ def check_static() -> None:
 
     cta = re.search(r'<a class="news-partner-cta"[^>]*>', html)
     assert cta, "Missing Makine Nabzı call to action"
-    assert f'href="{SECTOR_SITE}"' in cta.group(0)
+    assert f'href="{SECTOR_NEWS}"' in cta.group(0), "Call to action must open the news section"
     assert 'target="_blank"' in cta.group(0) and "noopener" in cta.group(0)
+
+    # Haftalık RSS iş akışının ürettiği son başlıklar şeridi.
+    assert 1 <= len(FEED_ITEMS) <= 6, "Sector feed must carry between one and six headlines"
+    assert FEED["sectionUrl"] == SECTOR_NEWS
+    for item in FEED_ITEMS:
+        assert item["title"] and item["publishedAt"], "Sector feed items need a title and date"
+        assert item["url"].startswith(SECTOR_SITE + "/"), f"Unexpected sector feed URL: {item['url']}"
+        assert item["url"] in html and item["title"] in html, f"Missing sector headline: {item['title']}"
+    assert html.count(SECTOR_NEWS) >= 3, "Sector links must point at the news section"
 
     sitemap = ET.parse(DIST / "sitemap.xml")
     ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
@@ -73,6 +85,9 @@ def main() -> None:
             # Seçki görünür, arşiv kapalı ama içeriği DOM'da duruyor.
             assert page.locator(".news-picks .news-story").count() == PICK_COUNT
             assert page.locator(".news-picks .news-story").first.is_visible()
+            assert page.locator(".sector-feed-list li").count() == len(FEED_ITEMS)
+            for href in page.locator(".sector-feed-list a").evaluate_all("els => els.map(el => el.href)"):
+                assert href.startswith(SECTOR_SITE + "/")
             assert page.locator(".news-archive .news-story").count() == ARCHIVE_COUNT
             assert page.locator("details.news-archive").evaluate("el => el.open") is False
             assert page.locator(".news-archive .news-feed").is_hidden()
@@ -118,7 +133,8 @@ def main() -> None:
             static_page.goto(base + ROUTE)
             body = static_page.locator("body").inner_text()
             assert HERO_TR in body and "Tüm haber arşivi" in body
-            assert SECTOR_SITE in static_page.content()
+            assert FEED_ITEMS[0]["title"] in body
+            assert SECTOR_NEWS in static_page.content()
             browser.close()
         print("PASS: News hub keeps the archive, shows six picks, and hands sector news to Makine Nabzı.")
     finally:
