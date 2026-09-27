@@ -65,6 +65,7 @@ export default function A10voLaGuidePage({ language = "tr" }: { language?: LaGui
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     <SiteHeader
       active="learn"
+      guideLocale
       language={language}
       languageLinks={laGuidePaths}
       onLanguage={persistLanguage}

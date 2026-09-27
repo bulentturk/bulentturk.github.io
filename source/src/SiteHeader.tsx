@@ -25,9 +25,10 @@ type LanguageSwitchProps = {
   language: SiteLanguage;
   onLanguage?: (language: SiteLanguage) => void;
   languageLinks?: Record<SiteLanguage, string>;
+  guideLocale?: boolean;
 };
 
-function LanguageSwitch({ language, onLanguage, languageLinks }: LanguageSwitchProps) {
+function LanguageSwitch({ language, onLanguage, languageLinks, guideLocale }: LanguageSwitchProps) {
   if (languageLinks) {
     return (
       <div className="rv-lang" aria-label="Dil seçimi">
@@ -39,6 +40,7 @@ function LanguageSwitch({ language, onLanguage, languageLinks }: LanguageSwitchP
             hrefLang={value}
             key={value}
             onClick={() => onLanguage?.(value)}
+            {...(guideLocale ? { "data-guide-locale": value } : {})}
           >
             {value.toUpperCase()}
           </a>
@@ -72,6 +74,11 @@ export type SiteHeaderProps = {
   onLanguage?: (language: SiteLanguage) => void;
   /** Ayrı adreslere giden dil bağlantıları (A10VO LA rehberi gibi). */
   languageLinks?: Record<SiteLanguage, string>;
+  /**
+   * Dil bağlantılarına `data-guide-locale` özniteliği ekler. A10VO LA
+   * rehberinin dil değiştirme davranışı bu kancayla doğrulanıyor.
+   */
+  guideLocale?: boolean;
   /** Ana sayfa içinde hash bağlantıları kullanılsın. */
   inPage?: boolean;
   active?: SiteNavKey;
@@ -81,7 +88,14 @@ export type SiteHeaderProps = {
  * Tüm sayfaların kullandığı ortak üst menü: logo, ana menü, mobil menü
  * ve dil seçimi. Ana sayfadaki yapıyla birebir aynıdır.
  */
-export default function SiteHeader({ language, onLanguage, languageLinks, inPage = false, active }: SiteHeaderProps) {
+export default function SiteHeader({
+  language,
+  onLanguage,
+  languageLinks,
+  guideLocale,
+  inPage = false,
+  active,
+}: SiteHeaderProps) {
   const labels = NAV_LABELS[language];
   const prefix = inPage ? "" : "/";
   const links: Array<{ key: SiteNavKey; href: string }> = [
@@ -115,7 +129,12 @@ export default function SiteHeader({ language, onLanguage, languageLinks, inPage
             ))}
           </div>
         </details>
-        <LanguageSwitch language={language} onLanguage={onLanguage} languageLinks={languageLinks} />
+        <LanguageSwitch
+          guideLocale={guideLocale}
+          language={language}
+          languageLinks={languageLinks}
+          onLanguage={onLanguage}
+        />
       </div>
     </header>
   );

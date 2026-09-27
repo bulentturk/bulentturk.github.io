@@ -1029,6 +1029,18 @@ body {
   color: #ffffff;
 }
 
+/* Dar ekranlarda üst menü tek satırda kalsın (390 px dahil). */
+@media (max-width: 899px) {
+  .rv-header-inner {
+    gap: 8px;
+  }
+
+  .rv-mobile-menu summary {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 380px) {
   .rv-lang a {
     padding: 4px 9px;
