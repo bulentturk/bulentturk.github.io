@@ -1,3 +1,7 @@
+// See entries/guide.tsx: this entry replaces main.tsx, so home.css has to be
+// loaded here to style the shared SiteHeader and keep the page theme aligned
+// with the rest of the site.
+import "../home.css";
 import A10voLaGuidePage from "../A10voLaGuidePage";
 import { mount } from "./mount";
 
