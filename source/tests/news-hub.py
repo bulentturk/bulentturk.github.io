@@ -4,10 +4,9 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
 from urllib.parse import urlparse
+import json
 import re
 import xml.etree.ElementTree as ET
-
-from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
@@ -19,9 +18,9 @@ TITLE = "Haberler: Sektör Gündemi ve Makine Nabzı | ALGO TEAM"
 HERO_TR = "Sektör gündemi artık Makine Nabzı'nda."
 HERO_EN = "Sector news now lives on Makine Nabzı."
 PICK_COUNT = 6
-ARCHIVE_COUNT = 31
-# Arşivin kaybolmadığını kanıtlayan örnek kayıtlar (seçki, madencilik, sağlık).
-SAMPLES = ("maxmine-maxi-fms-assistant", "caterpillar-q2-2026-construction-demand", "who-cancer-2050")
+
+ITEMS = json.loads((ROOT / "src/content/news-archive.json").read_text(encoding="utf-8"))["items"]
+ARCHIVE_COUNT = len(ITEMS)
 
 
 def check_static() -> None:
@@ -31,10 +30,9 @@ def check_static() -> None:
     assert "Makine Nabzı" in re.search(r'<meta name="description" content="([^"]*)"', html).group(1)
 
     assert '<details class="news-archive">' in html, "Archive must be collapsed by default"
-    assert len(re.findall(r'id="pick-', html)) == PICK_COUNT, "Selection must show six stories"
-    assert len(re.findall(r'id="news-[a-z0-9-]+"', html)) == ARCHIVE_COUNT, "Archive must keep all stories"
-    for sample in SAMPLES:
-        assert f'id="news-{sample}"' in html, f"Missing archived story: {sample}"
+    assert len(re.findall(r'id="pick-[a-z0-9-]+"', html)) == PICK_COUNT, "Selection must show six stories"
+    for item in ITEMS:
+        assert f'id="news-{item["id"]}"' in html, f"Missing archived story: {item['id']}"
 
     cta = re.search(r'<a class="news-partner-cta"[^>]*>', html)
     assert cta, "Missing Makine Nabzı call to action"
@@ -48,6 +46,8 @@ def check_static() -> None:
 
 
 def main() -> None:
+    from playwright.sync_api import sync_playwright
+
     check_static()
     OUT.mkdir(parents=True, exist_ok=True)
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(SimpleHTTPRequestHandler, directory=str(DIST)))
