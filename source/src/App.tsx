@@ -766,6 +766,14 @@ export default function Home() {
       <section className="rv-hero">
         <div className="rv-hero-grid" aria-hidden="true" />
         <div className="rv-hero-glow" aria-hidden="true" />
+        <img
+          className="rv-hero-mark"
+          src="/assets/algo-mark.svg"
+          alt=""
+          aria-hidden="true"
+          width={512}
+          height={512}
+        />
         <div className="rv-hero-inner">
           <Reveal className="rv-hero-copy">
             <p className="rv-hero-badge">

@@ -214,6 +214,26 @@
   );
 }
 
+.rv-hero-mark {
+  position: absolute;
+  right: -90px;
+  top: 50%;
+  width: min(46vw, 560px);
+  height: auto;
+  transform: translateY(-50%);
+  opacity: 0.055;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 899px) {
+  .rv-hero-mark {
+    right: -110px;
+    width: 380px;
+    opacity: 0.045;
+  }
+}
+
 .rv-hero-inner {
   position: relative;
   max-width: 1120px;
