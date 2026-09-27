@@ -81,10 +81,14 @@ def main() -> None:
             # Arşiv açıldığında kategori filtresi çalışmaya devam ediyor.
             page.locator("details.news-archive > summary").click()
             assert page.locator("details.news-archive").evaluate("el => el.open") is True
-            assert "31 haber" in page.locator(".news-result-count").inner_text()
+            # Sayaç metni CSS ile biçimlendirildiği için DOM metni normalize edilir.
+            def count_label() -> str:
+                return page.locator(".news-result-count").evaluate("el => el.textContent").lower()
+
+            assert "31 haber" in count_label()
             page.get_by_role("button", name="Madencilik Teknolojileri", exact=False).click()
             assert page.locator(".news-archive .news-story").count() == 5
-            assert "5 haber" in page.locator(".news-result-count").inner_text()
+            assert "5 haber" in count_label()
             assert page.evaluate("location.hash") == "#mining"
             page.get_by_role("button", name="Tüm Haberler", exact=False).click()
             assert page.locator(".news-archive .news-story").count() == ARCHIVE_COUNT
