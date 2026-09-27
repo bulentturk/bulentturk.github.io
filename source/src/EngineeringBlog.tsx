@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 
@@ -182,7 +184,7 @@ const articles = {
 } as const;
 
 export default function EngineeringBlog() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const items = articles[language];
   const labels = language === "tr"
     ? {
@@ -215,17 +217,7 @@ export default function EngineeringBlog() {
 
   return (
     <main className="blog-page">
-      <header className="site-header blog-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">
-          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
-        </a>
-        <a className="blog-back" href="/">← {labels.back}</a>
-        <div className="language-switch" aria-label="Dil seçimi">
-          <button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button>
-          <span>/</span>
-          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">EN</button>
-        </div>
-      </header>
+      <SiteHeader active="learn" language={language} onLanguage={setLanguage} />
 
       <section className="blog-hero">
         <p className="overline">{labels.overline}</p>

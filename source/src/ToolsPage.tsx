@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 
@@ -56,7 +58,7 @@ const content = {
 } as const;
 
 export default function ToolsPage() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const t = content[language];
 
   useEffect(() => {
@@ -68,22 +70,7 @@ export default function ToolsPage() {
 
   return (
     <main className="hub-page tools-hub">
-      <header className="site-header hub-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">
-          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
-        </a>
-        <nav className="hub-nav" aria-label="Ana menü">
-          <a href="/">{t.nav.home}</a>
-          <a href="/learn/">{t.nav.learn}</a>
-          <a className="active" href="/tools/">{t.nav.tools}</a>
-          <a href="/news/">{t.nav.news}</a>
-        </nav>
-        <div className="language-switch" aria-label="Dil seçimi">
-          <button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button>
-          <span>/</span>
-          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">EN</button>
-        </div>
-      </header>
+      <SiteHeader active="tools" language={language} onLanguage={setLanguage} />
 
       <section className="hub-hero">
         <p className="overline">{t.overline}</p>

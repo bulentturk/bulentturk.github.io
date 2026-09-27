@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { laGuideCopy, laGuidePaths, laGuidePdfs, laSource, type LaGuideLanguage, type LaGuideSection } from "./a10vo-la-guide-content";
 import "./a10vo-la-guide.css";
+import SiteHeader from "./SiteHeader";
 
 const origin = "https://algo-team.com";
 
@@ -62,13 +63,12 @@ export default function A10voLaGuidePage({ language = "tr" }: { language?: LaGui
 
   return <main className="la-guide-page" data-guide-language={language}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-    <header className="la-guide-header">
-      <a href="/" className="la-guide-brand" aria-label="ALGO TEAM"><img src="/assets/algo-team-logo.png" width="1200" height="206" alt="ALGO TEAM" /></a>
-      <nav aria-label={language === "tr" ? "Ana menü" : "Main navigation"}><a href="/">{copy.home}</a><a href="/learn/">Learn</a><a href="/hydraulic-simulator/la-power-controller/">LA Lab</a></nav>
-      <div className="la-guide-languages" aria-label="Language">
-        {(["tr", "en"] as const).map(value => <a key={value} href={laGuidePaths[value]} hrefLang={value} lang={value} data-guide-locale={value} aria-current={value === language ? "page" : undefined} onClick={() => persistLanguage(value)}>{value.toUpperCase()}</a>)}
-      </div>
-    </header>
+    <SiteHeader
+      active="learn"
+      language={language}
+      languageLinks={laGuidePaths}
+      onLanguage={persistLanguage}
+    />
     <article>
       <header className="la-guide-hero">
         <div className="la-guide-container"><p className="la-overline">{copy.eyebrow}</p><h1>{copy.title}</h1><p className="la-guide-meta">{copy.updated}</p><p className="la-guide-intro">{copy.intro}</p>

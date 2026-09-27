@@ -10,3 +10,34 @@
 .la-guide-page .la-guide-next{margin:38px 0 0;padding:30px;background:#e2ebe7;border:1px solid #c6d7cf;border-radius:12px}.la-guide-next h2{margin:0 0 12px;font-size:1.5rem;line-height:1.4}.la-guide-next p{margin:0 0 22px;line-height:1.8}.la-guide-page .la-guide-footer{padding:24px max(24px,calc((100vw - 1080px)/2));background:#102232;color:#cbd7db;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:.8rem}.la-guide-footer a{color:white}
 @media(max-width:720px){.la-guide-header{padding:16px 18px;gap:12px;flex-wrap:wrap}.la-guide-brand{flex-basis:136px}.la-guide-brand img{width:136px}.la-guide-header nav{order:3;width:100%;margin:0;gap:22px}.la-guide-languages{margin-left:auto}.la-guide-container{padding-left:20px;padding-right:20px}.la-guide-hero{padding:36px 0}.la-guide-hero h1{font-size:2.1rem}.la-guide-hero .la-guide-intro{font-size:1rem}.la-guide-toc{padding:20px}.la-guide-toc ol{grid-template-columns:1fr;gap:8px}.la-guide-page .la-guide-section{padding:28px 0}.la-guide-page .la-guide-section h2{font-size:1.32rem}.la-guide-figures.multiple{grid-template-columns:1fr}.la-guide-figures img,.la-guide-figures.multiple img{height:auto;max-height:480px}.la-guide-figures figure{padding:15px}.la-envelope{padding:6px}.la-envelope figcaption{padding:8px}.la-guide-page .la-guide-next{padding:22px}.la-guide-page .la-guide-button{font-size:.88rem;padding:10px 14px}}
 @media print{.la-guide-header nav,.la-guide-languages,.la-guide-actions{display:none}.la-guide-page,.la-guide-hero{background:white!important;color:#102232!important}.la-guide-hero h1,.la-guide-hero p{color:#102232!important}.la-guide-table{overflow:visible}.la-guide-section{break-inside:auto}.la-guide-figures figure{break-inside:avoid}}
+
+/* Ana sayfa temasıyla uyum: marka paleti ve rv- yüzeyleri. */
+.la-guide-page{--la-paper:#f9fcfd;--la-ink:#0b2b47;--la-accent:#0891a6;--la-line:rgba(8,60,98,.14);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+.la-guide-page a{color:#0891a6}
+.la-guide-hero{background:#083c62;border-top-color:#0ca4bb;color:#f2f9fc}
+.la-guide-page .la-overline{color:#8fd9e6;font-size:13px;font-weight:600;letter-spacing:.04em}
+.la-guide-hero h1{font-size:clamp(28px,4.4vw,44px);font-weight:600;letter-spacing:-.02em}
+.la-guide-hero .la-guide-intro{color:#d3e4ec;font-size:1rem}
+.la-guide-meta{color:#a9c6d6}
+.la-guide-page .la-guide-button{background:#0ca4bb;border-color:#0891a6;border-radius:10px;font-weight:600}
+.la-guide-page .la-guide-button:hover{background:#0891a6}
+.la-guide-hero .la-guide-button.secondary{border-color:rgba(255,255,255,.35);color:#eaf7fa}
+.la-guide-page .la-guide-next .la-guide-button.secondary{background:#fff;border-color:rgba(8,60,98,.18);color:#0b2b47}
+.la-guide-toc{border-radius:14px}
+.la-guide-page .la-guide-section{border-bottom-color:rgba(8,60,98,.14)}
+.la-guide-page .la-guide-section h2{color:#0b2b47;font-weight:600}
+.la-guide-page .la-guide-section p,.la-guide-page .la-guide-section ul,.la-guide-page .la-guide-section ol{color:#4a6175}
+.la-guide-page .la-guide-section .la-guide-reference{color:#7b8f9c}
+.la-guide-steps li::marker{color:#0891a6}
+.la-guide-formulas{border-left-color:#0ca4bb;background:#eef5f8;border-radius:0 12px 12px 0}
+.la-guide-formulas code{color:#083c62}
+.la-guide-table{border-color:rgba(8,60,98,.14);border-radius:12px}
+.la-guide-table th,.la-guide-table td{border-bottom-color:rgba(8,60,98,.1)}
+.la-guide-table thead th{background:#eef5f8;color:#083c62}
+.la-guide-table tbody tr:nth-child(even){background:#f6fbfc}
+.la-guide-figures figure{border-color:rgba(8,60,98,.14);border-radius:14px}
+.la-guide-figures figcaption,.la-envelope figcaption{color:#7b8f9c}
+.la-envelope{border-color:rgba(8,60,98,.14);border-radius:14px}
+.la-guide-page .la-guide-next{background:#eef5f8;border-color:rgba(8,60,98,.14);border-radius:16px}
+.la-guide-page .la-guide-footer{background:#f9fcfd;border-top:1px solid rgba(8,60,98,.14);color:#4a6175}
+.la-guide-footer a{color:#0891a6;font-weight:600}

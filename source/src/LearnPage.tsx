@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 type Language = "tr" | "en";
 
 const content = {
@@ -76,18 +78,14 @@ const content = {
 } as const;
 
 export default function LearnPage() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const t = content[language];
   useEffect(() => {
     document.documentElement.lang = language;
     document.title = language === "tr" ? "Mühendislik Rehberleri ve Teknik Yazılar | ALGO TEAM Learn" : "Engineering Guides and Technical Articles | ALGO TEAM Learn";
   }, [language]);
   return <main className="hub-page">
-    <header className="site-header hub-header">
-      <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa"><img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" /></a>
-      <nav className="hub-nav" aria-label="Ana menü"><a href="/">{t.nav.home}</a><a className="active" href="/learn/">{t.nav.learn}</a><a href="/tools/">{t.nav.tools}</a><a href="/news/">{t.nav.news}</a></nav>
-      <div className="language-switch" aria-label="Dil seçimi"><button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button><span>/</span><button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">EN</button></div>
-    </header>
+    <SiteHeader active="learn" language={language} onLanguage={setLanguage} />
     <section className="hub-hero"><p className="overline">{t.overline}</p><h1>{t.title}</h1><p>{t.intro}</p></section>
     <section className="hub-section">
       <div className="hub-section-head"><span>01</span><div><h2>{t.categoriesTitle}</h2><p>{t.categoriesIntro}</p></div></div>

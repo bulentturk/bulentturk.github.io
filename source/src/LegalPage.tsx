@@ -1,3 +1,7 @@
+import { useEffect } from "react";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
+
 type LegalSlug = "gizlilik-politikasi" | "cerez-politikasi" | "kvkk-aydinlatma-metni";
 
 const CONTACT_EMAIL = "info@algo-team.com";
@@ -276,16 +280,15 @@ function Body({ body }: { body: Section["body"][number] }) {
 
 export default function LegalPage({ slug }: { slug: LegalSlug }) {
   const page = CONTENT[slug];
+  const [language, setLanguage] = useSiteLanguage();
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   return (
     <main>
-      <header className="legal-header">
-        <a className="legal-brand" href="/">
-          ALGO TEAM
-        </a>
-        <a className="legal-back" href="/">
-          ← Ana sayfa
-        </a>
-      </header>
+      <SiteHeader language={language} onLanguage={setLanguage} />
       <article className="legal-page">
         <p className="legal-kicker">{page.kicker}</p>
         <h1>{page.title}</h1>

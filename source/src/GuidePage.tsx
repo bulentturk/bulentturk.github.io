@@ -1,4 +1,6 @@
 import "./guide-page.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 export type GuideSlug =
   | "dbc-dosyasi-nedir"
@@ -335,6 +337,7 @@ const guides = {
 
 export default function GuidePage({ slug }: { slug: GuideSlug }) {
   const guide = guides[slug];
+  const [language, setLanguage] = useSiteLanguage();
   const url = `https://algo-team.com/learn/${slug}/`;
   const relatedGuides = Object.entries(guides)
     .filter(([relatedSlug]) => relatedSlug !== slug)
@@ -352,10 +355,7 @@ export default function GuidePage({ slug }: { slug: GuideSlug }) {
 
   return (
     <main className="guide-page">
-      <header className="guide-header">
-        <a className="guide-brand" href="/"><img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" /></a>
-        <nav aria-label="Ana menü"><a href="/">Ana Sayfa</a><a href="/learn/">Learn</a><a href="/tools/">Tools</a><a href="/news/">Haberler</a></nav>
-      </header>
+      <SiteHeader active="learn" language={language} onLanguage={setLanguage} />
       <article>
         <header className="guide-hero"><p>ALGO TEAM / CAN & J1939 REHBERİ</p><h1>{guide.title}</h1><span>{guide.readTime} · Güncelleme: {guide.updatedLabel}</span><p>{guide.description}</p><a href={guide.tool.href}>{guide.tool.label} →</a></header>
         <div className="guide-body">

@@ -1,6 +1,8 @@
 "use client";
 
 import { createElement, useEffect, useRef, useState } from "react";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 
@@ -669,7 +671,7 @@ function Counter({ value, duration = 1100 }: { value: string; duration?: number 
 }
 
 export default function Home() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [filter, setFilter] = useState<string>("all");
   const t = copy[language];
 
@@ -715,53 +717,7 @@ export default function Home() {
 
   return (
     <main id="top">
-      <header className="rv-header">
-        <div className="rv-header-inner">
-          <a className="rv-brand" href="#top" aria-label="ALGO TEAM ana sayfa">
-            <img
-              src="/assets/algo-team-logo.png"
-              alt="ALGO TEAM"
-              width={1200}
-              height={206}
-            />
-          </a>
-          <nav className="rv-nav" aria-label="Ana menü">
-            <a href="#tools">{t.nav.tools}</a>
-            <a href="/learn/">{t.nav.learn}</a>
-            <a href="#roadmap">{t.nav.roadmap}</a>
-            <a href="/news/">{t.nav.news}</a>
-            <a href="#contact">{t.nav.contact}</a>
-          </nav>
-          <details className="rv-mobile-menu">
-            <summary>{t.nav.menu}</summary>
-            <div>
-              <a href="#tools">{t.nav.tools}</a>
-              <a href="/learn/">{t.nav.learn}</a>
-              <a href="#roadmap">{t.nav.roadmap}</a>
-              <a href="/news/">{t.nav.news}</a>
-              <a href="#contact">{t.nav.contact}</a>
-            </div>
-          </details>
-          <div className="rv-lang" aria-label="Dil seçimi">
-            <button
-              className={language === "tr" ? "active" : ""}
-              onClick={() => setLanguage("tr")}
-              type="button"
-              aria-pressed={language === "tr"}
-            >
-              TR
-            </button>
-            <button
-              className={language === "en" ? "active" : ""}
-              onClick={() => setLanguage("en")}
-              type="button"
-              aria-pressed={language === "en"}
-            >
-              EN
-            </button>
-          </div>
-        </div>
-      </header>
+      <SiteHeader inPage language={language} onLanguage={setLanguage} />
 
       <section className="rv-hero">
         <div className="rv-hero-grid" aria-hidden="true" />

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import newsArchive from "./content/news-archive.json";
 import { newsDetails } from "./content/news-details";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 type Category = "all" | "health" | "science-tech" | "mobile-machines" | "mining";
@@ -15,7 +17,7 @@ const symbols: Record<Exclude<Category, "all">, string> = {
 };
 
 export default function NewsPage() {
-  const [language, setLanguage] = useState<Language>("tr");
+  const [language, setLanguage] = useSiteLanguage();
   const [category, setCategory] = useState<Category>("all");
   const getText = (tr: string, en: string) => language === "tr" ? tr : en;
 
@@ -82,20 +84,7 @@ export default function NewsPage() {
 
   return (
     <main className="news-page">
-      <header className="site-header news-header">
-        <a className="brand" href="/" aria-label="ALGO TEAM ana sayfa">
-          <img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" />
-        </a>
-        <nav className="news-top-nav" aria-label="İçerik menüsü">
-          <a href="/">{labels.back}</a>
-          <a href="/blog/">{labels.blog}</a>
-        </nav>
-        <div className="language-switch" aria-label="Dil seçimi">
-          <button className={language === "tr" ? "active" : ""} onClick={() => setLanguage("tr")} type="button">TR</button>
-          <span>/</span>
-          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">EN</button>
-        </div>
-      </header>
+      <SiteHeader active="news" language={language} onLanguage={setLanguage} />
 
       <section className="news-hero">
         <p className="overline">{labels.overline}</p>

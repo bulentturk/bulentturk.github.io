@@ -1,10 +1,13 @@
 import "./guide-page.css";
+import SiteHeader from "./SiteHeader";
+import { useSiteLanguage } from "./use-site-language";
 
 const title = "DBC nedir? CAN Bus mesajlarını örnekle okuyun";
 const description = "DBC dosyası ne işe yarar, nasıl okunur? CAN verisini devir ve sıcaklık gibi değerlere çeviren sinyal tanımlarını örneklerle öğrenin; editörde deneyin.";
 const url = "https://algo-team.com/learn/dbc-dosyasi-nedir/";
 
 export default function DbcGuidePage() {
+  const [language, setLanguage] = useSiteLanguage();
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -40,10 +43,7 @@ export default function DbcGuidePage() {
   return (
     <main className="guide-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <header className="guide-header">
-        <a className="guide-brand" href="/"><img src="/assets/algo-team-logo.png" alt="ALGO TEAM" width="1200" height="206" /></a>
-        <nav aria-label="Ana menü"><a href="/">Ana Sayfa</a><a href="/learn/">Learn</a><a href="/tools/">Tools</a><a href="/news/">Haberler</a></nav>
-      </header>
+      <SiteHeader active="learn" language={language} onLanguage={setLanguage} />
 
       <article>
         <header className="guide-hero">
