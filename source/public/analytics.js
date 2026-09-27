@@ -87,6 +87,15 @@
       });
     }
 
+    // Kardeş siteye (Makine Nabzı) giden tıklamalar ayrı olay olarak ölçülür.
+    var sectorLink = target.closest('a[href*="makinenabzi.com"]');
+    if (sectorLink) {
+      window.gtag("event", "sector_site_click", {
+        page_path: normalizedPath,
+        link_url: sectorLink.getAttribute("href") || "",
+      });
+    }
+
     var languageButton = target.closest("button");
     if (!languageButton) return;
 

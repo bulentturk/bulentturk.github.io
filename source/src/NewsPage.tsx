@@ -8,6 +8,14 @@ import { useSiteLanguage } from "./use-site-language";
 
 type Language = "tr" | "en";
 type Category = "all" | "health" | "science-tech" | "mobile-machines" | "mining";
+type NewsItem = (typeof newsArchive.items)[number];
+
+/** Sektör gündeminin yayımlandığı kardeş site. */
+const SECTOR_SITE = "https://makinenabzi.com";
+
+/** Seçkide öne çıkan kategoriler: araçlarımızın kullanıldığı alanlar. */
+const PICK_CATEGORIES: Category[] = ["mobile-machines", "mining"];
+const PICK_COUNT = 6;
 
 const symbols: Record<Exclude<Category, "all">, string> = {
   health: "HL",
@@ -16,10 +24,158 @@ const symbols: Record<Exclude<Category, "all">, string> = {
   mining: "MT",
 };
 
+// Arşiv ve seçki statik içerikten türetilir; sayfa başına bir kez hesaplanır.
+const allItems: NewsItem[] = [...newsArchive.items].sort((a, b) =>
+  b.publishedDate.localeCompare(a.publishedDate),
+);
+const picks: NewsItem[] = allItems
+  .filter((item) => PICK_CATEGORIES.includes(item.category as Category))
+  .slice(0, PICK_COUNT);
+
+type Labels = {
+  archiveHint: string;
+  archiveToggle: string;
+  count: string;
+  details: string;
+  filterLabel: string;
+  healthNote: string;
+  intro: string;
+  overline: string;
+  partnerCta: string;
+  partnerKicker: string;
+  partnerNote: string;
+  partnerText: string;
+  partnerTitle: string;
+  partnerTopics: string[];
+  picksIntro: string;
+  picksKicker: string;
+  picksMore: string;
+  picksTitle: string;
+  published: string;
+  source: string;
+  title: string;
+  why: string;
+};
+
+const LABELS: Record<Language, Labels> = {
+  tr: {
+    archiveHint: "Arşivi aç",
+    archiveToggle: "Tüm haber arşivi",
+    count: "haber",
+    details: "Ayrıntılar ve bağlam",
+    filterLabel: "Haber kategorileri",
+    healthNote: "Sağlık içerikleri hakkında",
+    intro:
+      "algo-team.com mühendislik araçları ve teknik rehberlere odaklanıyor. İş makinaları, madencilik, liman, tarım, araç üstü ekipman ve elektrifikasyon haberleri kardeş sitemiz Makine Nabzı'nda yayımlanıyor. Burada araçlarımızı doğrudan ilgilendiren seçkiler ve eski haber arşivi kalıyor.",
+    overline: "ALGO TEAM / HABERLER",
+    partnerCta: "Makine Nabzı'na git",
+    partnerKicker: "KARDEŞ SİTE",
+    partnerNote: "Günlük sektör akışı orada; bu sayfa seçki ve arşiv olarak kalıyor.",
+    partnerText:
+      "İş makinaları, madencilik, liman, tarım, araç üstü ekipman ve elektrifikasyonda haber, teknik analiz ve teknoloji platformu.",
+    partnerTitle: "Sektör gündemi: Makine Nabzı",
+    partnerTopics: ["Elektrifikasyon", "İş makinaları", "Madencilik", "Liman & tarım"],
+    picksIntro:
+      "Mobil iş makinaları ve madencilik teknolojilerinden, mühendislik açısından öne çıkan seçilmiş haberler — kaynaklarıyla birlikte.",
+    picksKicker: "SEÇKİ",
+    picksMore: "Sektörün tamamını Makine Nabzı'nda takip edin",
+    picksTitle: "Araçlarımızı ilgilendiren başlıklar",
+    published: "Yayımlanma tarihi",
+    source: "Kaynağı aç",
+    title: "Sektör gündemi artık Makine Nabzı'nda.",
+    why: "Mühendislik açısından neden önemli?",
+  },
+  en: {
+    archiveHint: "Open the archive",
+    archiveToggle: "Full news archive",
+    count: "stories",
+    details: "Details and context",
+    filterLabel: "News categories",
+    healthNote: "About health coverage",
+    intro:
+      "algo-team.com focuses on engineering tools and technical guides. Mobile machinery, mining, ports, agriculture, on-vehicle equipment and electrification coverage is published on our sister site Makine Nabzı. What remains here is a curated selection that touches our tools, plus the older news archive.",
+    overline: "ALGO TEAM / NEWS",
+    partnerCta: "Visit Makine Nabzı",
+    partnerKicker: "SISTER SITE",
+    partnerNote: "The daily sector feed lives there; this page stays as a selection and archive.",
+    partnerText:
+      "A news, technical analysis and technology platform for mobile machinery, mining, ports, agriculture, on-vehicle equipment and electrification.",
+    partnerTitle: "Sector coverage: Makine Nabzı",
+    partnerTopics: ["Electrification", "Mobile machinery", "Mining", "Ports & agriculture"],
+    picksIntro:
+      "Stories from mobile machinery and mining technology that matter most to engineers — each with its source.",
+    picksKicker: "SELECTION",
+    picksMore: "Follow the full sector feed on Makine Nabzı",
+    picksTitle: "Stories that touch our tools",
+    published: "Published",
+    source: "Open source",
+    title: "Sector news now lives on Makine Nabzı.",
+    why: "Why does this matter to engineers?",
+  },
+};
+
+function formatDate(value: string, language: Language) {
+  return new Intl.DateTimeFormat(language === "tr" ? "tr-TR" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(`${value}T12:00:00`));
+}
+
+type StoryCardProps = {
+  detail?: string[];
+  idPrefix: string;
+  index: number;
+  item: NewsItem;
+  labels: Labels;
+  language: Language;
+};
+
+function StoryCard({ detail, idPrefix, index, item, labels, language }: StoryCardProps) {
+  const getText = (tr: string, en: string) => (language === "tr" ? tr : en);
+  const categoryLabel = newsArchive.labels.find((entry) => entry.key === item.category);
+
+  return (
+    <article className={`news-story news-story--${item.category}`} id={`${idPrefix}${item.id}`}>
+      <div className="news-story-visual" aria-hidden="true">
+        <span>{symbols[item.category as Exclude<Category, "all">]}</span>
+        <strong>{(index + 1).toString().padStart(2, "0")}</strong>
+        <i /><i />
+      </div>
+      <div className="news-story-content">
+        <div className="news-story-meta">
+          <span>{categoryLabel ? getText(categoryLabel.labelTr, categoryLabel.labelEn) : item.category}</span>
+          <span>{getText(item.evidenceTr, item.evidenceEn)}</span>
+        </div>
+        <h2>{getText(item.titleTr, item.titleEn)}</h2>
+        <p className="news-story-summary">{getText(item.summaryTr, item.summaryEn)}</p>
+        {detail ? (
+          <div className="news-story-detail">
+            <h3>{labels.details}</h3>
+            {detail.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        ) : null}
+        <aside>
+          <strong>{labels.why}</strong>
+          <p>{getText(item.whyTr, item.whyEn)}</p>
+        </aside>
+        <div className="news-story-footer">
+          <a href={item.sourceUrl} target="_blank" rel="noreferrer">
+            <span>{item.sourceName}</span>
+            <strong>{labels.source} ↗</strong>
+          </a>
+          <time dateTime={item.publishedDate}>{labels.published}: {formatDate(item.publishedDate, language)}</time>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function NewsPage() {
   const [language, setLanguage] = useSiteLanguage();
   const [category, setCategory] = useState<Category>("all");
   const getText = (tr: string, en: string) => language === "tr" ? tr : en;
+  const labels = LABELS[language];
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -35,51 +191,15 @@ export default function NewsPage() {
 
   const items = useMemo(
     () => category === "all"
-      ? newsArchive.items
-      : newsArchive.items.filter((item) => item.category === category),
+      ? allItems
+      : allItems.filter((item) => item.category === category),
     [category],
   );
-
-  const labels = language === "tr"
-    ? {
-        back: "Ana sayfa",
-        blog: "Teknik yazılar",
-        overline: "ALGO TEAM / HABERLER",
-        title: "Mühendislik, bilim ve teknoloji haberleri.",
-        intro: "Sağlık, bilim ve teknoloji, mobil iş makineleri ve madencilik teknolojilerinden güvenilir kaynaklara dayanan kalıcı bir haber arşivi.",
-        count: "haber",
-        why: "Mühendislik açısından neden önemli?",
-        details: "Ayrıntılar ve bağlam",
-        source: "Kaynağı aç",
-        published: "Yayımlanma tarihi",
-        healthNote: "Sağlık içerikleri hakkında",
-      }
-    : {
-        back: "Home",
-        blog: "Technical articles",
-        overline: "ALGO TEAM / NEWS",
-        title: "Engineering, science, and technology news.",
-        intro: "A permanent, source-backed archive spanning health, science and technology, mobile machinery, and mining technology.",
-        count: "stories",
-        why: "Why does this matter to engineers?",
-        details: "Details and context",
-        source: "Open source",
-        published: "Published",
-        healthNote: "About health coverage",
-      };
 
   function chooseCategory(next: Category) {
     setCategory(next);
     const nextUrl = next === "all" ? "/news/" : `/news/#${next}`;
     window.history.replaceState(null, "", nextUrl);
-  }
-
-  function formatDate(value: string) {
-    return new Intl.DateTimeFormat(language === "tr" ? "tr-TR" : "en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(new Date(`${value}T12:00:00`));
   }
 
   return (
@@ -92,68 +212,102 @@ export default function NewsPage() {
         <p>{labels.intro}</p>
       </section>
 
-      <nav className="news-filters" aria-label={language === "tr" ? "Haber kategorileri" : "News categories"}>
-        {newsArchive.labels.map((label) => (
-          <button
-            className={category === label.key ? "active" : ""}
-            id={label.key === "all" ? undefined : label.key}
-            key={label.key}
-            onClick={() => chooseCategory(label.key as Category)}
-            type="button"
-          >
-            <span>{getText(label.labelTr, label.labelEn)}</span>
-            <small>{label.key === "all" ? newsArchive.items.length : newsArchive.items.filter((item) => item.category === label.key).length}</small>
-          </button>
-        ))}
-      </nav>
-
-      <section className="news-feed" aria-live="polite">
-        <p className="news-result-count">{items.length} {labels.count}</p>
-        {items.map((item, index) => {
-          const categoryLabel = newsArchive.labels.find((entry) => entry.key === item.category);
-          const detail = newsDetails[item.id]?.[language];
-          return (
-            <article className={`news-story news-story--${item.category}`} id={`news-${item.id}`} key={item.id}>
-              <div className="news-story-visual" aria-hidden="true">
-                <span>{symbols[item.category as Exclude<Category, "all">]}</span>
-                <strong>{(index + 1).toString().padStart(2, "0")}</strong>
-                <i /><i />
-              </div>
-              <div className="news-story-content">
-                <div className="news-story-meta">
-                  <span>{categoryLabel ? getText(categoryLabel.labelTr, categoryLabel.labelEn) : item.category}</span>
-                  <span>{getText(item.evidenceTr, item.evidenceEn)}</span>
-                </div>
-                <h2>{getText(item.titleTr, item.titleEn)}</h2>
-                <p className="news-story-summary">{getText(item.summaryTr, item.summaryEn)}</p>
-                {detail ? (
-                  <div className="news-story-detail">
-                    <h3>{labels.details}</h3>
-                    {detail.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                  </div>
-                ) : null}
-                <aside>
-                  <strong>{labels.why}</strong>
-                  <p>{getText(item.whyTr, item.whyEn)}</p>
-                </aside>
-                <div className="news-story-footer">
-                  <a href={item.sourceUrl} target="_blank" rel="noreferrer">
-                    <span>{item.sourceName}</span>
-                    <strong>{labels.source} ↗</strong>
-                  </a>
-                  <time dateTime={item.publishedDate}>{labels.published}: {formatDate(item.publishedDate)}</time>
-                </div>
-              </div>
-            </article>
-          );
-        })}
-        {category === "health" || category === "all" ? (
-          <aside className="news-health-note">
-            <strong>{labels.healthNote}</strong>
-            <p>{getText(newsArchive.healthNoteTr, newsArchive.healthNoteEn)}</p>
-          </aside>
-        ) : null}
+      <section className="news-partner" aria-labelledby="news-partner-title">
+        <div className="news-partner-card">
+          <div className="news-partner-copy">
+            <p className="section-kicker">{labels.partnerKicker}</p>
+            <h2 id="news-partner-title">{labels.partnerTitle}</h2>
+            <p>{labels.partnerText}</p>
+            <ul className="news-partner-topics">
+              {labels.partnerTopics.map((topic) => <li key={topic}>{topic}</li>)}
+            </ul>
+          </div>
+          <div className="news-partner-action">
+            <a
+              className="news-partner-cta"
+              data-analytics-action="makine_nabzi"
+              href={SECTOR_SITE}
+              rel="noopener"
+              target="_blank"
+            >
+              {labels.partnerCta} <span aria-hidden="true">↗</span>
+            </a>
+            <small>{labels.partnerNote}</small>
+          </div>
+        </div>
       </section>
+
+      <section aria-labelledby="news-picks-title" className="news-picks">
+        <div className="news-section-head">
+          <p className="section-kicker">{labels.picksKicker}</p>
+          <h2 id="news-picks-title">{labels.picksTitle}</h2>
+          <p>{labels.picksIntro}</p>
+        </div>
+        <div className="news-picks-list">
+          {picks.map((item, index) => (
+            <StoryCard
+              detail={newsDetails[item.id]?.[language]}
+              idPrefix="pick-"
+              index={index}
+              item={item}
+              key={item.id}
+              labels={labels}
+              language={language}
+            />
+          ))}
+        </div>
+        <p className="news-picks-more">
+          <a href={SECTOR_SITE} rel="noopener" target="_blank">
+            {labels.picksMore} <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      </section>
+
+      <details className="news-archive">
+        <summary>
+          <span className="news-archive-title">
+            <strong>{labels.archiveToggle}</strong>
+            <small>{allItems.length} {labels.count}</small>
+          </span>
+          <i aria-hidden="true">{labels.archiveHint}</i>
+        </summary>
+
+        <nav className="news-filters" aria-label={labels.filterLabel}>
+          {newsArchive.labels.map((label) => (
+            <button
+              className={category === label.key ? "active" : ""}
+              id={label.key === "all" ? undefined : label.key}
+              key={label.key}
+              onClick={() => chooseCategory(label.key as Category)}
+              type="button"
+            >
+              <span>{getText(label.labelTr, label.labelEn)}</span>
+              <small>{label.key === "all" ? allItems.length : allItems.filter((item) => item.category === label.key).length}</small>
+            </button>
+          ))}
+        </nav>
+
+        <section className="news-feed" aria-live="polite">
+          <p className="news-result-count">{items.length} {labels.count}</p>
+          {items.map((item, index) => (
+            <StoryCard
+              detail={newsDetails[item.id]?.[language]}
+              idPrefix="news-"
+              index={index}
+              item={item}
+              key={item.id}
+              labels={labels}
+              language={language}
+            />
+          ))}
+          {category === "health" || category === "all" ? (
+            <aside className="news-health-note">
+              <strong>{labels.healthNote}</strong>
+              <p>{getText(newsArchive.healthNoteTr, newsArchive.healthNoteEn)}</p>
+            </aside>
+          ) : null}
+        </section>
+      </details>
 
       <footer>
         <p>ALGO TEAM · ENGINEERING TOOLS</p>

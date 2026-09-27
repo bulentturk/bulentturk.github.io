@@ -1633,6 +1633,219 @@ body {
   margin-top: 22px;
 }
 
+/* ---------- Haberler: seçki ve kardeş site yönlendirmesi ---------- */
+
+.news-partner,
+.news-picks,
+.news-archive {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1120px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (min-width: 960px) {
+  .news-partner,
+  .news-picks,
+  .news-archive {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .news-partner-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.news-partner {
+  padding-top: 40px;
+}
+
+.news-partner-card {
+  align-items: center;
+  background:
+    radial-gradient(120% 150% at 100% 0%, rgba(12, 165, 188, 0.34), transparent 62%),
+    linear-gradient(135deg, #083c62, #0b2b47 72%);
+  border-radius: 22px;
+  color: #ffffff;
+  display: grid;
+  gap: 26px;
+  padding: 30px 26px;
+}
+
+.news-partner-card .section-kicker {
+  color: #8fd9e6;
+}
+
+.news-partner-copy h2 {
+  color: #ffffff;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 10px 0 12px;
+}
+
+.news-partner-copy p {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 620px;
+}
+
+.news-partner-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.news-partner-topics li {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  padding: 5px 13px;
+}
+
+.news-partner-action {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.news-partner-cta {
+  background: #ffffff;
+  border-radius: 12px;
+  color: #083c62;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 13px 22px;
+  text-decoration: none;
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.news-partner-cta:hover {
+  box-shadow: 0 12px 28px rgba(4, 24, 40, 0.3);
+  transform: translateY(-1px);
+}
+
+.news-partner-action small {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 12.5px;
+  line-height: 1.5;
+  max-width: 260px;
+}
+
+.news-picks {
+  padding-top: 56px;
+  padding-bottom: 6px;
+}
+
+.news-section-head h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 10px 0;
+}
+
+.news-section-head > p:last-child {
+  color: var(--rv-muted);
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 720px;
+}
+
+.news-picks-list {
+  margin-top: 26px;
+}
+
+.news-picks-more {
+  margin: 4px 0 0;
+}
+
+.news-picks-more a {
+  color: var(--rv-accent-strong);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.news-picks-more a:hover {
+  text-decoration: underline;
+}
+
+.news-archive {
+  padding-top: 44px;
+  padding-bottom: 56px;
+}
+
+.news-archive > summary {
+  align-items: center;
+  background: var(--rv-card);
+  border: 1px solid var(--rv-border);
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 20px 22px;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.news-archive > summary:hover {
+  border-color: rgba(12, 165, 188, 0.45);
+}
+
+.news-archive > summary::-webkit-details-marker {
+  display: none;
+}
+
+.news-archive-title {
+  display: grid;
+  gap: 4px;
+}
+
+.news-archive-title strong {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.news-archive-title small {
+  color: var(--rv-muted);
+  font-size: 12.5px;
+}
+
+.news-archive > summary i {
+  color: var(--rv-accent-strong);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.news-archive[open] > summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Arşiv, kendi kapsayıcısının boşluğunu kullanır. */
+.news-archive .news-filters,
+.news-archive .news-feed {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* ---------- Blog ---------- */
 
 .blog-articles {

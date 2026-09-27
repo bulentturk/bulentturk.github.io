@@ -55,6 +55,8 @@ jobs:
         run: python3 tests/dbc-guide-browser.py
       - name: Test J1939 metadata and decoder behavior
         run: python3 tests/j1939-dtc-seo.py
+      - name: Test news hub selection and Makine Nabzı handoff
+        run: python3 tests/news-hub.py
       - name: Save J1939 visual QA
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
@@ -77,6 +79,14 @@ jobs:
         with:
           name: la-learn-qa
           path: source/.test-artifacts/la-guide/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Save news hub visual QA
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        with:
+          name: news-hub-qa
+          path: source/.test-artifacts/news-hub/
           if-no-files-found: ignore
           retention-days: 7
       - name: Configure GitHub Pages
@@ -138,6 +148,12 @@ jobs:
                   'J1939 DM1 Decoder: SPN/FMI Arıza Kodu Çözücü | ALGO TEAM',
                   'J1939 DM1 (PGN 65226) mesajını çözün: SPN, FMI, OC, lamba durumları ve BAM/TP.DT. TRC, ASC, CSV ve SocketCAN kayıtlarını tarayıcıda analiz edin.',
                   'DM1 çözümlemek için DBC dosyası gerekir mi?',
+              ),
+              (
+                  'https://algo-team.com/news/',
+                  'Haberler: Sektör Gündemi ve Makine Nabzı | ALGO TEAM',
+                  'İş makinaları, madencilik, liman, tarım ve elektrifikasyon haberleri kardeş sitemiz Makine Nabzı\'nda. Bu sayfada mühendislik araçlarımızı ilgilendiren seçkiler ve haber arşivi yer alıyor.',
+                  'makinenabzi.com',
               ),
           ]
           for canonical, expected, description, fragment in pages:
