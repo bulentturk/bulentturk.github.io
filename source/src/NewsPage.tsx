@@ -246,7 +246,6 @@ export default function NewsPage() {
         <div className="news-picks-list">
           {picks.map((item, index) => (
             <StoryCard
-              detail={newsDetails[item.id]?.[language]}
               idPrefix="pick-"
               index={index}
               item={item}

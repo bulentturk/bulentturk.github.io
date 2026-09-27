@@ -103,10 +103,14 @@ def main() -> None:
 
             assert not errors, errors
 
-            # Mobil: yatay taşma olmamalı.
+            # Mobil: açılış görünümü (arşiv kapalı) ve arşiv açıkken yatay taşma olmamalı.
             page.set_viewport_size({"width": 390, "height": 844})
+            page.reload(wait_until="networkidle")
+            assert page.locator("details.news-archive").evaluate("el => el.open") is False
             page.screenshot(path=str(OUT / "mobile.png"), full_page=True)
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 2"), "Mobile horizontal overflow"
+            page.locator("details.news-archive > summary").click()
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 2"), "Mobile archive overflow"
 
             noonjs = browser.new_context(java_script_enabled=False, viewport={"width": 390, "height": 844})
             noonjs.route("**/*", lambda route: route.continue_() if urlparse(route.request.url).hostname == "127.0.0.1" else route.abort())

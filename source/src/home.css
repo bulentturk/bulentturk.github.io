@@ -1764,8 +1764,17 @@ body {
   max-width: 720px;
 }
 
+/* Seçki, geniş ekranda iki kolonda derli toplu durur. */
 .news-picks-list {
+  align-items: start;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
   margin-top: 26px;
+}
+
+.news-picks-list .news-story {
+  margin-bottom: 0;
 }
 
 .news-picks-more {
