@@ -5,6 +5,10 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  # Haftalık tazeleme: Makine Nabzı son başlıkları yeniden çekilir ve site
+  # yeniden yayımlanır (Pazartesi 05:00 UTC).
+  schedule:
+    - cron: "0 5 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -45,6 +49,9 @@ jobs:
         run: node --test tests/la-model.test.mjs
       - name: Build full Rev B guides and manufacturer schematics
         run: python3 scripts/build_la_assets.py
+      - name: Refresh Makine Nabzı sector headlines
+        # Kardeş site erişilemezse commit edilmiş son başlıklar kullanılır.
+        run: node scripts/fetch_sector_feed.mjs || echo "Sector feed refresh skipped; using committed headlines."
       - name: Build
         run: npm run build
       - name: Test built laboratory and language-selected PDF downloads
