@@ -5,14 +5,15 @@
    ============================================================ */
 
 :root {
-  --rv-ink: #0d1b24;
-  --rv-muted: #5b6b78;
-  --rv-accent: #0e7f96;
-  --rv-accent-strong: #0b6b80;
-  --rv-bg: #fbfdfd;
+  --rv-ink: #0b2b47; /* logodaki lacivertin koyu tonu */
+  --rv-brand: #083c62; /* logo yazısı laciverti */
+  --rv-muted: #4a6175;
+  --rv-accent: #0ca5bc; /* logo dişli teal'i */
+  --rv-accent-strong: #0891a6;
+  --rv-bg: #f9fcfd;
   --rv-card: #ffffff;
-  --rv-border: rgba(13, 27, 36, 0.12);
-  --rv-tint: #f2f7f8;
+  --rv-border: rgba(8, 60, 98, 0.14);
+  --rv-tint: #eef5f8;
 }
 
 /* ---------- Header ---------- */
@@ -22,7 +23,7 @@
   top: 0;
   z-index: 60;
   border-bottom: 1px solid var(--rv-border);
-  background: rgba(251, 253, 253, 0.82);
+  background: rgba(249, 252, 253, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -123,7 +124,7 @@
 }
 
 .rv-mobile-menu[open] summary {
-  border-color: rgba(14, 127, 150, 0.45);
+  border-color: rgba(12, 165, 188, 0.45);
 }
 
 .rv-mobile-menu > div {
@@ -136,7 +137,7 @@
   border: 1px solid var(--rv-border);
   border-radius: 14px;
   background: var(--rv-card);
-  box-shadow: 0 18px 38px rgba(13, 27, 36, 0.12);
+  box-shadow: 0 18px 38px rgba(8, 60, 98, 0.12);
 }
 
 .rv-mobile-menu a {
@@ -195,8 +196,8 @@
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(to right, rgba(13, 27, 36, 0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(13, 27, 36, 0.055) 1px, transparent 1px);
+    linear-gradient(to right, rgba(8, 60, 98, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(8, 60, 98, 0.055) 1px, transparent 1px);
   background-size: 44px 44px;
   -webkit-mask-image: radial-gradient(75% 70% at 50% 0%, black 30%, transparent 100%);
   mask-image: radial-gradient(75% 70% at 50% 0%, black 30%, transparent 100%);
@@ -208,7 +209,7 @@
   pointer-events: none;
   background: radial-gradient(
     55% 45% at 50% 0%,
-    rgba(14, 127, 150, 0.09),
+    rgba(12, 165, 188, 0.09),
     transparent 100%
   );
 }
@@ -236,9 +237,9 @@
   gap: 8px;
   margin: 0 0 20px;
   padding: 6px 14px;
-  border: 1px solid rgba(14, 127, 150, 0.3);
+  border: 1px solid rgba(12, 165, 188, 0.3);
   border-radius: 999px;
-  background: rgba(14, 127, 150, 0.06);
+  background: rgba(12, 165, 188, 0.06);
   color: var(--rv-accent-strong);
   font-size: 13px;
   font-weight: 500;
@@ -328,7 +329,7 @@
 .rv-btn--primary:hover {
   background: var(--rv-accent-strong);
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(11, 107, 128, 0.25);
+  box-shadow: 0 8px 20px rgba(8, 145, 166, 0.25);
 }
 
 .rv-btn--ghost {
@@ -338,7 +339,7 @@
 }
 
 .rv-btn--ghost:hover {
-  border-color: rgba(14, 127, 150, 0.45);
+  border-color: rgba(12, 165, 188, 0.45);
 }
 
 .rv-hero-stats {
@@ -375,7 +376,7 @@
   border: 1px solid var(--rv-border);
   border-radius: 16px;
   background: var(--rv-card);
-  box-shadow: 0 24px 48px rgba(13, 27, 36, 0.08);
+  box-shadow: 0 24px 48px rgba(8, 60, 98, 0.08);
   overflow: hidden;
 }
 
@@ -455,9 +456,9 @@
 
 .rv-panel-result {
   padding: 12px;
-  border: 1px solid rgba(14, 127, 150, 0.25);
+  border: 1px solid rgba(12, 165, 188, 0.25);
   border-radius: 10px;
-  background: rgba(14, 127, 150, 0.06);
+  background: rgba(12, 165, 188, 0.06);
   color: var(--rv-ink);
 }
 
@@ -580,7 +581,7 @@
 }
 
 .rv-chip-btn:hover {
-  border-color: rgba(14, 127, 150, 0.4);
+  border-color: rgba(12, 165, 188, 0.4);
   color: var(--rv-ink);
 }
 
@@ -648,8 +649,8 @@
 
 a.rv-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(14, 127, 150, 0.45);
-  box-shadow: 0 12px 28px rgba(13, 27, 36, 0.07);
+  border-color: rgba(12, 165, 188, 0.45);
+  box-shadow: 0 12px 28px rgba(8, 60, 98, 0.07);
 }
 
 .rv-card--flat {
@@ -669,9 +670,9 @@ a.rv-card:hover {
   align-items: center;
   justify-content: center;
   padding: 10px 12px;
-  border: 1px solid rgba(14, 127, 150, 0.2);
+  border: 1px solid rgba(12, 165, 188, 0.2);
   border-radius: 10px;
-  background: rgba(14, 127, 150, 0.08);
+  background: rgba(12, 165, 188, 0.08);
   color: var(--rv-accent-strong);
   font-size: 12px;
   font-weight: 700;
@@ -832,7 +833,7 @@ a.rv-card:hover {
 
 .rv-contact-form input:focus,
 .rv-contact-form textarea:focus {
-  outline: 2px solid rgba(14, 127, 150, 0.35);
+  outline: 2px solid rgba(12, 165, 188, 0.35);
   outline-offset: 1px;
   border-color: var(--rv-accent);
 }
@@ -893,5 +894,61 @@ a.rv-card:hover {
   .rv-card,
   .rv-btn {
     transition: none;
+  }
+}
+
+/* ---------- Mobil ince ayarlar ---------- */
+
+@media (max-width: 899px) {
+  .rv-header-inner {
+    padding: 10px 16px;
+    gap: 10px;
+  }
+
+  .rv-brand img {
+    width: 124px;
+  }
+
+  .rv-hero-inner {
+    padding: 48px 16px 64px;
+    gap: 36px;
+  }
+
+  .rv-section {
+    padding: 52px 16px;
+  }
+
+  .rv-hero-stats {
+    gap: 12px 16px;
+    margin-top: 28px;
+  }
+
+  .rv-hero-stats .rv-stat-value {
+    font-size: 22px;
+  }
+
+  .rv-panel-chips {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    font-size: 11.5px;
+  }
+
+  .rv-contact-form {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .rv-brand img {
+    width: 108px;
+  }
+
+  .rv-lang button {
+    padding: 4px 9px;
+    font-size: 11.5px;
+  }
+
+  .rv-mobile-menu summary {
+    padding: 7px 9px;
+    font-size: 12.5px;
   }
 }

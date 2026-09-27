@@ -621,6 +621,53 @@ function doubleRAF(fn: () => void) {
   requestAnimationFrame(() => requestAnimationFrame(fn));
 }
 
+function Counter({ value, duration = 1100 }: { value: string; duration?: number }) {
+  const [display, setDisplay] = useState("0");
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const target = Number(value);
+    if (!Number.isFinite(target)) {
+      setDisplay(value);
+      return;
+    }
+    if (target === 0) {
+      setDisplay("0");
+      return;
+    }
+    if (typeof IntersectionObserver === "undefined") {
+      setDisplay(value);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting || started.current) continue;
+          started.current = true;
+          io.disconnect();
+          const t0 = performance.now();
+          const tick = (now: number) => {
+            const p = Math.min((now - t0) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+            setDisplay(String(Math.round(target * eased)));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          return;
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [value, duration]);
+
+  return <span ref={ref}>{display}</span>;
+}
+
 export default function Home() {
   const [language, setLanguage] = useState<Language>("tr");
   const [filter, setFilter] = useState<string>("all");
@@ -744,7 +791,9 @@ export default function Home() {
               {t.hero.stats.map((s) => (
                 <div key={s.label}>
                   <dt className="rv-sr-only">{s.label}</dt>
-                  <dd className="rv-stat-value">{s.value}</dd>
+                  <dd className="rv-stat-value">
+                    <Counter value={s.value} />
+                  </dd>
                   <dd className="rv-stat-label">{s.label}</dd>
                 </div>
               ))}
