@@ -23,6 +23,9 @@ const tools = {
     faq: [["Hangi tarayıcı gerekir?", "WebUSB desteği olan masaüstü Chromium tabanlı bir tarayıcı gerekir."], ["DBC olmadan kullanılabilir mi?", "Evet. Ham CAN kimliği, DLC, veri ve zamanlama bilgileri DBC olmadan da görülebilir."], ["Gönderilen mesaj değiştirilebilir mi?", "Evet. Baytlar hex veya decimal biçimde düzenlenebilir; dinamik alan, sayaç ve checksum kurgulanabilir."]],
     guide: "/learn/can-bus-ariza-tespiti/",
     guideLabel: "CAN Bus arıza tespiti rehberi",
+    relatedLinks: [
+      { href: "/learn/dbc-dosyasi-nedir/", label: "DBC dosyasının CAN verisini nasıl fiziksel değere çevirdiğini öğrenin", labelEn: "Learn how a DBC file turns CAN data into physical values" },
+    ],
   },
   "dbc-ecu-simulator": {
     name: "DBC ECU Simülatörü",
@@ -33,6 +36,9 @@ const tools = {
     faq: [["Extended DBC zorunlu mu?", "Hayır. Araç hem 11 bit Standard hem 29 bit Extended kimlikli mesajları DBC tanımına göre işler."], ["Sinyal değeri bayta nasıl çevrilir?", "Fiziksel değer, DBC içindeki factor, offset, byte order ve signed bilgisi kullanılarak ham değere çevrilir."], ["Gerçek araç üzerinde kullanılabilir mi?", "Aktif mesaj gönderimi risklidir. Yalnızca yetkili, izole ve güvenli test düzeneklerinde kullanılmalıdır."]],
     guide: "/learn/dbc-ile-ecu-simulasyonu/",
     guideLabel: "DBC ile ECU simülasyonu rehberi",
+    relatedLinks: [
+      { href: "/learn/dbc-dosyasi-nedir/", label: "DBC dosyası nedir? Mesaj ve sinyal yapısını öğrenin", labelEn: "What is a DBC file? Learn the message and signal structure" },
+    ],
   },
   "can-log-analyzer": {
     name: "Online CAN Log Analiz Programı",
@@ -44,6 +50,7 @@ const tools = {
     guide: "/learn/can-log-analizi/",
     guideLabel: "Adım adım CAN log analizi",
     relatedLinks: [
+      { href: "/learn/dbc-dosyasi-nedir/", label: "DBC dosyasıyla CAN sinyallerinin nasıl çözüldüğünü öğrenin", labelEn: "Learn how DBC files decode CAN signals" },
       { href: "/j1939-dtc-decoder/", label: "J1939 DM1 / SPN-FMI arıza kodlarını çözümleyin", labelEn: "Decode J1939 DM1 / SPN-FMI fault codes" },
     ],
   },
